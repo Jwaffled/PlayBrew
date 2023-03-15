@@ -5,6 +5,7 @@ import com.waffle.main.systems.RenderSystem;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.image.BufferStrategy;
 import java.awt.image.BufferedImage;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
@@ -12,12 +13,15 @@ import java.util.concurrent.ExecutionException;
 public class Canvas extends JPanel {
     private final RenderSystem renderSystem;
     private final FontRenderSystem fontRenderSystem;
+    private BufferStrategy strategy;
     private int width, height;
-    public Canvas(RenderSystem system, FontRenderSystem system2, int width, int height) {
+    public Canvas(RenderSystem system, FontRenderSystem system2, int width, int height, BufferStrategy s) {
         renderSystem = system;
         fontRenderSystem = system2;
         this.width = width;
         this.height = height;
+        this.setDoubleBuffered(false);
+        strategy = s;
     }
 
     @Override
@@ -37,12 +41,28 @@ public class Canvas extends JPanel {
         //super.paintComponent(window);
     }
 
-    public void render() {
-        getGraphics().setColor(Color.WHITE);
-        getGraphics().fillRect(0, 0, width, height);
+    @Override
+    public void paint(Graphics g) {
 
-        renderSystem.update(getGraphics());
-        fontRenderSystem.update(getGraphics());
+    }
+
+    public void render() {
+        do {
+            do {
+                Graphics g = strategy.getDrawGraphics();
+
+                g.setColor(Color.WHITE);
+                g.fillRect(0, 0, width, height);
+
+                renderSystem.update(g);
+                fontRenderSystem.update(g);
+
+                g.dispose();
+            } while(strategy.contentsRestored());
+
+            strategy.show();
+
+        } while(strategy.contentsLost());
     }
 
     public void setWidth(int width) {

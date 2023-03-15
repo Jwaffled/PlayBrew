@@ -14,7 +14,7 @@ public class FrameCounter extends GameObject {
         long dtNanos = System.nanoTime() - lastFrameTime;
         currentFps = 1e9 / dtNanos;
         lastFrameTime = System.nanoTime();
-        fontRenderComponent.message = String.format("Current FPS: %.4f", currentFps);
+        fontRenderComponent.message = String.format("Current FPS: %.4f    Entity count: %d", currentFps, world.getLivingEntityCount());
     }
 
     @Override

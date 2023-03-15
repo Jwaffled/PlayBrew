@@ -33,7 +33,9 @@ public class Player extends GameObject {
     }
 
     public void shoot() {
-        world.createGameObject(new Bullet(10, transform.position.x, transform.position.y));
+        for(int i = 0; i < 100; i++) {
+            world.createGameObject(new Bullet(10, transform.position.x, transform.position.y));
+        }
     }
 
     public void moveLeft() {

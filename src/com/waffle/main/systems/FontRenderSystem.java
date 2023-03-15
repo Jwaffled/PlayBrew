@@ -13,6 +13,7 @@ public class FontRenderSystem extends ECSSystem {
             TransformComponent comp = world.getComponent(entity, TransformComponent.class);
             FontRenderComponent s = world.getComponent(entity, FontRenderComponent.class);
             Vec2f drawPos = comp.position.add(s.position);
+            window.setColor(Color.black);
             window.drawString(s.message, (int)drawPos.x, (int)drawPos.y);
         }
 

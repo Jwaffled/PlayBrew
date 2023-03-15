@@ -39,7 +39,7 @@ public class EntityManager {
         livingEntityCount--;
     }
 
-    void setSignature(int entity, BitSet signature) {
+    public void setSignature(int entity, BitSet signature) {
         if(entity > maxEntityCount) {
             throw new IllegalStateException("Entity out of range.");
         }
@@ -47,12 +47,16 @@ public class EntityManager {
         signatures[entity] = signature;
     }
 
-    BitSet getSignature(int entity) {
+    public BitSet getSignature(int entity) {
         if(entity > maxEntityCount) {
             throw new IllegalStateException("Entity out of range.");
         }
 
         return signatures[entity];
+    }
+
+    public int getLivingEntityCount() {
+        return this.livingEntityCount;
     }
 
 }

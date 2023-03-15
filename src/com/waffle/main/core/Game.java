@@ -17,7 +17,7 @@ import java.util.concurrent.*;
 import java.util.concurrent.locks.ReentrantLock;
 
 public abstract class Game implements Runnable {
-    public static final int DEFAULT_MAX_ENTITIES = 5000;
+    public static final int DEFAULT_MAX_ENTITIES = 100000;
     private final int fpsCap;
     private final ExecutorService executinator = Executors.newSingleThreadExecutor();
     protected Window window;
@@ -51,13 +51,13 @@ public abstract class Game implements Runnable {
             if(window != null) {
                 long newTime = System.nanoTime();
                 long frameTime = newTime - currentTime;
-                if(frameTime > 250 * 1e6) {
-                    frameTime = (long)(250 * 1e6);
+                if(frameTime > 250 * 1e9) {
+                    frameTime = (long)(250 * 1e9);
                 }
                 currentTime = newTime;
                 accum += frameTime / 1e9;
                 while(accum >= dt) {
-                    CompletableFuture.runAsync(() -> this.update(dt));
+                    this.update(dt);
                     accum -= dt;
                 }
                 try {
@@ -72,10 +72,7 @@ public abstract class Game implements Runnable {
         updateInput();
         physicsSystem.update(dt);
         world.update(dt);
-
-        SwingUtilities.invokeLater(() -> {
-            window.canvas.render();
-        });
+        window.canvas.render();
     }
 
     private void updateInput() {

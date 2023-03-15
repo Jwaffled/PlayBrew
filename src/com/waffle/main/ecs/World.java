@@ -195,4 +195,8 @@ public class World {
     public <T extends ECSSystem> void setSystemSignature(BitSet signature, Class<T> tClass) {
         systemManager.setSignature(signature, tClass);
     }
+
+    public int getLivingEntityCount() {
+        return entityManager.getLivingEntityCount();
+    }
 }

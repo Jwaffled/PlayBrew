@@ -22,7 +22,6 @@ public class Window extends JFrame {
         setPreferredSize(new Dimension(width, height));
         setFocusable(true);
         requestFocus();
-        canvas = new Canvas(renderSystem, fontRenderSystem, width, height);
         addComponentListener(new ComponentAdapter() {
             @Override
             public void componentResized(ComponentEvent e) {
@@ -31,8 +30,9 @@ public class Window extends JFrame {
                 canvas.setHeight(getHeight());
             }
         });
-
-        add(canvas);
         pack();
+        createBufferStrategy(2);
+        canvas = new Canvas(renderSystem, fontRenderSystem, width, height, getBufferStrategy());
+        setContentPane(canvas);
     }
 }
