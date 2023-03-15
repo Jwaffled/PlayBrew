@@ -7,8 +7,8 @@ public class PhysicsSystem extends ECSSystem {
     public void update(float dt) {
         for(int entity : entities) {
             TransformComponent component = world.getComponent(entity, TransformComponent.class);
-            System.out.println("x: " + component.x + ", y: " + component.y);
-            component.setX(component.x + 1);
+            //component.position.addX(1);
         }
+
     }
 }

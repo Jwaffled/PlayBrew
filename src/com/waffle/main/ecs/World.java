@@ -1,11 +1,15 @@
 package com.waffle.main.ecs;
 
+import java.lang.reflect.Field;
 import java.util.BitSet;
+import java.util.HashSet;
+import java.util.Set;
 
 public class World {
     private final EntityManager entityManager;
     private final ComponentManager componentManager;
     private final SystemManager systemManager;
+    private final Set<GameObject> gameObjects;
 
     /**
      * Creates a new World (Entity Component System).
@@ -19,6 +23,48 @@ public class World {
         entityManager = new EntityManager(maxEntities);
         componentManager = new ComponentManager(maxEntities);
         systemManager = new SystemManager();
+        gameObjects = new HashSet<>();
+    }
+
+    public <T extends GameObject> void createGameObject(T gameObj) {
+        // Instantiate all fields that inherit from IComponent
+        gameObj.start();
+        int objID = entityManager.createEntity();
+        gameObj.ID = objID;
+        gameObj.setWorld(this);
+
+        try {
+            for(Field f : gameObj.getClass().getDeclaredFields()) {
+                Class<?> c = f.getType();
+                if(IComponent.class.isAssignableFrom(c)) {
+                    if(!f.canAccess(gameObj)) {
+                        f.setAccessible(true);
+                    }
+                    Object a = f.get(gameObj);
+                    if(a instanceof IComponent) {
+                        addComponent(objID, (IComponent)a);
+                    }
+                }
+            }
+        } catch(IllegalAccessException e) {
+            throw new IllegalStateException("Something went wrong with creating GameObject " + gameObj.getClass().getTypeName() + ": " + e.getMessage());
+        }
+
+        gameObjects.add(gameObj);
+
+    }
+
+    public <T extends GameObject> void removeGameObject(T gameObj) {
+        destroyEntity(gameObj.ID);
+        gameObjects.remove(gameObj);
+    }
+
+    public void update(float dt) {
+        for(GameObject obj : gameObjects) {
+            if(obj.isActive()) {
+                obj.update(dt);
+            }
+        }
     }
 
     /**

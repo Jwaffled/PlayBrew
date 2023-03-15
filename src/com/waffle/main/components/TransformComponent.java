@@ -1,20 +1,16 @@
 package com.waffle.main.components;
 
+import com.waffle.main.core.Vec2f;
 import com.waffle.main.ecs.IComponent;
 
 public class TransformComponent implements IComponent {
-    public float x, y;
+    public Vec2f position;
 
-    public TransformComponent(int x, int y) {
-        this.x = x;
-        this.y = y;
+    public TransformComponent(float x, float y) {
+        position = new Vec2f(x, y);
     }
 
-    public void setX(float newX) {
-        x = newX;
-    }
-
-    public void setY(float newY) {
-        y = newY;
+    public TransformComponent(Vec2f pos) {
+        position = new Vec2f(pos);
     }
 }
