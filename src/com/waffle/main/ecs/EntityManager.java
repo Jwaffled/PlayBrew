@@ -59,4 +59,8 @@ public class EntityManager {
         return this.livingEntityCount;
     }
 
+    public int getMaxEntityCount() {
+        return this.maxEntityCount;
+    }
+
 }

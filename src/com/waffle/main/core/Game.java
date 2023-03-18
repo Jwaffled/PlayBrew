@@ -10,11 +10,9 @@ import com.waffle.main.systems.FontRenderSystem;
 import com.waffle.main.systems.PhysicsSystem;
 import com.waffle.main.systems.RenderSystem;
 
-import javax.swing.*;
 import java.awt.*;
 import java.util.BitSet;
 import java.util.concurrent.*;
-import java.util.concurrent.locks.ReentrantLock;
 
 public abstract class Game implements Runnable {
     public static final int DEFAULT_MAX_ENTITIES = 100000;

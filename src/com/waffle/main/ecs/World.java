@@ -199,4 +199,8 @@ public class World {
     public int getLivingEntityCount() {
         return entityManager.getLivingEntityCount();
     }
+
+    public int getMaxEntities() {
+        return entityManager.getMaxEntityCount();
+    }
 }

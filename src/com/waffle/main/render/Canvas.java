@@ -6,14 +6,11 @@ import com.waffle.main.systems.RenderSystem;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferStrategy;
-import java.awt.image.BufferedImage;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ExecutionException;
 
 public class Canvas extends JPanel {
     private final RenderSystem renderSystem;
     private final FontRenderSystem fontRenderSystem;
-    private BufferStrategy strategy;
+    private final BufferStrategy strategy;
     private int width, height;
     public Canvas(RenderSystem system, FontRenderSystem system2, int width, int height, BufferStrategy s) {
         renderSystem = system;
@@ -26,19 +23,7 @@ public class Canvas extends JPanel {
 
     @Override
     public void paintComponent(Graphics window) {
-//        super.paintComponent(window);
-//
-//        Graphics2D graph = (Graphics2D) window;
-//
-//        BufferedImage back = (BufferedImage) (createImage(getWidth(), getHeight()));
-//
-//        Graphics graphToBack = back.createGraphics();
-//
-//        renderSystem.update(graphToBack);
-//        fontRenderSystem.update(graphToBack);
-//
-//        graph.drawImage(back, null, 0, 0);
-        //super.paintComponent(window);
+
     }
 
     @Override
