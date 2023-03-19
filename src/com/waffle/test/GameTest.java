@@ -3,38 +3,28 @@ package com.waffle.test;
 import com.waffle.main.core.Game;
 import com.waffle.main.input.*;
 import java.awt.event.KeyEvent;
+import java.awt.event.MouseEvent;
 
 public class GameTest extends Game {
-    public enum Actions
-    {
-        MOVE_LEFT,
-        MOVE_RIGHT,
-        MOVE_UP,
-        MOVE_DOWN,
-        FIRE
-    }
     private Player player;
 
     private FrameCounter frameCount;
+    private KeybindManager keybinds;
     public static GameTest INSTANCE = null;
 
-    private Binding[] bindings;
-
     public GameTest() {
-
         INSTANCE = this;
-
     }
 
     @Override
     public void update(float dt) {
         super.update(dt);
-        if(bindings[4].triggered()) {
+        if(keybinds.triggered("Fire")) {
             player.shoot();
         }
-        if(bindings[0].triggered()) {
+        if(keybinds.triggered("MoveLeft")) {
             player.moveLeft();
-        } else if(bindings[1].triggered()) {
+        } else if(keybinds.triggered("MoveRight")) {
             player.moveRight();
         }
     }
@@ -43,19 +33,22 @@ public class GameTest extends Game {
         window = createWindow(800, 600, "Testing");
         window.addMouseListener(Input.getInstance());
         window.addKeyListener(Input.getInstance());
+
         player = new Player();
         frameCount = new FrameCounter();
+
         world.createGameObject(player);
         world.createGameObject(frameCount);
-        bindings = new Binding[Actions.values().length];
+
+        keybinds = new KeybindManager();
         addBindings();
         window.setVisible(true);
     }
 
-    void addBindings()
+    private void addBindings()
     {
-        bindings[Actions.MOVE_LEFT.ordinal()] = new Binding(KeyEvent.VK_LEFT, KeyEvent.VK_SHIFT, Input.getInstance());
-        bindings[Actions.MOVE_RIGHT.ordinal()] = new Binding(KeyEvent.VK_RIGHT, KeyEvent.VK_SHIFT, Input.getInstance());
-        bindings[Actions.FIRE.ordinal()] = new Binding(KeyEvent.VK_SPACE, Input.getInstance());
+        keybinds.addKeybind("MoveLeft", KeyEvent.VK_LEFT);
+        keybinds.addKeybind("MoveRight", KeyEvent.VK_RIGHT);
+        keybinds.addMouseBind("Fire", MouseEvent.BUTTON1, KeyEvent.VK_SHIFT);
     }
 }

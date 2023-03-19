@@ -44,10 +44,14 @@ public class Input implements KeyListener, MouseListener {
     }
 
     @Override
-    public void mousePressed(MouseEvent e) { currentButtons.put(-e.getButton(), true);}
+    public void mousePressed(MouseEvent e) {
+        currentButtons.put(-e.getButton(), true);
+    }
 
     @Override
-    public void mouseReleased(MouseEvent e) { currentButtons.put(-e.getButton(), false);}
+    public void mouseReleased(MouseEvent e) {
+        currentButtons.put(-e.getButton(), false);
+    }
 
 
     @Override
@@ -61,8 +65,7 @@ public class Input implements KeyListener, MouseListener {
     }
 
 
-    public boolean read(int buttonCode)
-    {
+    public boolean read(int buttonCode) {
         return currentButtons.get(buttonCode) != null && currentButtons.get(buttonCode);
     }
 }

@@ -10,7 +10,7 @@ public class ECSSystem {
     public ECSSystem() {
     }
 
-    public void setWorld(World w) {
+    public final void setWorld(World w) {
         world = w;
         // Initial size of HashTable should be roughly 1.3 times the
         // maximum amount of keys that would appear in the table - UCSD
