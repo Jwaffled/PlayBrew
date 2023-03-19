@@ -1,91 +1,61 @@
 package com.waffle.test;
 
 import com.waffle.main.core.Game;
-
+import com.waffle.main.input.*;
 import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import java.util.HashMap;
-import java.util.Map;
 
-public class GameTest extends Game implements MouseListener, KeyListener {
-    private final Player player;
-    private final FrameCounter frameCount;
-    private final Map<Integer, Boolean> currentlyPressed = new HashMap<>();
+public class GameTest extends Game {
+    public enum Actions
+    {
+        MOVE_LEFT,
+        MOVE_RIGHT,
+        MOVE_UP,
+        MOVE_DOWN,
+        FIRE
+    }
+    private Player player;
+
+    private FrameCounter frameCount;
     public static GameTest INSTANCE = null;
 
+    private Binding[] bindings;
+
     public GameTest() {
-        window = createWindow(800, 600, "Testing");
-        window.addMouseListener(this);
-        window.addKeyListener(this);
-        player = new Player();
-        frameCount = new FrameCounter();
+
         INSTANCE = this;
+
     }
 
     @Override
     public void update(float dt) {
         super.update(dt);
-        if(isKeyPressed(KeyEvent.VK_SPACE)) {
+        if(bindings[4].triggered()) {
             player.shoot();
         }
-        if(isKeyPressed(KeyEvent.VK_LEFT)) {
+        if(bindings[0].triggered()) {
             player.moveLeft();
-        } else if(isKeyPressed(KeyEvent.VK_RIGHT)) {
+        } else if(bindings[1].triggered()) {
             player.moveRight();
         }
     }
 
     public void start() {
+        window = createWindow(800, 600, "Testing");
+        window.addMouseListener(Input.getInstance());
+        window.addKeyListener(Input.getInstance());
+        player = new Player();
+        frameCount = new FrameCounter();
         world.createGameObject(player);
         world.createGameObject(frameCount);
+        bindings = new Binding[Actions.values().length];
+        addBindings();
         window.setVisible(true);
     }
 
-    public boolean isKeyPressed(int keyCode) {
-        Boolean b = currentlyPressed.get(keyCode);
-        return b != null && b;
-    }
-
-    @Override
-    public void keyTyped(KeyEvent e) {
-
-    }
-
-    @Override
-    public void keyPressed(KeyEvent e) {
-        currentlyPressed.put(e.getKeyCode(), true);
-
-    }
-
-    @Override
-    public void keyReleased(KeyEvent e) {
-        currentlyPressed.put(e.getKeyCode(), false);
-    }
-
-    @Override
-    public void mouseClicked(MouseEvent e) {
-
-    }
-
-    @Override
-    public void mousePressed(MouseEvent e) {
-
-    }
-
-    @Override
-    public void mouseReleased(MouseEvent e) {
-
-    }
-
-    @Override
-    public void mouseEntered(MouseEvent e) {
-
-    }
-
-    @Override
-    public void mouseExited(MouseEvent e) {
-
+    void addBindings()
+    {
+        bindings[Actions.MOVE_LEFT.ordinal()] = new Binding(KeyEvent.VK_LEFT, KeyEvent.VK_SHIFT, Input.getInstance());
+        bindings[Actions.MOVE_RIGHT.ordinal()] = new Binding(KeyEvent.VK_RIGHT, KeyEvent.VK_SHIFT, Input.getInstance());
+        bindings[Actions.FIRE.ordinal()] = new Binding(KeyEvent.VK_SPACE, Input.getInstance());
     }
 }

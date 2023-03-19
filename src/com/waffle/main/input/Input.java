@@ -10,10 +10,10 @@ import java.util.Map;
 
 public class Input implements KeyListener, MouseListener {
     private static Input INSTANCE = new Input();
-    private Map<Integer, Boolean> currentlyPressedKeys = new HashMap<>();
+    private Map<Integer, Boolean> currentButtons = new HashMap<>();
     public Point mousePosition = MouseInfo.getPointerInfo().getLocation();
     // Subtract component.getLocationOnScreen() to get mouse pos relative to component
-    
+
 
     public static Input getInstance() {
         return INSTANCE;
@@ -30,12 +30,12 @@ public class Input implements KeyListener, MouseListener {
 
     @Override
     public void keyPressed(KeyEvent e) {
-        currentlyPressedKeys.put(e.getKeyCode(), true);
+        currentButtons.put(e.getKeyCode(), true);
     }
 
     @Override
     public void keyReleased(KeyEvent e) {
-        currentlyPressedKeys.put(e.getKeyCode(), false);
+        currentButtons.put(e.getKeyCode(), false);
     }
 
     @Override
@@ -44,14 +44,11 @@ public class Input implements KeyListener, MouseListener {
     }
 
     @Override
-    public void mousePressed(MouseEvent e) {
-
-    }
+    public void mousePressed(MouseEvent e) { currentButtons.put(-e.getButton(), true);}
 
     @Override
-    public void mouseReleased(MouseEvent e) {
+    public void mouseReleased(MouseEvent e) { currentButtons.put(-e.getButton(), false);}
 
-    }
 
     @Override
     public void mouseEntered(MouseEvent e) {
@@ -61,5 +58,11 @@ public class Input implements KeyListener, MouseListener {
     @Override
     public void mouseExited(MouseEvent e) {
 
+    }
+
+
+    public boolean read(int buttonCode)
+    {
+        return currentButtons.get(buttonCode) != null && currentButtons.get(buttonCode);
     }
 }

@@ -37,6 +37,7 @@ public abstract class Game implements Runnable {
     public void init() {
         registerComponents();
         registerSystems();
+        this.start();
         executinator.execute(this);
     }
 
@@ -120,4 +121,6 @@ public abstract class Game implements Runnable {
     protected Window createWindow(int width, int height, String title) {
         return new Window(width, height, title, renderSystem, fontRenderSystem);
     }
+
+    public abstract void start();
 }
