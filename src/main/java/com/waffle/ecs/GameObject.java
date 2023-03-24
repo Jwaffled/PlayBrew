@@ -3,7 +3,7 @@ package com.waffle.ecs;
 public abstract class GameObject {
     protected World world;
     public int ID;
-    protected boolean isActive = true;
+    protected final boolean isActive = true;
 
     public final void setWorld(World world) {
         this.world = world;

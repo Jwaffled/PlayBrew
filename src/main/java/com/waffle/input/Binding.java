@@ -1,9 +1,9 @@
 package com.waffle.input;
 
 public class Binding {
-    public static int NO_BUTTON = -255;
-    private int button, modifier;
-    private Input input;
+    public final static int NO_BUTTON = -255;
+    private final int button, modifier;
+    private final Input input;
     public Binding(int code, Input input) {
         button = code;
         modifier = NO_BUTTON;

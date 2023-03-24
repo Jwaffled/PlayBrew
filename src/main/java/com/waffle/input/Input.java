@@ -10,7 +10,7 @@ import java.util.Map;
 
 public class Input implements KeyListener, MouseListener {
     private static Input INSTANCE = new Input();
-    private Map<Integer, Boolean> currentButtons = new HashMap<>();
+    private final Map<Integer, Boolean> currentButtons = new HashMap<>();
     public Point mousePosition = MouseInfo.getPointerInfo().getLocation();
     // Subtract component.getLocationOnScreen() to get mouse pos relative to component
 

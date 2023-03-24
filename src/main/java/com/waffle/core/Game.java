@@ -19,7 +19,7 @@ public abstract class Game implements Runnable {
     private final int fpsCap;
     private final ExecutorService executinator = Executors.newSingleThreadExecutor();
     protected Window window;
-    protected World world;
+    protected final World world;
     protected RenderSystem renderSystem;
     protected PhysicsSystem physicsSystem;
     protected FontRenderSystem fontRenderSystem;

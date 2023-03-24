@@ -1,5 +1,6 @@
 package com.waffle;
 
+import com.waffle.audio.SoundEffect;
 import com.waffle.core.Game;
 import com.waffle.input.*;
 import java.awt.event.KeyEvent;
@@ -7,6 +8,7 @@ import java.awt.event.MouseEvent;
 
 public class GameTest extends Game {
     private Player player;
+    private SoundEffect effect;
 
     private FrameCounter frameCount;
     private KeybindManager keybinds;
@@ -21,6 +23,8 @@ public class GameTest extends Game {
         super.update(dt);
         if(keybinds.triggered("Fire")) {
             player.shoot();
+            effect.restart();
+            effect.start();
         }
         if(keybinds.triggered("MoveLeft")) {
             player.moveLeft();
@@ -36,6 +40,13 @@ public class GameTest extends Game {
 
         player = new Player();
         frameCount = new FrameCounter();
+        try {
+            effect = new SoundEffect("soundEffectTest.wav");
+            //effect.setOverlap(true);
+        } catch(Exception e) {
+            System.out.println("Skill issue: " + e.getMessage());
+        }
+
 
         world.createGameObject(player);
         world.createGameObject(frameCount);

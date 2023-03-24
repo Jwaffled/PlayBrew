@@ -7,6 +7,7 @@ public class ECSSystem {
     protected Set<Integer> entities;
     protected World world;
 
+    @SuppressWarnings("unused")
     public ECSSystem() {
     }
 

@@ -5,7 +5,7 @@ import java.util.Map;
 
 // TODO: Differentiate between mouse and keyboard inputs more clearly; addMouseBind is kind of scuffed.
 public class KeybindManager {
-    private Map<String, Binding> keybindMap;
+    private final Map<String, Binding> keybindMap;
 
     public KeybindManager() {
         keybindMap = new HashMap<>();
