@@ -14,7 +14,7 @@ import java.awt.*;
 import java.util.BitSet;
 import java.util.concurrent.*;
 
-public abstract class Game implements Runnable {
+public abstract class Game implements Runnable, FreeableResource {
     public static final int DEFAULT_MAX_ENTITIES = 100000;
     private final int fpsCap;
     private final ExecutorService executinator = Executors.newSingleThreadExecutor();
@@ -64,6 +64,7 @@ public abstract class Game implements Runnable {
                 } catch(InterruptedException ignored) {}
             }
         }
+        this.free();
     }
 
     public void update(float dt) {

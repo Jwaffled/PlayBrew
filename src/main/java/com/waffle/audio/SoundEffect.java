@@ -1,10 +1,12 @@
 package com.waffle.audio;
 
+import com.waffle.core.FreeableResource;
+
 import javax.sound.sampled.*;
 import java.io.IOException;
 import java.io.InputStream;
 
-public class SoundEffect {
+public class SoundEffect implements FreeableResource {
     private final String path;
     private InputStream inputStream;
     private AudioInputStream audioStream;
@@ -51,7 +53,7 @@ public class SoundEffect {
         audioClip.start();
     }
 
-    public void close() {
+    public void free() {
         audioClip.close();
         try {
             inputStream.close();

@@ -42,7 +42,6 @@ public class GameTest extends Game {
         frameCount = new FrameCounter();
         try {
             effect = new SoundEffect("soundEffectTest.wav");
-            //effect.setOverlap(true);
         } catch(Exception e) {
             System.out.println("Skill issue: " + e.getMessage());
         }
@@ -56,8 +55,12 @@ public class GameTest extends Game {
         window.setVisible(true);
     }
 
-    private void addBindings()
-    {
+    @Override
+    public void free() {
+        effect.free();
+    }
+
+    private void addBindings() {
         keybinds.addKeybind("MoveLeft", KeyEvent.VK_LEFT);
         keybinds.addKeybind("MoveRight", KeyEvent.VK_RIGHT);
         keybinds.addMouseBind("Fire", MouseEvent.BUTTON1, KeyEvent.VK_SHIFT);
