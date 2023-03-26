@@ -14,8 +14,8 @@ public class Player extends GameObject {
 
     public Player() {
         try {
-            URL file = getClass().getClassLoader().getResource("ship.jpg");
-            sprite = new SpriteRenderComponent(new Vec2f(), ImageIO.read(file), 50, 50);
+            URL file = getClass().getClassLoader().getResource("ship.png");
+            sprite = new SpriteRenderComponent(new Vec2f(), ImageIO.read(file), 32, 32);
         } catch(Exception e) {
             System.out.println("ERROR: " + e.getMessage());
         }
