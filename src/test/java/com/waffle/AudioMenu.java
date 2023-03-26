@@ -8,7 +8,7 @@ import com.waffle.ecs.GameObject;
 public class AudioMenu extends GameObject {
     private FontRenderComponent fontRenderComponent;
     private TransformComponent transformComponent;
-    private float currentVolume;
+    private double currentVolume;
     @Override
     public void update(float dt) {
         fontRenderComponent.message = String.format("Current volume: %.2f", currentVolume);
@@ -20,7 +20,7 @@ public class AudioMenu extends GameObject {
         transformComponent = new TransformComponent(200, 200);
     }
 
-    public void setCurrentVolume(float volume) {
+    public void setCurrentVolume(double volume) {
         currentVolume = volume;
     }
 }

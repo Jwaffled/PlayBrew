@@ -5,6 +5,7 @@ import com.waffle.components.SpriteRenderComponent;
 import com.waffle.components.TransformComponent;
 import com.waffle.ecs.World;
 import com.waffle.input.Input;
+import com.waffle.render.Camera;
 import com.waffle.render.Window;
 import com.waffle.systems.FontRenderSystem;
 import com.waffle.systems.PhysicsSystem;
@@ -119,8 +120,12 @@ public abstract class Game implements Runnable, FreeableResource {
      * @param title the title of the window
      * @return A JPanel representing the main game window
      */
-    protected Window createWindow(int width, int height, String title) {
-        return new Window(width, height, title, spriteRenderSystem, fontRenderSystem);
+    protected Window createWindow(int width, int height, String title, Camera cam) {
+        return new Window(width, height, title, spriteRenderSystem, fontRenderSystem, cam);
+    }
+
+    protected Window createWindow(String title, Camera cam) {
+        return new Window(title, spriteRenderSystem, fontRenderSystem, cam);
     }
 
     public abstract void start();

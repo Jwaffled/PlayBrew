@@ -12,8 +12,7 @@ public abstract class Animation {
      * Instantiates an Animation given an array of sprites
      * @param anim the array of sprites to be used
      */
-    public Animation(Sprite[] anim)
-    {
+    public Animation(Sprite[] anim) {
         frames = anim;
         index = 0;
     }
@@ -23,11 +22,9 @@ public abstract class Animation {
      * @param files the pathnames containing image files
      * @throws IOException upon a bad/nonexistent file
      */
-    public Animation(String... files) throws IOException
-    {
+    public Animation(String... files) throws IOException {
         frames = new Sprite[files.length];
-        for(int i = 0; i < frames.length; i++)
-        {
+        for(int i = 0; i < frames.length; i++) {
             frames[index] = new Sprite(files[i]);
         }
     }
@@ -42,16 +39,14 @@ public abstract class Animation {
      * Gets the numbered frame (starting at one (1)) the animation will return next
      * @return the number of the next frame
      */
-    public int getFrameNumber()
-    {
+    public int getFrameNumber() {
         return index + 1;
     }
 
     /**
      *  Returns the animation to its pre-played condition
      */
-    public void reset()
-    {
+    public void reset() {
         index = 0;
     }
 
@@ -59,8 +54,7 @@ public abstract class Animation {
      * Gets the number of frames in the animation
      * @return the number of frames in the animation
      */
-    public int getAnimationLength()
-    {
+    public int getAnimationLength() {
         return frames.length;
     }
 

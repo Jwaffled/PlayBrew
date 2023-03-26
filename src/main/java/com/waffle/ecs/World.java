@@ -108,6 +108,9 @@ public class World {
         if(entitySig == null) {
             entitySig = new BitSet();
         }
+
+        //
+
         entitySig.set(componentManager.getComponentType(component.getClass()), true);
         entityManager.setSignature(entity, entitySig);
 

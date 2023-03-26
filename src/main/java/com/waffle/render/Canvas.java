@@ -12,9 +12,11 @@ public class Canvas extends JPanel {
     private final FontRenderSystem fontRenderSystem;
     private final BufferStrategy strategy;
     private int width, height;
-    public Canvas(SpriteRenderSystem system, FontRenderSystem system2, int width, int height, BufferStrategy s) {
+    private Camera camera;
+    public Canvas(SpriteRenderSystem system, FontRenderSystem system2, Camera cam, int width, int height, BufferStrategy s) {
         spriteRenderSystem = system;
         fontRenderSystem = system2;
+        camera = cam;
         this.width = width;
         this.height = height;
         this.setDoubleBuffered(false);
@@ -39,7 +41,7 @@ public class Canvas extends JPanel {
                 g.setColor(Color.WHITE);
                 g.fillRect(0, 0, width, height);
 
-                spriteRenderSystem.update(g);
+                spriteRenderSystem.update(g, camera, width, height);
                 fontRenderSystem.update(g);
 
                 g.dispose();

@@ -6,7 +6,7 @@ import java.io.IOException;
 /**
  * A class representing an animation that can loop after reaching the end
  */
-public class LoopingAnimation extends Animation{
+public class LoopingAnimation extends Animation {
     private int loopPoint;
     private int numLoops;
 
@@ -14,8 +14,7 @@ public class LoopingAnimation extends Animation{
      * Instantiates a LoopingAnimation given an array of sprites
      * @param anim the array of sprites to use
      */
-    public LoopingAnimation(Sprite[] anim)
-    {
+    public LoopingAnimation(Sprite[] anim) {
         super(anim);
         loopPoint = 0;
         numLoops = 0;
@@ -26,8 +25,7 @@ public class LoopingAnimation extends Animation{
      * @param files the path names all leading to image files
      * @throws IOException upon a bad/nonexistent file
      */
-    public LoopingAnimation(String... files) throws IOException
-    {
+    public LoopingAnimation(String... files) throws IOException {
         super(files);
         loopPoint = 0;
         numLoops = 0;
@@ -38,11 +36,9 @@ public class LoopingAnimation extends Animation{
      * @param loopPoint the frame index to return to
      * @param anim the array of sprites to use
      */
-    public LoopingAnimation(int loopPoint, Sprite[] anim)
-    {
+    public LoopingAnimation(int loopPoint, Sprite[] anim) {
         super(anim);
-        if(loopPoint >= anim.length || loopPoint < 0)
-        {
+        if(loopPoint >= anim.length || loopPoint < 0) {
             throw new IndexOutOfBoundsException("Cannot set loop point (" + loopPoint + ") outside of the animation [0," + frames.length + ")");
         }
         this.loopPoint = loopPoint;
@@ -55,11 +51,9 @@ public class LoopingAnimation extends Animation{
      * @param files the path names (all leading to image files)
      * @throws IOException upon a bad/nonexistent file
      */
-    public LoopingAnimation(int loopPoint, String... files) throws IOException
-    {
+    public LoopingAnimation(int loopPoint, String... files) throws IOException {
         super(files);
-        if(loopPoint >= files.length || loopPoint < 0)
-        {
+        if(loopPoint >= files.length || loopPoint < 0) {
             throw new IndexOutOfBoundsException("Cannot set loop point (" + loopPoint + ") outside of the animation [0," + frames.length + ")");
         }
         this.loopPoint = loopPoint;
@@ -73,8 +67,7 @@ public class LoopingAnimation extends Animation{
     public BufferedImage getFrame() {
         int ret = index;
         index++;
-        if(index == frames.length)
-        {
+        if(index == frames.length) {
             index = loopPoint;
             numLoops++;
         }
@@ -85,16 +78,14 @@ public class LoopingAnimation extends Animation{
      * Returns the number of times this animation has looped
      * @return the number of times this animation has looped
      */
-    public int getNumLoops()
-    {
+    public int getNumLoops() {
         return numLoops;
     }
 
     /**
      * Resets the LoopingAnimation to its original state
      */
-    public void reset()
-    {
+    public void reset() {
         super.reset();
         numLoops = 0;
     }
@@ -103,8 +94,7 @@ public class LoopingAnimation extends Animation{
      * Gets the index the animation loops back to
      * @return the index the animation loops back to
      */
-    public int getLoopPoint()
-    {
+    public int getLoopPoint() {
         return loopPoint;
     }
 }

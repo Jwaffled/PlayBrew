@@ -11,8 +11,7 @@ public class Sprite {
      * Initializes a frame given an image
      * @param sprite the image this frame represents
      */
-    public Sprite(BufferedImage sprite)
-    {
+    public Sprite(BufferedImage sprite) {
         this.image = sprite;
     }
 
@@ -21,8 +20,7 @@ public class Sprite {
      * @param filePath the file of the image the frame represents
      * @throws IOException upon a bad/nonexistent file
      */
-    public Sprite(String filePath) throws IOException
-    {
+    public Sprite(String filePath) throws IOException {
         image = ImageIO.read(getClass().getClassLoader().getResource(filePath));
     }
 }
