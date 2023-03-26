@@ -1,19 +1,19 @@
 package com.waffle.render;
 
 import com.waffle.systems.FontRenderSystem;
-import com.waffle.systems.RenderSystem;
+import com.waffle.systems.SpriteRenderSystem;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferStrategy;
 
 public class Canvas extends JPanel {
-    private final RenderSystem renderSystem;
+    private final SpriteRenderSystem spriteRenderSystem;
     private final FontRenderSystem fontRenderSystem;
     private final BufferStrategy strategy;
     private int width, height;
-    public Canvas(RenderSystem system, FontRenderSystem system2, int width, int height, BufferStrategy s) {
-        renderSystem = system;
+    public Canvas(SpriteRenderSystem system, FontRenderSystem system2, int width, int height, BufferStrategy s) {
+        spriteRenderSystem = system;
         fontRenderSystem = system2;
         this.width = width;
         this.height = height;
@@ -39,7 +39,7 @@ public class Canvas extends JPanel {
                 g.setColor(Color.WHITE);
                 g.fillRect(0, 0, width, height);
 
-                renderSystem.update(g);
+                spriteRenderSystem.update(g);
                 fontRenderSystem.update(g);
 
                 g.dispose();

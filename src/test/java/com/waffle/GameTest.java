@@ -11,7 +11,9 @@ public class GameTest extends Game {
     private SoundEffect effect;
 
     private FrameCounter frameCount;
+    private AudioMenu audioMenu;
     private KeybindManager keybinds;
+    private float currentVolume;
     public static GameTest INSTANCE = null;
 
     public GameTest() {
@@ -26,6 +28,19 @@ public class GameTest extends Game {
             effect.restart();
             effect.start();
         }
+
+        if(keybinds.triggered("VolUp")) {
+            currentVolume = effect.getVolumeControl().getValue() + 0.1f;
+            effect.getVolumeControl().setValue(currentVolume);
+            audioMenu.setCurrentVolume(currentVolume);
+        }
+
+        if(keybinds.triggered("VolDown")) {
+            currentVolume = effect.getVolumeControl().getValue() - 0.1f;
+            effect.getVolumeControl().setValue(currentVolume);
+            audioMenu.setCurrentVolume(currentVolume);
+        }
+
         if(keybinds.triggered("MoveLeft")) {
             player.moveLeft();
         } else if(keybinds.triggered("MoveRight")) {
@@ -40,6 +55,7 @@ public class GameTest extends Game {
 
         player = new Player();
         frameCount = new FrameCounter();
+        audioMenu = new AudioMenu();
         try {
             effect = new SoundEffect("soundEffectTest.wav");
         } catch(Exception e) {
@@ -49,6 +65,7 @@ public class GameTest extends Game {
 
         world.createGameObject(player);
         world.createGameObject(frameCount);
+        world.createGameObject(audioMenu);
 
         keybinds = new KeybindManager();
         addBindings();
@@ -64,5 +81,7 @@ public class GameTest extends Game {
         keybinds.addKeybind("MoveLeft", KeyEvent.VK_LEFT);
         keybinds.addKeybind("MoveRight", KeyEvent.VK_RIGHT);
         keybinds.addMouseBind("Fire", MouseEvent.BUTTON1, KeyEvent.VK_SHIFT);
+        keybinds.addKeybind("VolUp", KeyEvent.VK_UP);
+        keybinds.addKeybind("VolDown", KeyEvent.VK_DOWN);
     }
 }

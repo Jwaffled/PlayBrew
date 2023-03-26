@@ -9,9 +9,8 @@ public abstract class GameObject {
         this.world = world;
     }
 
-    public abstract void update(float dt);
-
     public abstract void start();
+    public abstract void update(float dt);
 
     public final <T extends IComponent> void addComponent(T component) {
         world.addComponent(this.ID, component);

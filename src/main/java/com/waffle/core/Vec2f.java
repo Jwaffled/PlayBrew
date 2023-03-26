@@ -33,7 +33,7 @@ public class Vec2f {
     }
 
     public Vec2f mul(Vec2f other) {
-        return new Vec2f(this.x *= other.x, this.y *= other.y);
+        return new Vec2f(this.x * other.x, this.y * other.y);
     }
 
     public Vec2f div(Vec2f other) {

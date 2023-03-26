@@ -4,10 +4,8 @@ import com.waffle.components.SpriteRenderComponent;
 import com.waffle.components.TransformComponent;
 import com.waffle.core.Vec2f;
 import com.waffle.ecs.GameObject;
-import com.waffle.ecs.*;
 
 import javax.imageio.ImageIO;
-import java.io.File;
 import java.net.URL;
 
 public class Player extends GameObject {

@@ -7,7 +7,7 @@ import com.waffle.ecs.ECSSystem;
 
 import java.awt.*;
 
-public class RenderSystem extends ECSSystem {
+public class SpriteRenderSystem extends ECSSystem {
     public void update(Graphics window) {
         for(int entity : entities) {
             TransformComponent comp = world.getComponent(entity, TransformComponent.class);

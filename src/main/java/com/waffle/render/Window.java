@@ -1,7 +1,7 @@
 package com.waffle.render;
 
 import com.waffle.systems.FontRenderSystem;
-import com.waffle.systems.RenderSystem;
+import com.waffle.systems.SpriteRenderSystem;
 
 import javax.swing.*;
 import java.awt.*;
@@ -10,7 +10,7 @@ import java.awt.event.*;
 public class Window extends JFrame {
     public final Canvas canvas;
 
-    public Window(int width, int height, String title, RenderSystem renderSystem, FontRenderSystem fontRenderSystem) {
+    public Window(int width, int height, String title, SpriteRenderSystem spriteRenderSystem, FontRenderSystem fontRenderSystem) {
         super(title);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setPreferredSize(new Dimension(width, height));
@@ -18,7 +18,7 @@ public class Window extends JFrame {
         requestFocus();
         pack();
         createBufferStrategy(2);
-        canvas = new Canvas(renderSystem, fontRenderSystem, width, height, getBufferStrategy());
+        canvas = new Canvas(spriteRenderSystem, fontRenderSystem, width, height, getBufferStrategy());
         setContentPane(canvas);
         addComponentListener(new ComponentAdapter() {
             @Override

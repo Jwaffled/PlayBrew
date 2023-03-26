@@ -8,7 +8,7 @@ import com.waffle.input.Input;
 import com.waffle.render.Window;
 import com.waffle.systems.FontRenderSystem;
 import com.waffle.systems.PhysicsSystem;
-import com.waffle.systems.RenderSystem;
+import com.waffle.systems.SpriteRenderSystem;
 
 import java.awt.*;
 import java.util.BitSet;
@@ -20,7 +20,7 @@ public abstract class Game implements Runnable, FreeableResource {
     private final ExecutorService executinator = Executors.newSingleThreadExecutor();
     protected Window window;
     protected final World world;
-    protected RenderSystem renderSystem;
+    protected SpriteRenderSystem spriteRenderSystem;
     protected PhysicsSystem physicsSystem;
     protected FontRenderSystem fontRenderSystem;
 
@@ -80,13 +80,13 @@ public abstract class Game implements Runnable, FreeableResource {
     }
 
     private void registerSystems() {
-        renderSystem = world.registerSystem(RenderSystem.class);
+        spriteRenderSystem = world.registerSystem(SpriteRenderSystem.class);
         {
-            renderSystem.setWorld(world);
+            spriteRenderSystem.setWorld(world);
             BitSet sig = new BitSet();
             sig.set(world.getComponentType(TransformComponent.class));
             sig.set(world.getComponentType(SpriteRenderComponent.class));
-            world.setSystemSignature(sig, RenderSystem.class);
+            world.setSystemSignature(sig, SpriteRenderSystem.class);
         }
 
         physicsSystem = world.registerSystem(PhysicsSystem.class);
@@ -120,7 +120,7 @@ public abstract class Game implements Runnable, FreeableResource {
      * @return A JPanel representing the main game window
      */
     protected Window createWindow(int width, int height, String title) {
-        return new Window(width, height, title, renderSystem, fontRenderSystem);
+        return new Window(width, height, title, spriteRenderSystem, fontRenderSystem);
     }
 
     public abstract void start();
