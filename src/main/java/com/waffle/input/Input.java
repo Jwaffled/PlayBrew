@@ -1,14 +1,11 @@
 package com.waffle.input;
 
 import java.awt.*;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
+import java.awt.event.*;
 import java.util.HashMap;
 import java.util.Map;
 
-public class Input implements KeyListener, MouseListener {
+public class Input implements KeyListener, MouseListener, MouseWheelListener {
     private static Input INSTANCE = new Input();
     private final Map<Integer, Boolean> currentButtons = new HashMap<>();
     public Point mousePosition = MouseInfo.getPointerInfo().getLocation();
@@ -67,5 +64,10 @@ public class Input implements KeyListener, MouseListener {
 
     public boolean read(int buttonCode) {
         return currentButtons.get(buttonCode) != null && currentButtons.get(buttonCode);
+    }
+
+    @Override
+    public void mouseWheelMoved(MouseWheelEvent e) {
+        System.out.println(e.getWheelRotation());
     }
 }

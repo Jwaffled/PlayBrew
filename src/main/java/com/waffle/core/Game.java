@@ -1,6 +1,7 @@
 package com.waffle.core;
 
 import com.waffle.components.FontRenderComponent;
+import com.waffle.components.OutlineComponent;
 import com.waffle.components.SpriteRenderComponent;
 import com.waffle.components.TransformComponent;
 import com.waffle.ecs.World;
@@ -8,6 +9,7 @@ import com.waffle.input.Input;
 import com.waffle.render.Camera;
 import com.waffle.render.Window;
 import com.waffle.systems.FontRenderSystem;
+import com.waffle.systems.GeometryRenderSystem;
 import com.waffle.systems.PhysicsSystem;
 import com.waffle.systems.SpriteRenderSystem;
 
@@ -24,6 +26,7 @@ public abstract class Game implements Runnable, FreeableResource {
     protected SpriteRenderSystem spriteRenderSystem;
     protected PhysicsSystem physicsSystem;
     protected FontRenderSystem fontRenderSystem;
+    protected GeometryRenderSystem geometryRenderSystem;
 
     public Game() {
         this(DEFAULT_MAX_ENTITIES, 60);
@@ -83,7 +86,6 @@ public abstract class Game implements Runnable, FreeableResource {
     private void registerSystems() {
         spriteRenderSystem = world.registerSystem(SpriteRenderSystem.class);
         {
-            spriteRenderSystem.setWorld(world);
             BitSet sig = new BitSet();
             sig.set(world.getComponentType(TransformComponent.class));
             sig.set(world.getComponentType(SpriteRenderComponent.class));
@@ -92,7 +94,6 @@ public abstract class Game implements Runnable, FreeableResource {
 
         physicsSystem = world.registerSystem(PhysicsSystem.class);
         {
-            physicsSystem.setWorld(world);
             BitSet sig = new BitSet();
             sig.set(world.getComponentType(TransformComponent.class));
             world.setSystemSignature(sig, PhysicsSystem.class);
@@ -100,11 +101,18 @@ public abstract class Game implements Runnable, FreeableResource {
 
         fontRenderSystem = world.registerSystem(FontRenderSystem.class);
         {
-            fontRenderSystem.setWorld(world);
             BitSet sig = new BitSet();
             sig.set(world.getComponentType(TransformComponent.class));
             sig.set(world.getComponentType(FontRenderComponent.class));
             world.setSystemSignature(sig, FontRenderSystem.class);
+        }
+
+        geometryRenderSystem = world.registerSystem(GeometryRenderSystem.class);
+        {
+            BitSet sig = new BitSet();
+            sig.set(world.getComponentType(OutlineComponent.class));
+            sig.set(world.getComponentType(TransformComponent.class));
+            world.setSystemSignature(sig, GeometryRenderSystem.class);
         }
     }
 
@@ -112,6 +120,7 @@ public abstract class Game implements Runnable, FreeableResource {
         world.registerComponent(TransformComponent.class);
         world.registerComponent(SpriteRenderComponent.class);
         world.registerComponent(FontRenderComponent.class);
+        world.registerComponent(OutlineComponent.class);
     }
 
     /**
@@ -121,11 +130,11 @@ public abstract class Game implements Runnable, FreeableResource {
      * @return A JPanel representing the main game window
      */
     protected Window createWindow(int width, int height, String title, Camera cam) {
-        return new Window(width, height, title, spriteRenderSystem, fontRenderSystem, cam);
+        return new Window(width, height, title, spriteRenderSystem, fontRenderSystem, geometryRenderSystem, cam);
     }
 
     protected Window createWindow(String title, Camera cam) {
-        return new Window(title, spriteRenderSystem, fontRenderSystem, cam);
+        return new Window(title, spriteRenderSystem, fontRenderSystem, geometryRenderSystem, cam);
     }
 
     public abstract void start();

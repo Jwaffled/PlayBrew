@@ -1,6 +1,7 @@
 package com.waffle.render;
 
 import com.waffle.systems.FontRenderSystem;
+import com.waffle.systems.GeometryRenderSystem;
 import com.waffle.systems.SpriteRenderSystem;
 
 import javax.swing.*;
@@ -10,12 +11,14 @@ import java.awt.image.BufferStrategy;
 public class Canvas extends JPanel {
     private final SpriteRenderSystem spriteRenderSystem;
     private final FontRenderSystem fontRenderSystem;
+    private final GeometryRenderSystem geometryRenderSystem;
     private final BufferStrategy strategy;
     private int width, height;
     private Camera camera;
-    public Canvas(SpriteRenderSystem system, FontRenderSystem system2, Camera cam, int width, int height, BufferStrategy s) {
+    public Canvas(SpriteRenderSystem system, FontRenderSystem system2, GeometryRenderSystem system3, Camera cam, int width, int height, BufferStrategy s) {
         spriteRenderSystem = system;
         fontRenderSystem = system2;
+        geometryRenderSystem = system3;
         camera = cam;
         this.width = width;
         this.height = height;
@@ -43,6 +46,7 @@ public class Canvas extends JPanel {
 
                 spriteRenderSystem.update(g, camera, width, height);
                 fontRenderSystem.update(g);
+                geometryRenderSystem.update(g);
 
                 g.dispose();
             } while(strategy.contentsRestored());

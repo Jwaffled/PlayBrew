@@ -15,13 +15,21 @@ public class SimpleAnimation extends Animation {
         super(anim);
     }
 
+    public SimpleAnimation(String dir) throws IOException {
+        super(dir);
+    }
+
+    public SimpleAnimation(String dir, int updateFrequency) throws IOException {
+        super(dir, updateFrequency);
+    }
+
     /**
      * Instantiates a SimpleAnimation given file path names
      * @param files path names all leading to image files
      * @throws IOException upon a bad/nonexistent file
      */
-    public SimpleAnimation(String... files) throws IOException {
-        super(files);
+    public SimpleAnimation(String dir, String... files) throws IOException {
+        super(dir, files);
     }
 
     /**
@@ -39,10 +47,14 @@ public class SimpleAnimation extends Animation {
     @Override
     public BufferedImage getFrame() {
         int ret = index;
-        if(ret >= frames.length) {
-            ret = frames.length - 1;
+        if(counter.isReady()) {
+            if(ret >= frames.length) {
+                ret = frames.length - 1;
+            }
+            index++;
         }
-        index++;
+
+        counter.update();
         return frames[index].image;
     }
 

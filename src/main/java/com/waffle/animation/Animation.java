@@ -1,12 +1,16 @@
 package com.waffle.animation;
 
+import com.waffle.core.UpdateCounter;
+
 import java.awt.image.BufferedImage;
+import java.io.File;
 import java.io.IOException;
 
 public abstract class Animation {
 
     protected Sprite[] frames;
     protected int index;
+    protected UpdateCounter counter;
 
     /**
      * Instantiates an Animation given an array of sprites
@@ -15,6 +19,7 @@ public abstract class Animation {
     public Animation(Sprite[] anim) {
         frames = anim;
         index = 0;
+        counter = new UpdateCounter(1);
     }
 
     /**
@@ -22,11 +27,31 @@ public abstract class Animation {
      * @param files the pathnames containing image files
      * @throws IOException upon a bad/nonexistent file
      */
-    public Animation(String... files) throws IOException {
+    public Animation(String dir, String... files) throws IOException {
         frames = new Sprite[files.length];
         for(int i = 0; i < frames.length; i++) {
-            frames[index] = new Sprite(files[i]);
+            frames[i] = new Sprite(dir + files[i]);
         }
+        counter = new UpdateCounter(1);
+    }
+
+    public Animation(String directory) throws IOException {
+        final File f = new File(getClass().getClassLoader().getResource(directory).getPath());
+        final String[] files = f.list();
+        frames = new Sprite[files.length];
+        for(int i = 0; i < files.length; i++) {
+            frames[i] = new Sprite(directory + "/" + files[i]);
+        }
+        counter = new UpdateCounter(1);
+    }
+
+    public Animation(String dir, int updateFrequency) throws IOException {
+        this(dir);
+        counter = new UpdateCounter(updateFrequency);
+    }
+
+    public void setUpdateFrequency(int frequency) {
+        counter = new UpdateCounter(frequency);
     }
 
     /**

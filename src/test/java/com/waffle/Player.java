@@ -1,5 +1,6 @@
 package com.waffle;
 
+import com.waffle.animation.LoopingAnimation;
 import com.waffle.components.SpriteRenderComponent;
 import com.waffle.components.TransformComponent;
 import com.waffle.core.Vec2f;
@@ -10,31 +11,34 @@ import java.net.URL;
 
 public class Player extends GameObject {
     private SpriteRenderComponent sprite;
-    private final TransformComponent transform;
+    private LoopingAnimation animation;
+    private TransformComponent transform;
 
     public Player() {
-        try {
-            URL file = getClass().getClassLoader().getResource("ship.png");
-            sprite = new SpriteRenderComponent(new Vec2f(), ImageIO.read(file), 32, 32);
-        } catch(Exception e) {
-            System.out.println("ERROR: " + e.getMessage());
-        }
-        transform = new TransformComponent(new Vec2f(300, 300));
+
     }
 
     @Override
     public void update(float dt) {
-
+        sprite.sprite = animation.getFrame();
     }
 
     @Override
     public void start() {
+        try {
+            URL file = getClass().getClassLoader().getResource("ship.png");
+            sprite = new SpriteRenderComponent(new Vec2f(), ImageIO.read(file), 32, 32);
+            animation = new LoopingAnimation("PlayerAnimation", 6);
+        } catch(Exception e) {
+            System.out.println("ERROR: " + e.getMessage());
+        }
+        transform = new TransformComponent(new Vec2f(300, 300));
 
     }
 
     public void shoot() {
         for(int i = 0; i < 100; i++) {
-            world.createGameObject(new Bullet((int)(Math.random() * 150), transform.position.x, transform.position.y));
+            world.createGameObject(new Bullet((int)(Math.random() * 150 + 10), transform.position.x, transform.position.y));
         }
     }
 

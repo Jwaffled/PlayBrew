@@ -21,7 +21,8 @@ public class SpriteRenderSystem extends ECSSystem {
                         .sub(camera.getPosition());
 
                 scalar = new Vec2f(sWidth, sHeight)
-                        .div(new Vec2f(camera.getWidth(), camera.getHeight()));
+                        .div(new Vec2f(camera.getWidth(), camera.getHeight()))
+                        .div(camera.getZoomScale());
             } else {
                 drawPos = comp.position.add(s.position);
             }
@@ -31,7 +32,7 @@ public class SpriteRenderSystem extends ECSSystem {
             final int finalX = (int)(drawPos.x * scalar.x);
             final int finalY = (int)(drawPos.y * scalar.y);
 
-            if(!(drawPos.x + finalWidth < 0 || drawPos.x > camera.getWidth() || drawPos.y + finalHeight < 0 || drawPos.y - finalHeight > camera.getHeight())) {
+            if(RenderUtils.shouldRender(drawPos, finalWidth, finalHeight, camera)) {
                 window.drawImage(s.sprite, finalX, finalY, finalWidth, finalHeight, null);
             }
         }

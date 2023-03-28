@@ -20,13 +20,21 @@ public class LoopingAnimation extends Animation {
         numLoops = 0;
     }
 
+    public LoopingAnimation(String dir) throws IOException {
+        super(dir);
+    }
+
+    public LoopingAnimation(String dir, int updateFrequency) throws IOException {
+        super(dir, updateFrequency);
+    }
+
     /**
      * Instantiates a LoopingAnimation given file path names
      * @param files the path names all leading to image files
      * @throws IOException upon a bad/nonexistent file
      */
-    public LoopingAnimation(String... files) throws IOException {
-        super(files);
+    public LoopingAnimation(String dir, String... files) throws IOException {
+        super(dir, files);
         loopPoint = 0;
         numLoops = 0;
     }
@@ -51,8 +59,8 @@ public class LoopingAnimation extends Animation {
      * @param files the path names (all leading to image files)
      * @throws IOException upon a bad/nonexistent file
      */
-    public LoopingAnimation(int loopPoint, String... files) throws IOException {
-        super(files);
+    public LoopingAnimation(int loopPoint, String dir, String... files) throws IOException {
+        super(dir, files);
         if(loopPoint >= files.length || loopPoint < 0) {
             throw new IndexOutOfBoundsException("Cannot set loop point (" + loopPoint + ") outside of the animation [0," + frames.length + ")");
         }
@@ -66,11 +74,16 @@ public class LoopingAnimation extends Animation {
     @Override
     public BufferedImage getFrame() {
         int ret = index;
-        index++;
-        if(index == frames.length) {
-            index = loopPoint;
-            numLoops++;
+        if(counter.isReady()) {
+            index++;
+            if(index == frames.length) {
+                index = loopPoint;
+                numLoops++;
+            }
         }
+
+        counter.update();
+
         return frames[ret].image;
     }
 
