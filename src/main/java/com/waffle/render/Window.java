@@ -22,7 +22,7 @@ public class Window extends JFrame {
                 sys3,
                 cam
         );
-        //device.setFullScreenWindow(this);
+        device.setFullScreenWindow(this);
     }
 
     public Window(int width, int height, String title, SpriteRenderSystem sys, FontRenderSystem sys2, GeometryRenderSystem sys3, Camera cam) {

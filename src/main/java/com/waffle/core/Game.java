@@ -14,6 +14,7 @@ import com.waffle.systems.PhysicsSystem;
 import com.waffle.systems.SpriteRenderSystem;
 
 import java.awt.*;
+import java.awt.event.WindowEvent;
 import java.util.BitSet;
 import java.util.concurrent.*;
 
@@ -50,25 +51,31 @@ public abstract class Game implements Runnable, FreeableResource {
         long currentTime = System.nanoTime();
         double accum = 0;
         float dt = 1.0f / fpsCap;
-        while(!Thread.interrupted()) {
-            if(window != null) {
-                long newTime = System.nanoTime();
-                long frameTime = newTime - currentTime;
-                if(frameTime > 250 * 1e9) {
-                    frameTime = (long)(250 * 1e9);
+        try {
+            while(!Thread.interrupted()) {
+                if(window != null) {
+                    long newTime = System.nanoTime();
+                    long frameTime = newTime - currentTime;
+                    if(frameTime > 250 * 1e9) {
+                        frameTime = (long)(250 * 1e9);
+                    }
+                    currentTime = newTime;
+                    accum += frameTime / 1e9;
+                    while(accum >= dt) {
+                        this.update(dt);
+                        accum -= dt;
+                    }
+                    try {
+                        Thread.sleep(Math.round(dt));
+                    } catch(InterruptedException ignored) {}
                 }
-                currentTime = newTime;
-                accum += frameTime / 1e9;
-                while(accum >= dt) {
-                    this.update(dt);
-                    accum -= dt;
-                }
-                try {
-                    Thread.sleep(Math.round(dt));
-                } catch(InterruptedException ignored) {}
             }
+        } finally {
+            if(window != null) {
+                window.dispatchEvent(new WindowEvent(window, WindowEvent.WINDOW_CLOSING));
+            }
+            this.free();
         }
-        this.free();
     }
 
     public void update(float dt) {

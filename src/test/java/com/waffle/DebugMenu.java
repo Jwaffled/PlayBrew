@@ -11,7 +11,7 @@ public class DebugMenu extends GameObject {
     private TransformComponent transform;
     private FontRenderComponent text;
     private FrameCounter counter;
-    private final int stringCount = 3;
+    private final int stringCount = 4;
 
     @Override
     public void start() {
@@ -28,6 +28,7 @@ public class DebugMenu extends GameObject {
                 "Current FPS: %.4f\n"
                 + "Volume (dB): %.2f\n"
                 + "Entity count: %d\n"
-        , counter.getFps(), GameTest.INSTANCE.currentVolume, world.getLivingEntityCount());
+                + "Camera zoom: %.1f\n"
+        , counter.getFps(), GameTest.INSTANCE.currentVolume, world.getLivingEntityCount(), GameTest.INSTANCE.camera.zoomScale);
     }
 }

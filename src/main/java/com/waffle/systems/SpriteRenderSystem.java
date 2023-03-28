@@ -18,11 +18,11 @@ public class SpriteRenderSystem extends ECSSystem {
             if(camera != null) {
                 drawPos = comp.position
                         .add(s.position)
-                        .sub(camera.getPosition());
+                        .sub(camera.position);
 
                 scalar = new Vec2f(sWidth, sHeight)
                         .div(new Vec2f(camera.getWidth(), camera.getHeight()))
-                        .div(camera.getZoomScale());
+                        .div(camera.zoomScale);
             } else {
                 drawPos = comp.position.add(s.position);
             }

@@ -4,8 +4,8 @@ import com.waffle.core.Vec2f;
 
 public class Camera {
     private int width, height;
-    private Vec2f position;
-    private float zoomScale;
+    public Vec2f position;
+    public float zoomScale;
 
     public Camera(int width, int height) {
         this.width = width;
@@ -20,23 +20,11 @@ public class Camera {
         this.position = position;
     }
 
-    public Vec2f getPosition() {
-        return this.position;
-    }
-
     public int getWidth() {
         return this.width;
     }
 
     public int getHeight() {
         return this.height;
-    }
-
-    public float getZoomScale() {
-        return zoomScale;
-    }
-
-    public void setZoomScale(float newZoom) {
-        zoomScale = newZoom;
     }
 }

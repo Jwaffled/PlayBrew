@@ -21,6 +21,21 @@ public class Player extends GameObject {
     @Override
     public void update(float dt) {
         sprite.sprite = animation.getFrame();
+        if(GameTest.INSTANCE.keybinds.triggered("MoveLeft")) {
+            transform.position.addX(-450 * dt);
+        }
+
+        if(GameTest.INSTANCE.keybinds.triggered("MoveRight")) {
+            transform.position.addX(450 * dt);
+        }
+
+        if(GameTest.INSTANCE.keybinds.triggered("MoveUp")) {
+            transform.position.addY(-450 * dt);
+        }
+
+        if(GameTest.INSTANCE.keybinds.triggered("MoveDown")) {
+            transform.position.addY(450 * dt);
+        }
     }
 
     @Override

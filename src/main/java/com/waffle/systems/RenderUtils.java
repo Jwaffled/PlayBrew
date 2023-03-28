@@ -7,6 +7,6 @@ public final class RenderUtils {
     private RenderUtils() {}
 
     public static boolean shouldRender(Vec2f drawPos, int width, int height, Camera cam) {
-        return !(drawPos.x + width < 0 || drawPos.x > cam.getWidth() * cam.getZoomScale() || drawPos.y + height < 0 || drawPos.y - height > cam.getHeight() * cam.getZoomScale());
+        return !(drawPos.x + width < 0 || drawPos.x > cam.getWidth() * cam.zoomScale || drawPos.y + height < 0 || drawPos.y - height > cam.getHeight() * cam.zoomScale);
     }
 }

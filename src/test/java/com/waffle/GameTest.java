@@ -14,9 +14,9 @@ public class GameTest extends Game {
     private Player player;
     private StereoSoundEffect effect;
     private StereoSoundEffect bgm;
-    private KeybindManager keybinds;
-    private Camera camera;
     private DebugMenu debug;
+    public Camera camera;
+    public KeybindManager keybinds;
     public float currentVolume;
     public FrameCounter frameCounter;
     public static GameTest INSTANCE = null;
@@ -46,41 +46,25 @@ public class GameTest extends Game {
         }
 
         if(keybinds.triggered("PanUp")) {
-            camera.getPosition().addY(-10 * camera.getZoomScale());
+            camera.position.addY(-10 * camera.zoomScale);
         }
 
         if(keybinds.triggered("PanDown")) {
-            camera.getPosition().addY(10 * camera.getZoomScale());
+            camera.position.addY(10 * camera.zoomScale);
         }
 
         if(keybinds.triggered("PanLeft")) {
-            camera.getPosition().addX(-10 * camera.getZoomScale());
+            camera.position.addX(-10 * camera.zoomScale);
         }
 
         if(keybinds.triggered("PanRight")) {
-            camera.getPosition().addX(10 * camera.getZoomScale());
+            camera.position.addX(10 * camera.zoomScale);
         }
 
         if(keybinds.triggered("Fire")) {
             player.shoot();
             effect.restart();
             effect.start();
-        }
-
-        if(keybinds.triggered("MoveLeft")) {
-            player.moveLeft();
-        }
-
-        if(keybinds.triggered("MoveRight")) {
-            player.moveRight();
-        }
-
-        if(keybinds.triggered("MoveUp")) {
-            player.moveUp();
-        }
-
-        if(keybinds.triggered("MoveDown")) {
-            player.moveDown();
         }
     }
 
@@ -92,7 +76,7 @@ public class GameTest extends Game {
         window.addMouseListener(Input.getInstance());
         window.addKeyListener(Input.getInstance());
         window.addMouseWheelListener(e -> {
-            camera.setZoomScale(camera.getZoomScale() + (e.getWheelRotation() * 0.1f));
+            camera.zoomScale += e.getWheelRotation() * 0.1f;
         });
 
         player = new Player();
