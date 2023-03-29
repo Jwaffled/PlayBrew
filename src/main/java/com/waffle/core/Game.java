@@ -1,7 +1,7 @@
 package com.waffle.core;
 
 import com.waffle.components.FontRenderComponent;
-import com.waffle.components.OutlineComponent;
+import com.waffle.components.GeometryComponent;
 import com.waffle.components.SpriteRenderComponent;
 import com.waffle.components.TransformComponent;
 import com.waffle.ecs.World;
@@ -117,7 +117,7 @@ public abstract class Game implements Runnable, FreeableResource {
         geometryRenderSystem = world.registerSystem(GeometryRenderSystem.class);
         {
             BitSet sig = new BitSet();
-            sig.set(world.getComponentType(OutlineComponent.class));
+            sig.set(world.getComponentType(GeometryComponent.class));
             sig.set(world.getComponentType(TransformComponent.class));
             world.setSystemSignature(sig, GeometryRenderSystem.class);
         }
@@ -127,7 +127,7 @@ public abstract class Game implements Runnable, FreeableResource {
         world.registerComponent(TransformComponent.class);
         world.registerComponent(SpriteRenderComponent.class);
         world.registerComponent(FontRenderComponent.class);
-        world.registerComponent(OutlineComponent.class);
+        world.registerComponent(GeometryComponent.class);
     }
 
     /**

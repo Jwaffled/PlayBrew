@@ -45,8 +45,8 @@ public class Canvas extends JPanel {
                 g.fillRect(0, 0, width, height);
 
                 spriteRenderSystem.update(g, camera, width, height);
-                fontRenderSystem.update(g);
                 geometryRenderSystem.update(g);
+                fontRenderSystem.update(g);
 
                 g.dispose();
             } while(strategy.contentsRestored());

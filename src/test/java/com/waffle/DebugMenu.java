@@ -1,13 +1,17 @@
 package com.waffle;
 
 import com.waffle.components.FontRenderComponent;
-import com.waffle.components.OutlineComponent;
+import com.waffle.components.GeometryComponent;
 import com.waffle.components.TransformComponent;
 import com.waffle.core.Vec2f;
 import com.waffle.ecs.GameObject;
 
+import java.awt.*;
+
+import static com.waffle.core.Constants.*;
+
 public class DebugMenu extends GameObject {
-    private OutlineComponent outline;
+    private GeometryComponent outline;
     private TransformComponent transform;
     private FontRenderComponent text;
     private FrameCounter counter;
@@ -16,7 +20,7 @@ public class DebugMenu extends GameObject {
     @Override
     public void start() {
         counter = GameTest.INSTANCE.frameCounter;
-        outline = new OutlineComponent(300, 5 + 5 + (stringCount * 16));
+        outline = new GeometryComponent(ShapeType.RECTANGLE, DrawMode.FILLED, Color.RED, 300, 5 + 5 + (stringCount * 16));
         text = new FontRenderComponent("");
         text.position = new Vec2f(5, 10);
         transform = new TransformComponent(20, 20);

@@ -1,18 +1,38 @@
 package com.waffle.systems;
 
-import com.waffle.components.OutlineComponent;
+import com.waffle.components.GeometryComponent;
 import com.waffle.components.TransformComponent;
 import com.waffle.ecs.ECSSystem;
 
 import java.awt.*;
 
+import static com.waffle.core.Constants.*;
+
 public class GeometryRenderSystem extends ECSSystem {
     public void update(Graphics window) {
         for(int entity : entities) {
-            OutlineComponent c = world.getComponent(entity, OutlineComponent.class);
+            GeometryComponent c = world.getComponent(entity, GeometryComponent.class);
             TransformComponent t = world.getComponent(entity, TransformComponent.class);
-            window.setColor(Color.black);
-            window.drawRect((int)t.position.x, (int)t.position.y, c.width, c.height);
+            window.setColor(c.color);
+            switch(c.shape) {
+                case RECTANGLE: {
+                    if(c.mode == DrawMode.FILLED) {
+                        window.fillRect((int)t.position.x, (int)t.position.y, c.width, c.height);
+                    } else {
+                        window.drawRect((int)t.position.x, (int)t.position.y, c.width, c.height);
+                    }
+
+                    break;
+                }
+                case ELLIPSE: {
+                    if(c.mode == DrawMode.FILLED) {
+                        window.fillOval((int)t.position.x, (int)t.position.y, c.width, c.height);
+                    } else {
+                        window.drawOval((int)t.position.x, (int)t.position.y, c.width, c.height);
+                    }
+                    break;
+                }
+            }
         }
     }
 }

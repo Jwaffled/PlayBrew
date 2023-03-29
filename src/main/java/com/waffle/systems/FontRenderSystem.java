@@ -20,8 +20,6 @@ public class FontRenderSystem extends ECSSystem {
                 window.drawString(sLine, (int)drawPos.x, (int)(drawPos.y + lineOffset + fontHeight / 2));
                 lineOffset += fontHeight;
             }
-
-            //window.drawString(s.message, (int)drawPos.x, (int)drawPos.y);
         }
 
     }
