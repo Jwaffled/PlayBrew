@@ -1,9 +1,5 @@
 package com.waffle;
 
-import com.waffle.components.FontRenderComponent;
-import com.waffle.components.TransformComponent;
-import com.waffle.ecs.GameObject;
-
 public class FrameCounter {
     private long lastFrameTime = System.nanoTime();
     private double currentFps;

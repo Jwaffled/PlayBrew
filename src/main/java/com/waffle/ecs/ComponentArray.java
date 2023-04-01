@@ -60,7 +60,7 @@ public class ComponentArray<T extends IComponent> implements IComponentArray {
     }
 
     public void entityDestroyed(int entity) {
-        if(!entityToIndexMap.containsKey(entity)) {
+        if(entityToIndexMap.containsKey(entity)) {
             removeData(entity);
         }
     }

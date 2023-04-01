@@ -52,24 +52,10 @@ public class Player extends GameObject {
     }
 
     public void shoot() {
-        for(int i = 0; i < 100; i++) {
-            world.createGameObject(new Bullet((int)(Math.random() * 150 + 10), transform.position.x, transform.position.y));
-        }
+        world.createGameObject(new Bullet((int)(Math.random() * 150 + 10), transform.position.x, transform.position.y));
     }
 
-    public void moveLeft() {
-        transform.position.addX(-15);
-    }
-
-    public void moveRight() {
-        transform.position.addX(15);
-    }
-
-    public void moveUp() {
-        transform.position.addY(-15);
-    }
-
-    public void moveDown() {
-        transform.position.addY(15);
+    public Vec2f getPosition() {
+        return transform.position;
     }
 }

@@ -206,4 +206,23 @@ public class World {
     public int getMaxEntities() {
         return entityManager.getMaxEntityCount();
     }
+
+    public void clearAllExcept(int... protect) {
+        Set<Integer> protectedObjects = new HashSet<>();
+        for(int a : protect) {
+            protectedObjects.add(a);
+        }
+
+        Set<GameObject> toRemove = new HashSet<>();
+
+        for(GameObject o : gameObjects) {
+            if(!protectedObjects.contains(o.ID)) {
+                toRemove.add(o);
+            }
+        }
+
+        for(GameObject o : toRemove) {
+            removeGameObject(o);
+        }
+    }
 }

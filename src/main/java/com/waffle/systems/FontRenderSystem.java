@@ -15,7 +15,8 @@ public class FontRenderSystem extends ECSSystem {
             Vec2f drawPos = comp.position.add(s.position);
             final int fontHeight = window.getFontMetrics().getHeight();
             int lineOffset = 0;
-            window.setColor(Color.black);
+            window.setColor(s.color);
+            window.setFont(s.font);
             for(String sLine : s.message.split("\n")) {
                 window.drawString(sLine, (int)drawPos.x, (int)(drawPos.y + lineOffset + fontHeight / 2));
                 lineOffset += fontHeight;

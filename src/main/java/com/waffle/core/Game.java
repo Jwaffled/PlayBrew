@@ -70,12 +70,16 @@ public abstract class Game implements Runnable, FreeableResource {
                     } catch(InterruptedException ignored) {}
                 }
             }
-        } finally {
-            if(window != null) {
-                window.dispatchEvent(new WindowEvent(window, WindowEvent.WINDOW_CLOSING));
-            }
-            this.free();
+        } catch(Exception e) {
+            System.out.println("EXCEPTION INTERNAL GAME: " + e.getMessage() + " STACKTRACE: " + e.getStackTrace());
+            throw e;
         }
+//        } finally {
+//            if(window != null) {
+//                window.dispatchEvent(new WindowEvent(window, WindowEvent.WINDOW_CLOSING));
+//            }
+//            this.free();
+//        }
     }
 
     public void update(float dt) {

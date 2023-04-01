@@ -5,13 +5,12 @@ import com.waffle.core.Game;
 import com.waffle.input.*;
 import com.waffle.render.Camera;
 
-import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.WindowEvent;
 
 public class GameTest extends Game {
-    private Player player;
+    public Player player;
     private StereoSoundEffect effect;
     private StereoSoundEffect bgm;
     private DebugMenu debug;
@@ -31,6 +30,10 @@ public class GameTest extends Game {
 
         if(keybinds.triggered("Exit")) {
             window.dispatchEvent(new WindowEvent(window, WindowEvent.WINDOW_CLOSING));
+        }
+
+        if(keybinds.triggered("Clear")) {
+            world.clearAllExcept(player.ID, debug.ID);
         }
 
         if(keybinds.triggered("VolUp")) {
@@ -124,6 +127,8 @@ public class GameTest extends Game {
         keybinds.addKeybind("PanUp", KeyEvent.VK_W);
 
         keybinds.addMouseBind("Fire", MouseEvent.BUTTON1);
+
+        keybinds.addKeybind("Clear", KeyEvent.VK_SPACE);
 
         keybinds.addKeybind("Exit", KeyEvent.VK_ESCAPE);
     }
