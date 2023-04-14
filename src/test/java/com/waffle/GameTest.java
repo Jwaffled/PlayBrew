@@ -2,9 +2,13 @@ package com.waffle;
 
 import com.waffle.audio.StereoSoundEffect;
 import com.waffle.core.Game;
+import com.waffle.core.Vec2f;
 import com.waffle.input.*;
 import com.waffle.render.Camera;
+import com.waffle.ui.Button;
+import com.waffle.ui.ButtonEventListener;
 
+import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.WindowEvent;
@@ -14,6 +18,7 @@ public class GameTest extends Game {
     private StereoSoundEffect effect;
     private StereoSoundEffect bgm;
     private DebugMenu debug;
+    private Button button;
     public Camera camera;
     public KeybindManager keybinds;
     public float currentVolume;
@@ -85,6 +90,44 @@ public class GameTest extends Game {
         player = new Player();
         frameCounter = new FrameCounter();
         debug = new DebugMenu();
+        button = Button.newBuilder()
+                .setX(100)
+                .setY(300)
+                .setWidth(100)
+                .setHeight(50)
+                .setButtonMessage("Testing")
+                .setMessageOffset(new Vec2f(30, 20))
+                .addButtonListener(new ButtonEventListener() {
+                    @Override
+                    public void buttonClicked() {
+                    }
+
+                    @Override
+                    public void buttonPressed() {
+                        button.geometryComponent.color = Color.DARK_GRAY;
+                    }
+
+                    @Override
+                    public void buttonReleased() {
+                        if(button.mouseWithin()) {
+                            button.geometryComponent.color = Color.GRAY;
+                        } else {
+                            button.geometryComponent.color = Color.LIGHT_GRAY;
+                        }
+
+                    }
+
+                    @Override
+                    public void mouseEntered() {
+                        button.geometryComponent.color = Color.GRAY;
+                    }
+
+                    @Override
+                    public void mouseExited() {
+                        button.geometryComponent.color = Color.LIGHT_GRAY;
+                    }
+                })
+                .build();
 
 
         try {
@@ -101,6 +144,7 @@ public class GameTest extends Game {
 
         world.createGameObject(player);
         world.createGameObject(debug);
+        world.createGameObject(button);
 
         keybinds = new KeybindManager();
         addBindings();

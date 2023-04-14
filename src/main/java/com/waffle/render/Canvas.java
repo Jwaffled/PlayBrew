@@ -13,8 +13,8 @@ public class Canvas extends JPanel {
     private final FontRenderSystem fontRenderSystem;
     private final GeometryRenderSystem geometryRenderSystem;
     private final BufferStrategy strategy;
+    private final Camera camera;
     private int width, height;
-    private Camera camera;
     public Canvas(SpriteRenderSystem system, FontRenderSystem system2, GeometryRenderSystem system3, Camera cam, int width, int height, BufferStrategy s) {
         spriteRenderSystem = system;
         fontRenderSystem = system2;

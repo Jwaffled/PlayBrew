@@ -3,7 +3,7 @@ package com.waffle.ecs;
 public abstract class GameObject {
     protected World world;
     public int ID;
-    protected final boolean isActive = true;
+    protected boolean isActive = true;
 
     public final void setWorld(World world) {
         this.world = world;
@@ -26,5 +26,9 @@ public abstract class GameObject {
 
     public final boolean isActive() {
         return isActive;
+    }
+
+    public final void setActive(boolean active) {
+        isActive = active;
     }
 }

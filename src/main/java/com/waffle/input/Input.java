@@ -2,12 +2,14 @@ package com.waffle.input;
 
 import java.awt.*;
 import java.awt.event.*;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
 public class Input implements KeyListener, MouseListener, MouseWheelListener {
     private static Input INSTANCE = new Input();
     private final Map<Integer, Boolean> currentButtons = new HashMap<>();
+    private final ArrayList<MouseListener> listeners = new ArrayList<>();
     public Point mousePosition = MouseInfo.getPointerInfo().getLocation();
     // Subtract component.getLocationOnScreen() to get mouse pos relative to component
 
@@ -18,6 +20,10 @@ public class Input implements KeyListener, MouseListener, MouseWheelListener {
 
     private Input() {
         INSTANCE = this;
+    }
+
+    public void addMouseListener(MouseListener m) {
+        listeners.add(m);
     }
 
     @Override
@@ -37,28 +43,40 @@ public class Input implements KeyListener, MouseListener, MouseWheelListener {
 
     @Override
     public void mouseClicked(MouseEvent e) {
-
+        for(MouseListener m : listeners) {
+            m.mouseClicked(e);
+        }
     }
 
     @Override
     public void mousePressed(MouseEvent e) {
         currentButtons.put(-e.getButton(), true);
+        for(MouseListener m : listeners) {
+            m.mousePressed(e);
+        }
     }
 
     @Override
     public void mouseReleased(MouseEvent e) {
         currentButtons.put(-e.getButton(), false);
+        for(MouseListener m : listeners) {
+            m.mouseReleased(e);
+        }
     }
 
 
     @Override
     public void mouseEntered(MouseEvent e) {
-
+        for(MouseListener m : listeners) {
+            m.mouseEntered(e);
+        }
     }
 
     @Override
     public void mouseExited(MouseEvent e) {
-
+        for(MouseListener m : listeners) {
+            m.mouseExited(e);
+        }
     }
 
 
