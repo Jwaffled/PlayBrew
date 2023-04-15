@@ -7,6 +7,7 @@ import com.waffle.input.*;
 import com.waffle.render.Camera;
 import com.waffle.ui.Button;
 import com.waffle.ui.ButtonEventListener;
+import com.waffle.ui.TexturedButton;
 
 import java.awt.*;
 import java.awt.event.KeyEvent;
@@ -18,7 +19,7 @@ public class GameTest extends Game {
     private StereoSoundEffect effect;
     private StereoSoundEffect bgm;
     private DebugMenu debug;
-    private Button button;
+    private TexturedButton button;
     public Camera camera;
     public KeybindManager keybinds;
     public float currentVolume;
@@ -80,7 +81,7 @@ public class GameTest extends Game {
         INSTANCE = this;
         currentVolume = -20;
         camera = new Camera(960, 540);
-        window = createWindow("Testing", camera);
+        window = createWindow(960, 540, "Testing", camera);
         window.addMouseListener(Input.getInstance());
         window.addKeyListener(Input.getInstance());
         window.addMouseWheelListener(e -> {
@@ -90,44 +91,49 @@ public class GameTest extends Game {
         player = new Player();
         frameCounter = new FrameCounter();
         debug = new DebugMenu();
-        button = Button.newBuilder()
+        button = TexturedButton.newBuilder()
                 .setX(100)
                 .setY(300)
                 .setWidth(100)
                 .setHeight(50)
-                .setButtonMessage("Testing")
+                //.setButtonMessage("Testing")
                 .setMessageOffset(new Vec2f(30, 20))
+                .setButtonTexture("TestButtonPlayBrew.png")
                 .addButtonListener(new ButtonEventListener() {
                     @Override
                     public void buttonClicked() {
+                        System.out.println("Button clicked");
                     }
 
                     @Override
                     public void buttonPressed() {
-                        button.geometryComponent.color = Color.DARK_GRAY;
+                        System.out.println("Button was pressed");
                     }
 
                     @Override
                     public void buttonReleased() {
+                        System.out.println("Button released");
                         if(button.mouseWithin()) {
-                            button.geometryComponent.color = Color.GRAY;
+                            //button.geometryComponent.color = Color.GRAY;
                         } else {
-                            button.geometryComponent.color = Color.LIGHT_GRAY;
+                            //button.geometryComponent.color = Color.LIGHT_GRAY;
                         }
 
                     }
 
                     @Override
                     public void mouseEntered() {
-                        button.geometryComponent.color = Color.GRAY;
+                        System.out.println("Mouse entered button");
+                        //button.geometryComponent.color = Color.GRAY;
                     }
 
                     @Override
                     public void mouseExited() {
-                        button.geometryComponent.color = Color.LIGHT_GRAY;
+                        System.out.println("Mouse exited button");
+                        //button.geometryComponent.color = Color.LIGHT_GRAY;
                     }
                 })
-                .build();
+                .buildTexturedButton();
 
 
         try {

@@ -1,17 +1,11 @@
 package com.waffle.core;
 
-import com.waffle.components.FontRenderComponent;
-import com.waffle.components.GeometryComponent;
-import com.waffle.components.SpriteRenderComponent;
-import com.waffle.components.TransformComponent;
+import com.waffle.components.*;
 import com.waffle.ecs.World;
 import com.waffle.input.Input;
 import com.waffle.render.Camera;
 import com.waffle.render.Window;
-import com.waffle.systems.FontRenderSystem;
-import com.waffle.systems.GeometryRenderSystem;
-import com.waffle.systems.PhysicsSystem;
-import com.waffle.systems.SpriteRenderSystem;
+import com.waffle.systems.*;
 
 import java.awt.*;
 import java.awt.event.WindowEvent;
@@ -28,6 +22,7 @@ public abstract class Game implements Runnable, FreeableResource {
     protected PhysicsSystem physicsSystem;
     protected FontRenderSystem fontRenderSystem;
     protected GeometryRenderSystem geometryRenderSystem;
+    protected UIRenderSystem uiRenderSystem;
 
     public Game() {
         this(DEFAULT_MAX_ENTITIES, 60);
@@ -125,6 +120,14 @@ public abstract class Game implements Runnable, FreeableResource {
             sig.set(world.getComponentType(TransformComponent.class));
             world.setSystemSignature(sig, GeometryRenderSystem.class);
         }
+
+        uiRenderSystem = world.registerSystem(UIRenderSystem.class);
+        {
+            BitSet sig = new BitSet();
+            sig.set(world.getComponentType(UITextureComponent.class));
+            sig.set(world.getComponentType(TransformComponent.class));
+            world.setSystemSignature(sig, UIRenderSystem.class);
+        }
     }
 
     private void registerComponents() {
@@ -132,6 +135,7 @@ public abstract class Game implements Runnable, FreeableResource {
         world.registerComponent(SpriteRenderComponent.class);
         world.registerComponent(FontRenderComponent.class);
         world.registerComponent(GeometryComponent.class);
+        world.registerComponent(UITextureComponent.class);
     }
 
     /**
@@ -141,11 +145,11 @@ public abstract class Game implements Runnable, FreeableResource {
      * @return A JPanel representing the main game window
      */
     protected Window createWindow(int width, int height, String title, Camera cam) {
-        return new Window(width, height, title, spriteRenderSystem, fontRenderSystem, geometryRenderSystem, cam);
+        return new Window(width, height, title, spriteRenderSystem, fontRenderSystem, geometryRenderSystem, uiRenderSystem, cam);
     }
 
     protected Window createWindow(String title, Camera cam) {
-        return new Window(title, spriteRenderSystem, fontRenderSystem, geometryRenderSystem, cam);
+        return new Window(title, spriteRenderSystem, fontRenderSystem, geometryRenderSystem, uiRenderSystem, cam);
     }
 
     public abstract void start();

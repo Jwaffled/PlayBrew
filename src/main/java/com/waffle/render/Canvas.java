@@ -3,6 +3,7 @@ package com.waffle.render;
 import com.waffle.systems.FontRenderSystem;
 import com.waffle.systems.GeometryRenderSystem;
 import com.waffle.systems.SpriteRenderSystem;
+import com.waffle.systems.UIRenderSystem;
 
 import javax.swing.*;
 import java.awt.*;
@@ -12,13 +13,15 @@ public class Canvas extends JPanel {
     private final SpriteRenderSystem spriteRenderSystem;
     private final FontRenderSystem fontRenderSystem;
     private final GeometryRenderSystem geometryRenderSystem;
+    private final UIRenderSystem uiRenderSystem;
     private final BufferStrategy strategy;
     private final Camera camera;
     private int width, height;
-    public Canvas(SpriteRenderSystem system, FontRenderSystem system2, GeometryRenderSystem system3, Camera cam, int width, int height, BufferStrategy s) {
-        spriteRenderSystem = system;
-        fontRenderSystem = system2;
-        geometryRenderSystem = system3;
+    public Canvas(SpriteRenderSystem sys, FontRenderSystem sys2, GeometryRenderSystem sys3, UIRenderSystem sys4, Camera cam, int width, int height, BufferStrategy s) {
+        spriteRenderSystem = sys;
+        fontRenderSystem = sys2;
+        geometryRenderSystem = sys3;
+        uiRenderSystem = sys4;
         camera = cam;
         this.width = width;
         this.height = height;
@@ -45,6 +48,7 @@ public class Canvas extends JPanel {
                 g.fillRect(0, 0, width, height);
 
                 spriteRenderSystem.update(g, camera, width, height);
+                uiRenderSystem.update(g);
                 geometryRenderSystem.update(g);
                 fontRenderSystem.update(g);
 

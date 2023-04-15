@@ -3,6 +3,7 @@ package com.waffle.render;
 import com.waffle.systems.FontRenderSystem;
 import com.waffle.systems.GeometryRenderSystem;
 import com.waffle.systems.SpriteRenderSystem;
+import com.waffle.systems.UIRenderSystem;
 
 import javax.swing.*;
 import java.awt.*;
@@ -10,9 +11,9 @@ import java.awt.event.*;
 
 public class Window extends JFrame {
     public final Canvas canvas;
-    private static GraphicsDevice device = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
+    private final static GraphicsDevice device = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
 
-    public Window(String title, SpriteRenderSystem sys, FontRenderSystem sys2, GeometryRenderSystem sys3, Camera cam) {
+    public Window(String title, SpriteRenderSystem sys, FontRenderSystem sys2, GeometryRenderSystem sys3, UIRenderSystem sys4, Camera cam) {
         this(
                 Toolkit.getDefaultToolkit().getScreenSize().width,
                 Toolkit.getDefaultToolkit().getScreenSize().height,
@@ -20,12 +21,13 @@ public class Window extends JFrame {
                 sys,
                 sys2,
                 sys3,
+                sys4,
                 cam
         );
         device.setFullScreenWindow(this);
     }
 
-    public Window(int width, int height, String title, SpriteRenderSystem sys, FontRenderSystem sys2, GeometryRenderSystem sys3, Camera cam) {
+    public Window(int width, int height, String title, SpriteRenderSystem sys, FontRenderSystem sys2, GeometryRenderSystem sys3, UIRenderSystem sys4, Camera cam) {
         super(title);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setPreferredSize(new Dimension(width, height));
@@ -34,7 +36,7 @@ public class Window extends JFrame {
         setUndecorated(true);
         pack();
         createBufferStrategy(2);
-        canvas = new Canvas(sys, sys2, sys3, cam, width, height, getBufferStrategy());
+        canvas = new Canvas(sys, sys2, sys3, sys4, cam, width, height, getBufferStrategy());
         setContentPane(canvas);
         addComponentListener(new ComponentAdapter() {
             @Override
