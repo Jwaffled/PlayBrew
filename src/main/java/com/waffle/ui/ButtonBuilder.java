@@ -4,6 +4,7 @@ import com.waffle.components.FontRenderComponent;
 import com.waffle.components.GeometryComponent;
 import com.waffle.components.TransformComponent;
 import com.waffle.components.UITextureComponent;
+import com.waffle.core.RenderShape;
 import com.waffle.core.Vec2f;
 
 import javax.imageio.ImageIO;
@@ -99,6 +100,11 @@ public class ButtonBuilder {
         return this;
     }
 
+    public ButtonBuilder setButtonTexture(BufferedImage b) {
+        buttonTexture = b;
+        return this;
+    }
+
     public TexturedButton buildTexturedButton() {
         TexturedButton b = new TexturedButton();
         if(buttonTexture == null) {
@@ -118,7 +124,10 @@ public class ButtonBuilder {
     public Button buildButton() {
         Button b = new Button();
         b.listeners = listeners;
-        b.geometryComponent = new GeometryComponent(shapeType, drawMode, backgroundColor, width, height);
+        b.geometryComponent = new GeometryComponent();
+        b.geometryComponent.shapes.add(new RenderShape(shapeType, drawMode, backgroundColor, width, height, new Vec2f()));
+        b.width = width;
+        b.height = height;
         b.position = new TransformComponent(x, y);
         b.text = new FontRenderComponent(buttonMessage);
         b.text.position = messageOffset;

@@ -84,8 +84,8 @@ public class TexturedButton extends GameObject implements MouseListener {
     public boolean mouseWithin() {
         Point e = Input.getInstance().mousePosition;
         return position.position.x <= e.getX()
-                && position.position.x + texture.width() >= e.getX()
+                && position.position.x + texture.width >= e.getX()
                 && position.position.y <= e.getY()
-                && position.position.y + texture.height() >= e.getY();
+                && position.position.y + texture.height >= e.getY();
     }
 }

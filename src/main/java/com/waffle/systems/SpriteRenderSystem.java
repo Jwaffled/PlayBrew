@@ -2,6 +2,7 @@ package com.waffle.systems;
 
 import com.waffle.components.SpriteRenderComponent;
 import com.waffle.components.TransformComponent;
+import com.waffle.core.Utils;
 import com.waffle.core.Vec2f;
 import com.waffle.ecs.ECSSystem;
 import com.waffle.render.Camera;
@@ -32,7 +33,7 @@ public class SpriteRenderSystem extends ECSSystem {
             final int finalX = (int)(drawPos.x * scalar.x);
             final int finalY = (int)(drawPos.y * scalar.y);
 
-            if(RenderUtils.shouldRender(drawPos, finalWidth, finalHeight, camera)) {
+            if(Utils.shouldRender(drawPos, finalWidth, finalHeight, camera)) {
                 window.drawImage(s.sprite, finalX, finalY, finalWidth, finalHeight, null);
             }
         }

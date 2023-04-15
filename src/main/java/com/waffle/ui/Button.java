@@ -16,6 +16,7 @@ public class Button extends GameObject implements MouseListener {
     public GeometryComponent geometryComponent;
     public FontRenderComponent text;
     public ArrayList<ButtonEventListener> listeners = new ArrayList<>();
+    public int width, height;
     private boolean mouseWithinLastFrame = false;
     public static ButtonBuilder newBuilder() {
         return new ButtonBuilder();
@@ -84,8 +85,8 @@ public class Button extends GameObject implements MouseListener {
     public boolean mouseWithin() {
         Point e = Input.getInstance().mousePosition;
         return position.position.x <= e.getX()
-                && position.position.x + geometryComponent.width >= e.getX()
+                && position.position.x + this.width >= e.getX()
                 && position.position.y <= e.getY()
-                && position.position.y + geometryComponent.height >= e.getY();
+                && position.position.y + this.height >= e.getY();
     }
 }

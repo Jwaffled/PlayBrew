@@ -2,17 +2,19 @@ package com.waffle;
 
 import com.waffle.audio.StereoSoundEffect;
 import com.waffle.core.Game;
+import com.waffle.core.Utils;
 import com.waffle.core.Vec2f;
 import com.waffle.input.*;
 import com.waffle.render.Camera;
-import com.waffle.ui.Button;
 import com.waffle.ui.ButtonEventListener;
+import com.waffle.ui.Slider;
 import com.waffle.ui.TexturedButton;
 
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.WindowEvent;
+import java.awt.image.BufferedImage;
 
 public class GameTest extends Game {
     public Player player;
@@ -20,6 +22,7 @@ public class GameTest extends Game {
     private StereoSoundEffect bgm;
     private DebugMenu debug;
     private TexturedButton button;
+    public Slider slider;
     public Camera camera;
     public KeybindManager keybinds;
     public float currentVolume;
@@ -84,9 +87,11 @@ public class GameTest extends Game {
         window = createWindow(960, 540, "Testing", camera);
         window.addMouseListener(Input.getInstance());
         window.addKeyListener(Input.getInstance());
-        window.addMouseWheelListener(e -> {
-            camera.zoomScale += e.getWheelRotation() * 0.1f;
-        });
+        window.addMouseWheelListener(e -> camera.zoomScale += e.getWheelRotation() * 0.1f);
+
+        BufferedImage texture = Utils.loadImageFromPath("TestButtonPlayBrew_2.png");
+
+        BufferedImage tint = Utils.applyTint(texture, new Color(90, 90, 90, 100));
 
         player = new Player();
         frameCounter = new FrameCounter();
@@ -98,7 +103,7 @@ public class GameTest extends Game {
                 .setHeight(50)
                 //.setButtonMessage("Testing")
                 .setMessageOffset(new Vec2f(30, 20))
-                .setButtonTexture("TestButtonPlayBrew.png")
+                .setButtonTexture(texture)
                 .addButtonListener(new ButtonEventListener() {
                     @Override
                     public void buttonClicked() {
@@ -107,18 +112,12 @@ public class GameTest extends Game {
 
                     @Override
                     public void buttonPressed() {
-                        System.out.println("Button was pressed");
+                        button.texture.sprite = tint;
                     }
 
                     @Override
                     public void buttonReleased() {
-                        System.out.println("Button released");
-                        if(button.mouseWithin()) {
-                            //button.geometryComponent.color = Color.GRAY;
-                        } else {
-                            //button.geometryComponent.color = Color.LIGHT_GRAY;
-                        }
-
+                        button.texture.sprite = texture;
                     }
 
                     @Override
@@ -135,6 +134,16 @@ public class GameTest extends Game {
                 })
                 .buildTexturedButton();
 
+        slider = Slider.newBuilder()
+                .setX(300)
+                .setY(200)
+                .setWidth(200)
+                .setHeight(50)
+                .setMinValue(-50)
+                .setMaxValue(150)
+                .setStartingValue(50)
+                .buildSlider();
+
 
         try {
             effect = new StereoSoundEffect("eightbit.wav");
@@ -147,7 +156,7 @@ public class GameTest extends Game {
 
         bgm.start();
 
-
+        world.createGameObject(slider);
         world.createGameObject(player);
         world.createGameObject(debug);
         world.createGameObject(button);

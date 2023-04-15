@@ -1,21 +1,19 @@
 package com.waffle.components;
 
-import com.waffle.core.Constants;
+import com.waffle.core.RenderShape;
 import com.waffle.ecs.IComponent;
 
-import java.awt.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class GeometryComponent implements IComponent {
-    public int width, height;
-    public Constants.ShapeType shape;
-    public Constants.DrawMode mode;
-    public Color color;
+    public List<RenderShape> shapes;
 
-    public GeometryComponent(Constants.ShapeType s, Constants.DrawMode m, Color c, int width, int height) {
-        color = c;
-        shape = s;
-        mode = m;
-        this.width = width;
-        this.height = height;
+    public GeometryComponent(List<RenderShape> shapes) {
+        this.shapes = shapes;
+    }
+
+    public GeometryComponent() {
+        shapes = new ArrayList<>();
     }
 }
