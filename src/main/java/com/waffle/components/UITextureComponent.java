@@ -7,13 +7,21 @@ import java.util.ArrayList;
 import java.util.List;
 
 public final class UITextureComponent implements IComponent {
-    public List<UITexture> textures;
+    private List<UITexture> textures;
 
     public UITextureComponent(List<UITexture> t) {
-        textures = t;
+        setTextures(t);
     }
 
     public UITextureComponent() {
-        textures = new ArrayList<>();
+        setTextures(new ArrayList<>());
+    }
+
+    public List<UITexture> getTextures() {
+        return textures;
+    }
+
+    public void setTextures(List<UITexture> textures) {
+        this.textures = textures;
     }
 }

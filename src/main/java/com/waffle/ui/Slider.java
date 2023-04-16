@@ -12,12 +12,14 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
 public class Slider extends GameObject implements MouseListener {
-    public TransformComponent position;
-    public GeometryComponent geometryComponent;
+    TransformComponent transform;
+    GeometryComponent geometry;
     RenderShape sliderRect;
     RenderShape sliderTrack;
-    int maxValue, minValue;
-    int width, height;
+    public int maxValue;
+    public int minValue;
+    public int width;
+    public int height;
     private boolean heldDown = false;
 
     public static SliderBuilder newBuilder() {
@@ -26,37 +28,37 @@ public class Slider extends GameObject implements MouseListener {
 
     @Override
     public void start() {
-        geometryComponent.shapes.add(sliderTrack);
-        geometryComponent.shapes.add(sliderRect);
+        geometry.getShapes().add(sliderTrack);
+        geometry.getShapes().add(sliderRect);
         Input.getInstance().addMouseListener(this);
     }
 
     @Override
     public void update(float dt) {
         if(heldDown) {
-            Point mousePt = Input.getInstance().mousePosition;
-            float minX = position.position.x;
-            float maxX = position.position.x + width;
+            Point mousePt = Input.getInstance().getMousePosition();
+            float minX = transform.getPosition().x;
+            float maxX = transform.getPosition().x + width;
             if(mousePt.x <= minX) {
-              sliderRect.pos.x = 0;
+              sliderRect.getPosition().x = 0;
             } else if(mousePt.x >= maxX) {
-                sliderRect.pos.x = width;
+                sliderRect.getPosition().x = width;
             } else {
-                sliderRect.pos.x = mousePt.x - position.position.x;
+                sliderRect.getPosition().x = mousePt.x - transform.getPosition().x;
             }
         }
     }
 
     public float getValue() {
-        return minValue + (sliderRect.pos.x / width) * (maxValue - minValue);
+        return minValue + (sliderRect.getPosition().x / width) * (maxValue - minValue);
     }
 
     public void setValue(float v) {
-        sliderRect.pos.x = (v - minValue) / (maxValue - minValue) * width;
+        sliderRect.getPosition().x = (v - minValue) / (maxValue - minValue) * width;
     }
 
     public float getNormalizedValue() {
-        return sliderRect.pos.x / width;
+        return sliderRect.getPosition().x / width;
     }
 
     @Override
@@ -87,11 +89,35 @@ public class Slider extends GameObject implements MouseListener {
     }
 
     public boolean mouseWithin() {
-        Vec2f sliderPoint = position.position.add(sliderRect.pos);
-        Point e = Input.getInstance().mousePosition;
+        Vec2f sliderPoint = transform.getPosition().add(sliderRect.getPosition());
+        Point e = Input.getInstance().getMousePosition();
         return sliderPoint.x <= e.getX()
-                && sliderPoint.x + sliderRect.width >= e.getX()
+                && sliderPoint.x + sliderRect.getWidth() >= e.getX()
                 && sliderPoint.y <= e.getY()
-                && sliderPoint.y + sliderRect.height >= e.getY();
+                && sliderPoint.y + sliderRect.getHeight() >= e.getY();
+    }
+
+    public TransformComponent getTransform() {
+        return transform;
+    }
+
+    public GeometryComponent getGeometry() {
+        return geometry;
+    }
+
+    public RenderShape getSliderRect() {
+        return sliderRect;
+    }
+
+    public RenderShape getSliderTrack() {
+        return sliderTrack;
+    }
+
+    public int getMaxValue() {
+        return maxValue;
+    }
+
+    public int getMinValue() {
+        return minValue;
     }
 }

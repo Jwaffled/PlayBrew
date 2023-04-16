@@ -10,7 +10,7 @@ public class Input implements KeyListener, MouseListener, MouseWheelListener {
     private static Input INSTANCE = new Input();
     private final Map<Integer, Boolean> currentButtons = new HashMap<>();
     private final ArrayList<MouseListener> listeners = new ArrayList<>();
-    public Point mousePosition = MouseInfo.getPointerInfo().getLocation();
+    private Point mousePosition = MouseInfo.getPointerInfo().getLocation();
     // Subtract component.getLocationOnScreen() to get mouse pos relative to component
 
 
@@ -87,5 +87,13 @@ public class Input implements KeyListener, MouseListener, MouseWheelListener {
     @Override
     public void mouseWheelMoved(MouseWheelEvent e) {
         System.out.println(e.getWheelRotation());
+    }
+
+    public Point getMousePosition() {
+        return mousePosition;
+    }
+
+    public void setMousePosition(Point mousePosition) {
+        this.mousePosition = mousePosition;
     }
 }

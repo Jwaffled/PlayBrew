@@ -19,27 +19,27 @@ public class SpriteRenderSystem extends ECSSystem {
                 SpriteRenderComponent sprites = world.getComponent(entity, SpriteRenderComponent.class);
                 Vec2f drawPos;
                 Vec2f scalar;
-                for(SpriteRenderer s : sprites.sprites) {
+                for(SpriteRenderer s : sprites.getSprites()) {
                     if(camera != null) {
-                        drawPos = comp.position
-                                .add(s.position)
-                                .sub(camera.position);
+                        drawPos = comp.getPosition()
+                                .add(s.getPosition())
+                                .sub(camera.getPosition());
 
                         scalar = new Vec2f(sWidth, sHeight)
                                 .div(new Vec2f(camera.getWidth(), camera.getHeight()))
-                                .div(camera.zoomScale);
+                                .div(camera.getZoomScale());
                     } else {
-                        drawPos = comp.position.add(s.position);
+                        drawPos = comp.getPosition().add(s.getPosition());
                         scalar = new Vec2f(1, 1);
                     }
 
-                    final int finalWidth = (int)(s.width * scalar.x);
-                    final int finalHeight = (int)(s.height * scalar.y);
+                    final int finalWidth = (int)(s.getWidth() * scalar.x);
+                    final int finalHeight = (int)(s.getHeight() * scalar.y);
                     final int finalX = (int)(drawPos.x * scalar.x);
                     final int finalY = (int)(drawPos.y * scalar.y);
 
                     if(Utils.shouldRender(drawPos, finalWidth, finalHeight, camera)) {
-                        window.drawImage(s.sprite, finalX, finalY, finalWidth, finalHeight, null);
+                        window.drawImage(s.getSprite(), finalX, finalY, finalWidth, finalHeight, null);
                     }
                 }
             }

@@ -8,7 +8,6 @@ import com.waffle.ecs.GameObject;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
-import java.io.File;
 import java.net.URL;
 
 public class Bullet extends GameObject {
@@ -28,12 +27,12 @@ public class Bullet extends GameObject {
     public Bullet(int speed, float x, float y) {
         this.speed = speed;
         sprite = new SpriteRenderComponent();
-        sprite.sprites.add(new SpriteRenderer(new Vec2f(), image, 50, 50));
+        sprite.getSprites().add(new SpriteRenderer(new Vec2f(), image, 50, 50));
         transform = new TransformComponent(new Vec2f(x, y));
     }
 
     public void update(float dt) {
-        transform.position.addY(speed * dt);
+        transform.getPosition().addY(speed * dt);
     }
 
     @Override

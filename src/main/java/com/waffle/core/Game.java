@@ -8,7 +8,6 @@ import com.waffle.render.Window;
 import com.waffle.systems.*;
 
 import java.awt.*;
-import java.awt.event.WindowEvent;
 import java.util.BitSet;
 import java.util.concurrent.*;
 
@@ -86,7 +85,7 @@ public abstract class Game implements Runnable, FreeableResource {
     }
 
     private void updateInput() {
-        Input.getInstance().mousePosition = MouseInfo.getPointerInfo().getLocation();
+        Input.getInstance().setMousePosition(MouseInfo.getPointerInfo().getLocation());
     }
 
     private void registerSystems() {

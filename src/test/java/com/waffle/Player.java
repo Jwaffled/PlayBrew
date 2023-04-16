@@ -22,21 +22,21 @@ public class Player extends GameObject {
 
     @Override
     public void update(float dt) {
-        sprite.sprites.get(0).sprite = animation.getFrame();
+        sprite.getSprites().get(0).setSprite(animation.getFrame());
         if(GameTest.INSTANCE.keybinds.triggered("MoveLeft")) {
-            transform.position.addX(-450 * dt);
+            transform.getPosition().addX(-450 * dt);
         }
 
         if(GameTest.INSTANCE.keybinds.triggered("MoveRight")) {
-            transform.position.addX(450 * dt);
+            transform.getPosition().addX(450 * dt);
         }
 
         if(GameTest.INSTANCE.keybinds.triggered("MoveUp")) {
-            transform.position.addY(-450 * dt);
+            transform.getPosition().addY(-450 * dt);
         }
 
         if(GameTest.INSTANCE.keybinds.triggered("MoveDown")) {
-            transform.position.addY(450 * dt);
+            transform.getPosition().addY(450 * dt);
         }
     }
 
@@ -45,7 +45,7 @@ public class Player extends GameObject {
         try {
             URL file = getClass().getClassLoader().getResource("ship.png");
             sprite = new SpriteRenderComponent();
-            sprite.sprites.add(new SpriteRenderer(new Vec2f(), ImageIO.read(file), 32, 32));
+            sprite.getSprites().add(new SpriteRenderer(new Vec2f(), ImageIO.read(file), 32, 32));
             animation = new LoopingAnimation("PlayerAnimation", 6);
         } catch(Exception e) {
             System.out.println("ERROR: " + e.getMessage());
@@ -56,7 +56,7 @@ public class Player extends GameObject {
 
     public void shoot() {
         if(canShoot) {
-            world.createGameObject(new Bullet((int)(Math.random() * 150 + 10), transform.position.x, transform.position.y), 0);
+            world.createGameObject(new Bullet((int)(Math.random() * 150 + 10), transform.getPosition().x, transform.getPosition().y), 0);
         }
     }
 
@@ -69,6 +69,6 @@ public class Player extends GameObject {
     }
 
     public Vec2f getPosition() {
-        return transform.position;
+        return transform.getPosition();
     }
 }

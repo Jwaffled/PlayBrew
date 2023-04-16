@@ -3,7 +3,6 @@ package com.waffle.tilemap;
 import com.waffle.components.SpriteRenderComponent;
 import com.waffle.components.TransformComponent;
 import com.waffle.core.SpriteRenderer;
-import com.waffle.core.Utils;
 import com.waffle.core.Vec2f;
 import com.waffle.ecs.GameObject;
 
@@ -11,8 +10,9 @@ import java.awt.image.BufferedImage;
 import java.util.Map;
 
 public class Tilemap extends GameObject {
-    private TransformComponent transform;
-    private SpriteRenderComponent sprites;
+    TransformComponent transform;
+    SpriteRenderComponent sprites;
+    public int x, y;
     public int width, height;
     public int tileWidth, tileHeight;
     public int[][] tiles;
@@ -26,14 +26,15 @@ public class Tilemap extends GameObject {
 
     @Override
     public void start() {
-        BufferedImage grass = Utils.loadImageFromPath("Grass.png");
-        BufferedImage dirt = Utils.loadImageFromPath("Dirt.png");
-        transform = new TransformComponent(0, 300);
+        transform = new TransformComponent(x, y);
         sprites = new SpriteRenderComponent();
-        for(int i = 0; i < 30; i++) {
-            sprites.sprites.add(new SpriteRenderer(new Vec2f(i * 32, 0), grass, 32, 32));
-            for(int j = 1; j < 5; j++) {
-                sprites.sprites.add(new SpriteRenderer(new Vec2f(i * 32, j * 32), dirt, 32, 32));
+        for(int i = 0; i < tiles.length; i++) {
+            for(int j = 0; j < tiles[i].length; j++) {
+                sprites.getSprites().add(new SpriteRenderer(
+                        new Vec2f(i * tileWidth, j * tileHeight),
+                        numToTile.get(tiles[i][j]),
+                        tileWidth, tileHeight
+                ));
             }
         }
     }
@@ -43,7 +44,11 @@ public class Tilemap extends GameObject {
 
     }
 
+    public TransformComponent getTransform() {
+        return transform;
+    }
 
-
-
+    public SpriteRenderComponent getSprites() {
+        return sprites;
+    }
 }

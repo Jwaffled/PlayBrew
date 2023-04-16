@@ -23,15 +23,15 @@ public class DebugMenu extends GameObject {
     public void start() {
         counter = GameTest.INSTANCE.frameCounter;
         outline = new GeometryComponent();
-        outline.shapes.add(new RenderShape(ShapeType.RECTANGLE, DrawMode.OUTLINE, Color.BLACK, 300, 5 + 5 + (STRING_COUNT * 16), new Vec2f()));
+        outline.getShapes().add(new RenderShape(ShapeType.RECTANGLE, DrawMode.OUTLINE, Color.BLACK, 300, 5 + 5 + (STRING_COUNT * 16), new Vec2f()));
         text = new FontRenderComponent("");
-        text.position = new Vec2f(5, 10);
+        text.setPosition(new Vec2f(5, 10));
         transform = new TransformComponent(20, 20);
     }
 
     @Override
     public void update(float dt) {
-        text.message = String.format(
+        text.setMessage(String.format(
                 "Current FPS: %.4f\n"
                 + "Volume (dB): %.2f\n"
                 + "Entity count: %d\n"
@@ -44,12 +44,12 @@ public class DebugMenu extends GameObject {
                 counter.getFps(),
                 GameTest.INSTANCE.currentVolume,
                 world.getLivingEntityCount(),
-                GameTest.INSTANCE.camera.zoomScale,
+                GameTest.INSTANCE.camera.getZoomScale(),
                 GameTest.INSTANCE.player.getPosition().x, GameTest.INSTANCE.player.getPosition().y,
-                GameTest.INSTANCE.camera.position.x, GameTest.INSTANCE.camera.position.y,
+                GameTest.INSTANCE.camera.getPosition().x, GameTest.INSTANCE.camera.getPosition().y,
                 GameTest.INSTANCE.slider.getValue(),
-                Input.getInstance().mousePosition.x, Input.getInstance().mousePosition.y,
+                Input.getInstance().getMousePosition().x, Input.getInstance().getMousePosition().y,
                 GameTest.INSTANCE.slider.getNormalizedValue()
-        );
+        ));
     }
 }

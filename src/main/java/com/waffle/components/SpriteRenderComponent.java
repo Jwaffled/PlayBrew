@@ -1,20 +1,26 @@
 package com.waffle.components;
 
 import com.waffle.core.SpriteRenderer;
-import com.waffle.core.Vec2f;
 import com.waffle.ecs.IComponent;
 
-import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.List;
 
 public class SpriteRenderComponent implements IComponent {
-    public List<SpriteRenderer> sprites;
+    private List<SpriteRenderer> sprites;
     public SpriteRenderComponent(List<SpriteRenderer> l) {
-        sprites = l;
+        setSprites(l);
     }
 
     public SpriteRenderComponent() {
-        sprites = new ArrayList<>();
+        setSprites(new ArrayList<>());
+    }
+
+    public List<SpriteRenderer> getSprites() {
+        return sprites;
+    }
+
+    public void setSprites(List<SpriteRenderer> sprites) {
+        this.sprites = sprites;
     }
 }

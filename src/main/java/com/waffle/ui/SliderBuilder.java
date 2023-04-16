@@ -84,8 +84,8 @@ public class SliderBuilder {
 
     public Slider buildSlider() {
         Slider s = new Slider();
-        s.geometryComponent = new GeometryComponent();
-        s.position = new TransformComponent(x, y);
+        s.geometry = new GeometryComponent();
+        s.transform = new TransformComponent(x, y);
         s.sliderRect = new RenderShape(ShapeType.RECTANGLE, DrawMode.FILLED, Color.BLACK,
                 sliderWidth, height,
                 new Vec2f(calculateSliderRectX(), 0)
@@ -103,7 +103,7 @@ public class SliderBuilder {
     public TexturedSlider buildTexturedSlider() {
         TexturedSlider s = new TexturedSlider();
         s.texture = new UITextureComponent();
-        s.position = new TransformComponent(x, y);
+        s.transform = new TransformComponent(x, y);
         if(sliderSprite == null || trackSprite == null) {
             throw new IllegalStateException("Tried to build textured slider without both a track and slider texture. (Call setTrackTexture() and setSliderTexture()?)");
         }

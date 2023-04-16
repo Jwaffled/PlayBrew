@@ -13,11 +13,12 @@ import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
 public class TexturedButton extends GameObject implements MouseListener {
-    public UITextureComponent texture;
-    public TransformComponent position;
-    public FontRenderComponent text;
-    public ArrayList<ButtonEventListener> listeners = new ArrayList<>();
-    public int width, height;
+    UITextureComponent texture;
+    TransformComponent transform;
+    FontRenderComponent text;
+    ArrayList<ButtonEventListener> listeners = new ArrayList<>();
+    public int width;
+    public int height;
     private boolean mouseWithinLastFrame = false;
     public static ButtonBuilder newBuilder() {
         return new ButtonBuilder();
@@ -49,7 +50,7 @@ public class TexturedButton extends GameObject implements MouseListener {
     }
 
     public void setCurrentTexture(BufferedImage b) {
-        texture.textures.get(0).sprite = b;
+        texture.getTextures().get(0).setSprite(b);
     }
 
     @Override
@@ -88,10 +89,26 @@ public class TexturedButton extends GameObject implements MouseListener {
     }
 
     public boolean mouseWithin() {
-        Point e = Input.getInstance().mousePosition;
-        return position.position.x <= e.getX()
-                && position.position.x + width >= e.getX()
-                && position.position.y <= e.getY()
-                && position.position.y + height >= e.getY();
+        Point e = Input.getInstance().getMousePosition();
+        return transform.getPosition().x <= e.getX()
+                && transform.getPosition().x + width >= e.getX()
+                && transform.getPosition().y <= e.getY()
+                && transform.getPosition().y + width >= e.getY();
+    }
+
+    public UITextureComponent getTexture() {
+        return texture;
+    }
+
+    public TransformComponent getTransform() {
+        return transform;
+    }
+
+    public FontRenderComponent getText() {
+        return text;
+    }
+
+    public ArrayList<ButtonEventListener> getListeners() {
+        return listeners;
     }
 }

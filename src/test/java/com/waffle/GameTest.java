@@ -7,7 +7,6 @@ import com.waffle.core.Vec2f;
 import com.waffle.input.*;
 import com.waffle.render.Camera;
 import com.waffle.tilemap.Tilemap;
-import com.waffle.tilemap.TilemapBuilder;
 import com.waffle.ui.ButtonEventListener;
 import com.waffle.ui.TexturedButton;
 import com.waffle.ui.TexturedSlider;
@@ -64,19 +63,19 @@ public class GameTest extends Game {
         }
 
         if(keybinds.triggered("PanUp")) {
-            camera.position.addY(-10 * camera.zoomScale);
+            camera.getPosition().addY(-10 * camera.getZoomScale());
         }
 
         if(keybinds.triggered("PanDown")) {
-            camera.position.addY(10 * camera.zoomScale);
+            camera.getPosition().addY(10 * camera.getZoomScale());
         }
 
         if(keybinds.triggered("PanLeft")) {
-            camera.position.addX(-10 * camera.zoomScale);
+            camera.getPosition().addX(-10 * camera.getZoomScale());
         }
 
         if(keybinds.triggered("PanRight")) {
-            camera.position.addX(10 * camera.zoomScale);
+            camera.getPosition().addX(10 * camera.getZoomScale());
         }
 
         if(keybinds.triggered("Fire") && player.canShoot()) {
@@ -94,7 +93,7 @@ public class GameTest extends Game {
         window = createWindow(960, 540, "Testing", camera);
         window.addMouseListener(Input.getInstance());
         window.addKeyListener(Input.getInstance());
-        window.addMouseWheelListener(e -> camera.zoomScale += e.getWheelRotation() * 0.1f);
+        window.addMouseWheelListener(e -> camera.setZoomScale(camera.getZoomScale() + e.getWheelRotation() * 0.1f));
 
         BufferedImage texture = Utils.loadImageFromPath("TestButtonPlayBrew_2.png");
 
@@ -111,8 +110,12 @@ public class GameTest extends Game {
         tilemap = Tilemap.newBuilder()
                 .addTilemapping(1, grassTex)
                 .addTilemapping(2, dirtTex)
-                .setRow(0, 1)
-                .setRows(0, TilemapBuilder.TO_END, 2)
+                .setWidth(960)
+                .setHeight(129)
+                .setY(300)
+                .setTileHeight(32)
+                .setTileWidth(32)
+                .setRandomTiles()
                 .buildTilemap();
 
         button = TexturedButton.newBuilder()
@@ -127,7 +130,7 @@ public class GameTest extends Game {
                     @Override
                     public void buttonClicked() {
                         player.setCanShoot(!player.canShoot());
-                        button.text.message = "Player can shoot: " + player.canShoot();
+                        button.getText().setMessage("Player can shoot: " + player.canShoot());
                     }
 
                     @Override

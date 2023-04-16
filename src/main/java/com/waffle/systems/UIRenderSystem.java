@@ -15,9 +15,9 @@ public class UIRenderSystem extends ECSSystem {
             for(int entity : layer) {
                 TransformComponent t = world.getComponent(entity, TransformComponent.class);
                 UITextureComponent a = world.getComponent(entity, UITextureComponent.class);
-                for(UITexture u : a.textures) {
-                    Vec2f drawPos = t.position.add(u.position);
-                    window.drawImage(u.sprite, (int)drawPos.x, (int)drawPos.y, u.width, u.height, null);
+                for(UITexture u : a.getTextures()) {
+                    Vec2f drawPos = t.getPosition().add(u.getPosition());
+                    window.drawImage(u.getSprite(), (int)drawPos.x, (int)drawPos.y, u.getWidth(), u.getHeight(), null);
                 }
             }
         }

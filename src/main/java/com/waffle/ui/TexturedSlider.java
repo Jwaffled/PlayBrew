@@ -1,9 +1,7 @@
 package com.waffle.ui;
 
-import com.waffle.components.GeometryComponent;
 import com.waffle.components.TransformComponent;
 import com.waffle.components.UITextureComponent;
-import com.waffle.core.RenderShape;
 import com.waffle.core.UITexture;
 import com.waffle.core.Vec2f;
 import com.waffle.ecs.GameObject;
@@ -14,12 +12,12 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
 public class TexturedSlider extends GameObject implements MouseListener {
-    public TransformComponent position;
-    public UITextureComponent texture;
+    TransformComponent transform;
+    UITextureComponent texture;
     UITexture sliderRect;
     UITexture sliderTrack;
-    int maxValue, minValue;
-    int width, height;
+    public int maxValue, minValue;
+    public int width, height;
     private boolean heldDown = false;
 
     public static SliderBuilder newBuilder() {
@@ -28,37 +26,37 @@ public class TexturedSlider extends GameObject implements MouseListener {
 
     @Override
     public void start() {
-        texture.textures.add(sliderTrack);
-        texture.textures.add(sliderRect);
+        getTexture().getTextures().add(sliderTrack);
+        getTexture().getTextures().add(sliderRect);
         Input.getInstance().addMouseListener(this);
     }
 
     @Override
     public void update(float dt) {
         if(heldDown) {
-            Point mousePt = Input.getInstance().mousePosition;
-            float minX = position.position.x;
-            float maxX = position.position.x + width;
+            Point mousePt = Input.getInstance().getMousePosition();
+            float minX = transform.getPosition().x;
+            float maxX = transform.getPosition().x + width;
             if(mousePt.x <= minX) {
-                sliderRect.position.x = 0;
+                sliderRect.getPosition().x = 0;
             } else if(mousePt.x >= maxX) {
-                sliderRect.position.x = width;
+                sliderRect.getPosition().x = width;
             } else {
-                sliderRect.position.x = mousePt.x - position.position.x;
+                sliderRect.getPosition().x = mousePt.x - transform.getPosition().x;
             }
         }
     }
 
     public float getValue() {
-        return minValue + (sliderRect.position.x / width) * (maxValue - minValue);
+        return minValue + (sliderRect.getPosition().x / width) * (maxValue - minValue);
     }
 
     public void setValue(float v) {
-        sliderRect.position.x = (v - minValue) / (maxValue - minValue) * width;
+        sliderRect.getPosition().x = (v - minValue) / (maxValue - minValue) * width;
     }
 
     public float getNormalizedValue() {
-        return sliderRect.position.x / width;
+        return sliderRect.getPosition().x / width;
     }
 
     @Override
@@ -89,11 +87,19 @@ public class TexturedSlider extends GameObject implements MouseListener {
     }
 
     public boolean mouseWithin() {
-        Vec2f sliderPoint = position.position.add(sliderRect.position);
-        Point e = Input.getInstance().mousePosition;
+        Vec2f sliderPoint = transform.getPosition().add(sliderRect.getPosition());
+        Point e = Input.getInstance().getMousePosition();
         return sliderPoint.x <= e.getX()
-                && sliderPoint.x + sliderRect.width >= e.getX()
+                && sliderPoint.x + sliderRect.getWidth() >= e.getX()
                 && sliderPoint.y <= e.getY()
-                && sliderPoint.y + sliderRect.height >= e.getY();
+                && sliderPoint.y + sliderRect.getHeight() >= e.getY();
+    }
+
+    public TransformComponent getTransform() {
+        return transform;
+    }
+
+    public UITextureComponent getTexture() {
+        return texture;
     }
 }

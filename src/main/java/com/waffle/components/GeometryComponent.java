@@ -7,13 +7,21 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class GeometryComponent implements IComponent {
-    public List<RenderShape> shapes;
+    private List<RenderShape> shapes;
 
     public GeometryComponent(List<RenderShape> shapes) {
-        this.shapes = shapes;
+        this.setShapes(shapes);
     }
 
     public GeometryComponent() {
-        shapes = new ArrayList<>();
+        setShapes(new ArrayList<>());
+    }
+
+    public List<RenderShape> getShapes() {
+        return shapes;
+    }
+
+    public void setShapes(List<RenderShape> shapes) {
+        this.shapes = shapes;
     }
 }

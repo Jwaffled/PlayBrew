@@ -17,32 +17,32 @@ public class GeometryRenderSystem extends ECSSystem {
             for(int entity : layer) {
                 GeometryComponent g = world.getComponent(entity, GeometryComponent.class);
                 TransformComponent t = world.getComponent(entity, TransformComponent.class);
-                for(RenderShape c : g.shapes) {
-                    Vec2f drawPos = t.position.add(c.pos);
+                for(RenderShape c : g.getShapes()) {
+                    Vec2f drawPos = t.getPosition().add(c.getPosition());
                     final int x = (int)drawPos.x;
                     final int y = (int)drawPos.y;
-                    window.setColor(c.color);
-                    switch (c.shape) {
+                    window.setColor(c.getColor());
+                    switch (c.getShape()) {
                         case RECTANGLE -> {
-                            if (c.mode == DrawMode.FILLED) {
-                                window.fillRect(x, y, c.width, c.height);
-                            } else if (c.mode == DrawMode.FILLED_BORDER) {
-                                window.fillRect(x, y, c.width, c.height);
+                            if (c.getMode() == DrawMode.FILLED) {
+                                window.fillRect(x, y, c.getWidth(), c.getHeight());
+                            } else if (c.getMode() == DrawMode.FILLED_BORDER) {
+                                window.fillRect(x, y, c.getWidth(), c.getHeight());
                                 window.setColor(Color.BLACK);
-                                window.drawRect(x, y, c.width, c.height);
+                                window.drawRect(x, y, c.getWidth(), c.getHeight());
                             } else {
-                                window.drawRect(x, y, c.width, c.height);
+                                window.drawRect(x, y, c.getWidth(), c.getHeight());
                             }
                         }
                         case ELLIPSE -> {
-                            if (c.mode == DrawMode.FILLED) {
-                                window.fillOval(x, y, c.width, c.height);
-                            } else if (c.mode == DrawMode.FILLED_BORDER) {
-                                window.fillOval(x, y, c.width, c.height);
+                            if (c.getMode() == DrawMode.FILLED) {
+                                window.fillOval(x, y, c.getWidth(), c.getHeight());
+                            } else if (c.getMode() == DrawMode.FILLED_BORDER) {
+                                window.fillOval(x, y, c.getWidth(), c.getHeight());
                                 window.setColor(Color.BLACK);
-                                window.drawOval(x, y, c.width, c.height);
+                                window.drawOval(x, y, c.getWidth(), c.getHeight());
                             } else {
-                                window.drawOval(x, y, c.width, c.height);
+                                window.drawOval(x, y, c.getWidth(), c.getHeight());
                             }
                         }
                     }

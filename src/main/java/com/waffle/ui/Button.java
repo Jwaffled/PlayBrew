@@ -9,15 +9,15 @@ import com.waffle.input.Input;
 import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
 public class Button extends GameObject implements MouseListener {
-    public TransformComponent position;
-    public GeometryComponent geometryComponent;
-    public FontRenderComponent text;
-    public ArrayList<ButtonEventListener> listeners = new ArrayList<>();
-    public int width, height;
+    TransformComponent transform;
+    GeometryComponent geometry;
+    FontRenderComponent text;
+    ArrayList<ButtonEventListener> listeners = new ArrayList<>();
+    public int width;
+    public int height;
     private boolean mouseWithinLastFrame = false;
     public static ButtonBuilder newBuilder() {
         return new ButtonBuilder();
@@ -68,7 +68,7 @@ public class Button extends GameObject implements MouseListener {
 
     @Override
     public void mouseReleased(MouseEvent e) {
-        for(ButtonEventListener l : listeners) {
+        for(ButtonEventListener l : getListeners()) {
             l.buttonReleased();
         }
     }
@@ -84,10 +84,26 @@ public class Button extends GameObject implements MouseListener {
     }
 
     public boolean mouseWithin() {
-        Point e = Input.getInstance().mousePosition;
-        return position.position.x <= e.getX()
-                && position.position.x + this.width >= e.getX()
-                && position.position.y <= e.getY()
-                && position.position.y + this.height >= e.getY();
+        Point e = Input.getInstance().getMousePosition();
+        return transform.getPosition().x <= e.getX()
+                && transform.getPosition().x + width >= e.getX()
+                && transform.getPosition().y <= e.getY()
+                && transform.getPosition().y + height >= e.getY();
+    }
+
+    public TransformComponent getTransform() {
+        return transform;
+    }
+
+    public GeometryComponent getGeometry() {
+        return geometry;
+    }
+
+    public FontRenderComponent getText() {
+        return text;
+    }
+
+    public ArrayList<ButtonEventListener> getListeners() {
+        return listeners;
     }
 }
