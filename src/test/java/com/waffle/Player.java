@@ -52,7 +52,7 @@ public class Player extends GameObject {
     }
 
     public void shoot() {
-        world.createGameObject(new Bullet((int)(Math.random() * 150 + 10), transform.position.x, transform.position.y));
+        world.createGameObject(new Bullet((int)(Math.random() * 150 + 10), transform.position.x, transform.position.y), 1);
     }
 
     public Vec2f getPosition() {

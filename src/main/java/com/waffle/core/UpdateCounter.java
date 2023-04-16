@@ -1,7 +1,7 @@
 package com.waffle.core;
 
 public class UpdateCounter {
-    private int updateFrequency;
+    private final int updateFrequency;
     private int updateCounter;
 
     public UpdateCounter(int updateFrequency) {

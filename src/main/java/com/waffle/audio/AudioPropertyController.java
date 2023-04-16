@@ -4,7 +4,7 @@ import javax.sound.sampled.Control;
 import javax.sound.sampled.FloatControl;
 
 public class AudioPropertyController {
-    private FloatControl control;
+    private final FloatControl control;
     public AudioPropertyController(FloatControl c) {
         control = c;
     }

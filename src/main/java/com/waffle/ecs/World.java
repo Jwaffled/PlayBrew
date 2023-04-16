@@ -1,15 +1,15 @@
 package com.waffle.ecs;
 
 import java.lang.reflect.Field;
-import java.util.BitSet;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 public class World {
     private final EntityManager entityManager;
     private final ComponentManager componentManager;
     private final SystemManager systemManager;
     private final Set<GameObject> gameObjects;
+    private final Map<Integer, Integer> entityToLayerMap;
+    private int validLayers = 0;
 
     /**
      * Creates a new World (Entity Component System).
@@ -23,13 +23,18 @@ public class World {
         entityManager = new EntityManager(maxEntities);
         componentManager = new ComponentManager(maxEntities);
         systemManager = new SystemManager();
+        entityToLayerMap = new HashMap<>();
         gameObjects = new HashSet<>();
     }
 
     public <T extends GameObject> void createGameObject(T gameObj) {
+        createGameObject(gameObj, 0);
+    }
+
+    public <T extends GameObject> void createGameObject(T gameObj, int layer) {
         // Instantiate all fields that inherit from IComponent
         gameObj.start();
-        int objID = entityManager.createEntity();
+        int objID = createEntity(layer);
         gameObj.ID = objID;
         gameObj.setWorld(this);
 
@@ -68,11 +73,36 @@ public class World {
     }
 
     /**
+     * Creates valid layers from [0, upper) for entities<br>
+     * <i><b>MUST</b></i> be called before adding entities
+     * @param upper the upper limit (NOT INCLUSIVE) of layers to create
+     */
+    public void createLayers(int upper) {
+        validLayers = upper;
+        for(ECSSystem sys : systemManager.getSystems().values()) {
+            for(int i = 0; i < upper; i++) {
+                sys.entities.put(i, new HashSet<>());
+            }
+        }
+    }
+
+    public int createEntity() {
+        if(validLayers == 0) {
+            throw new IllegalArgumentException("Entity layer '0' out of range (Did you call createLayers()?).");
+        }
+        return entityManager.createEntity(0);
+    }
+
+    /**
      * Allocates an entity within the world and returns its ID.
+     * @param layer the layer the entity should be placed on
      * @return an integer representing a unique ID for an entity
      */
-    public int createEntity() {
-        return entityManager.createEntity();
+    public int createEntity(int layer) {
+        if(layer > validLayers) {
+            throw new IllegalArgumentException("Entity layer '" + layer + "' out of range (Did you call createLayers()?).");
+        }
+        return entityManager.createEntity(layer);
     }
 
     /**
@@ -114,7 +144,7 @@ public class World {
         entitySig.set(componentManager.getComponentType(component.getClass()), true);
         entityManager.setSignature(entity, entitySig);
 
-        systemManager.entitySignatureChanged(entity, entitySig);
+        systemManager.entitySignatureChanged(entity, entityManager.getEntityLayer(entity), entitySig);
     }
 
     /**
@@ -133,7 +163,7 @@ public class World {
         entitySig.set(componentManager.getComponentType(tClass), false);
         entityManager.setSignature(entity, entitySig);
 
-        systemManager.entitySignatureChanged(entity, entitySig);
+        systemManager.entitySignatureChanged(entity, entityManager.getEntityLayer(entity), entitySig);
     }
 
     /**

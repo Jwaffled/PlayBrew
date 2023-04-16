@@ -20,9 +20,9 @@ public class Bullet extends GameObject {
             System.out.println("ERROR: " + e.getMessage());
         }
     }
-    private TransformComponent transform;
-    private SpriteRenderComponent sprite;
-    private int speed;
+    private final TransformComponent transform;
+    private final SpriteRenderComponent sprite;
+    private final int speed;
 
     public Bullet(int speed, float x, float y) {
         this.speed = speed;

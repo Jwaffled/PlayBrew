@@ -43,6 +43,10 @@ public class SystemManager {
         return (T) systems.get(name);
     }
 
+    public Map<String, ECSSystem> getSystems() {
+        return systems;
+    }
+
     public <T extends ECSSystem> void setSignature(BitSet signature, Class<T> tClass) {
         String name = tClass.getTypeName();
 
@@ -59,7 +63,7 @@ public class SystemManager {
         }
     }
 
-    public void entitySignatureChanged(int entity, BitSet entitySignature) {
+    public void entitySignatureChanged(int entity, int layer, BitSet entitySignature) {
         for(Map.Entry<String, ECSSystem> entry : systems.entrySet()) {
             String type = entry.getKey();
             ECSSystem system = entry.getValue();
@@ -68,9 +72,9 @@ public class SystemManager {
             BitSet cloned = (BitSet) entitySignature.clone();
             cloned.and(systemSignature);
             if(cloned.equals(systemSignature)) {
-                system.entities.add(entity);
+                system.entities.get(layer).add(entity);
             } else {
-                system.entities.remove(entity);
+                system.entities.get(layer).remove(entity);
             }
         }
     }

@@ -9,9 +9,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class StereoSoundEffect implements FreeableResource {
-    private Clip audioClip;
+    private final Clip audioClip;
     private long clipTime;
-    private Map<FloatControl.Type, AudioPropertyController> controllerMap;
+    private final Map<FloatControl.Type, AudioPropertyController> controllerMap;
 
     public StereoSoundEffect(String pathToResource) throws UnsupportedAudioFileException, IOException, LineUnavailableException {
         InputStream inputStream = getClass().getClassLoader().getResourceAsStream(pathToResource);

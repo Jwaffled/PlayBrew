@@ -3,7 +3,8 @@ package com.waffle.render;
 import com.waffle.core.Vec2f;
 
 public class Camera {
-    private int width, height;
+    private final int width;
+    private final int height;
     public Vec2f position;
     public float zoomScale;
 

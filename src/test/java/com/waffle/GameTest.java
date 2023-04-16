@@ -2,13 +2,11 @@ package com.waffle;
 
 import com.waffle.audio.StereoSoundEffect;
 import com.waffle.core.Game;
-import com.waffle.core.UITexture;
 import com.waffle.core.Utils;
 import com.waffle.core.Vec2f;
 import com.waffle.input.*;
 import com.waffle.render.Camera;
 import com.waffle.ui.ButtonEventListener;
-import com.waffle.ui.Slider;
 import com.waffle.ui.TexturedButton;
 import com.waffle.ui.TexturedSlider;
 
@@ -83,6 +81,7 @@ public class GameTest extends Game {
     }
 
     public void start() {
+        world.createLayers(4);
         INSTANCE = this;
         currentVolume = -20;
         camera = new Camera(960, 540);
@@ -165,7 +164,7 @@ public class GameTest extends Game {
         bgm.start();
 
         world.createGameObject(slider);
-        world.createGameObject(player);
+        world.createGameObject(player, 2);
         world.createGameObject(debug);
         world.createGameObject(button);
 

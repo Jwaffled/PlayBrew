@@ -1,11 +1,10 @@
 package com.waffle.ecs;
 
-import java.util.BitSet;
-import java.util.Deque;
-import java.util.LinkedList;
+import java.util.*;
 
 public class EntityManager {
     private final Deque<Integer> availableEntities = new LinkedList<>();
+    private final Map<Integer, Integer> entityToLayers = new HashMap<>();
     private final BitSet[] signatures;
     private final int maxEntityCount;
     private int livingEntityCount;
@@ -19,14 +18,23 @@ public class EntityManager {
         }
     }
 
-    public int createEntity() {
+    public int createEntity(int layer) {
         if(livingEntityCount >= maxEntityCount) {
             throw new IllegalStateException("Too many entities in existence.");
         }
 
         int id = availableEntities.pop();
+        entityToLayers.put(id, layer);
         livingEntityCount++;
         return id;
+    }
+
+    public int getEntityLayer(int entity) {
+        if(entity > maxEntityCount) {
+            throw new IllegalStateException("Entity out of range.");
+        }
+
+        return entityToLayers.get(entity);
     }
 
     public void removeEntity(int entity) {
