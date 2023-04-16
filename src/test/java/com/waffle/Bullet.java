@@ -2,6 +2,7 @@ package com.waffle;
 
 import com.waffle.components.SpriteRenderComponent;
 import com.waffle.components.TransformComponent;
+import com.waffle.core.SpriteRenderer;
 import com.waffle.core.Vec2f;
 import com.waffle.ecs.GameObject;
 
@@ -26,7 +27,8 @@ public class Bullet extends GameObject {
 
     public Bullet(int speed, float x, float y) {
         this.speed = speed;
-        sprite = new SpriteRenderComponent(new Vec2f(), image, 50, 50);
+        sprite = new SpriteRenderComponent();
+        sprite.sprites.add(new SpriteRenderer(new Vec2f(), image, 50, 50));
         transform = new TransformComponent(new Vec2f(x, y));
     }
 

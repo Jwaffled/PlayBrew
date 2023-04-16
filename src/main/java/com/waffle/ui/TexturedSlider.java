@@ -53,6 +53,10 @@ public class TexturedSlider extends GameObject implements MouseListener {
         return minValue + (sliderRect.position.x / width) * (maxValue - minValue);
     }
 
+    public void setValue(float v) {
+        sliderRect.position.x = (v - minValue) / (maxValue - minValue) * width;
+    }
+
     public float getNormalizedValue() {
         return sliderRect.position.x / width;
     }

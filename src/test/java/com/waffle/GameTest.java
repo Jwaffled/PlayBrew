@@ -6,6 +6,8 @@ import com.waffle.core.Utils;
 import com.waffle.core.Vec2f;
 import com.waffle.input.*;
 import com.waffle.render.Camera;
+import com.waffle.tilemap.Tilemap;
+import com.waffle.tilemap.TilemapBuilder;
 import com.waffle.ui.ButtonEventListener;
 import com.waffle.ui.TexturedButton;
 import com.waffle.ui.TexturedSlider;
@@ -18,6 +20,7 @@ import java.awt.image.BufferedImage;
 
 public class GameTest extends Game {
     public Player player;
+    public Tilemap tilemap;
     private StereoSoundEffect effect;
     private StereoSoundEffect bgm;
     private DebugMenu debug;
@@ -37,6 +40,11 @@ public class GameTest extends Game {
         super.update(dt);
         frameCounter.update(dt);
 
+        currentVolume = slider.getValue();
+        effect.getVolumeControl().setValue(currentVolume);
+        bgm.getVolumeControl().setValue(currentVolume);
+
+
         if(keybinds.triggered("Exit")) {
             window.dispatchEvent(new WindowEvent(window, WindowEvent.WINDOW_CLOSING));
         }
@@ -47,14 +55,12 @@ public class GameTest extends Game {
 
         if(keybinds.triggered("VolUp")) {
             currentVolume = effect.getVolumeControl().getValue() + 0.1f;
-            effect.getVolumeControl().setValue(currentVolume);
-            bgm.getVolumeControl().setValue(currentVolume);
+            slider.setValue(currentVolume);
         }
 
         if(keybinds.triggered("VolDown")) {
             currentVolume = effect.getVolumeControl().getValue() - 0.1f;
-            effect.getVolumeControl().setValue(currentVolume);
-            bgm.getVolumeControl().setValue(currentVolume);
+            slider.setValue(currentVolume);
         }
 
         if(keybinds.triggered("PanUp")) {
@@ -73,7 +79,7 @@ public class GameTest extends Game {
             camera.position.addX(10 * camera.zoomScale);
         }
 
-        if(keybinds.triggered("Fire")) {
+        if(keybinds.triggered("Fire") && player.canShoot()) {
             player.shoot();
             effect.restart();
             effect.start();
@@ -94,21 +100,34 @@ public class GameTest extends Game {
 
         BufferedImage tint = Utils.applyTint(texture, new Color(90, 90, 90, 100));
 
+        BufferedImage grassTex = Utils.loadImageFromPath("Grass.png");
+        BufferedImage dirtTex = Utils.loadImageFromPath("Dirt.png");
+
         player = new Player();
         frameCounter = new FrameCounter();
         debug = new DebugMenu();
+
+
+        tilemap = Tilemap.newBuilder()
+                .addTilemapping(1, grassTex)
+                .addTilemapping(2, dirtTex)
+                .setRow(0, 1)
+                .setRows(0, TilemapBuilder.TO_END, 2)
+                .buildTilemap();
+
         button = TexturedButton.newBuilder()
-                .setX(100)
-                .setY(300)
+                .setX(750)
+                .setY(95)
                 .setWidth(100)
                 .setHeight(50)
-                //.setButtonMessage("Testing")
-                .setMessageOffset(new Vec2f(30, 20))
+                .setButtonMessage("Player can shoot: true")
+                .setMessageOffset(new Vec2f(-10, -30))
                 .setButtonTexture(texture)
                 .addButtonListener(new ButtonEventListener() {
                     @Override
                     public void buttonClicked() {
-                        System.out.println("Button clicked");
+                        player.setCanShoot(!player.canShoot());
+                        button.text.message = "Player can shoot: " + player.canShoot();
                     }
 
                     @Override
@@ -139,14 +158,14 @@ public class GameTest extends Game {
         BufferedImage sliderTrack = Utils.loadImageFromPath("SliderTrack.png");
 
         slider = TexturedSlider.newBuilder()
-                .setX(300)
-                .setY(200)
+                .setX(750)
+                .setY(15)
                 .setWidth(200)
-                .setHeight(300)
-                .setMinValue(0)
-                .setMaxValue(600)
+                .setHeight(50)
+                .setMinValue(-60)
+                .setMaxValue(0)
                 .setSliderWidth(10)
-                .setStartingValue(50)
+                .setStartingValue(-20)
                 .setSliderTexture(sliderRect)
                 .setTrackTexture(sliderTrack)
                 .buildTexturedSlider();
@@ -164,6 +183,7 @@ public class GameTest extends Game {
         bgm.start();
 
         world.createGameObject(slider);
+        world.createGameObject(tilemap, 1);
         world.createGameObject(player, 2);
         world.createGameObject(debug);
         world.createGameObject(button);

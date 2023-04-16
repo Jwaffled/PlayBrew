@@ -116,7 +116,7 @@ public class SliderBuilder {
         return s;
     }
 
-    private int calculateSliderRectX() {
-        return (int)((float)(startingValue - minValue) / (maxValue - minValue) * width);
+    private float calculateSliderRectX() {
+        return (float)(startingValue - minValue) / (maxValue - minValue) * width;
     }
 }

@@ -51,6 +51,10 @@ public class Slider extends GameObject implements MouseListener {
         return minValue + (sliderRect.pos.x / width) * (maxValue - minValue);
     }
 
+    public void setValue(float v) {
+        sliderRect.pos.x = (v - minValue) / (maxValue - minValue) * width;
+    }
+
     public float getNormalizedValue() {
         return sliderRect.pos.x / width;
     }
