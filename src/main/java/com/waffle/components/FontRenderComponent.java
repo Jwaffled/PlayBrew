@@ -12,17 +12,17 @@ public class FontRenderComponent implements IComponent {
     private Color color;
 
     public FontRenderComponent(String msg) {
-        this.setMessage(msg);
-        setPosition(new Vec2f(0, 0));
-        setFont(new Font(Font.SANS_SERIF, Font.PLAIN, 12));
-        setColor(Color.black);
+        message = msg;
+        position = new Vec2f(0, 0);
+        font = new Font(Font.SANS_SERIF, Font.PLAIN, 12);
+        color = Color.black;
     }
 
-    public FontRenderComponent(String msg, Font font, int fontSize, Color color) {
-        this.setMessage(msg);
-        this.setFont(font);
-        this.setPosition(new Vec2f(0, 0));
-        this.setColor(color);
+    public FontRenderComponent(String msg, Font f, int fontSize, Color c) {
+        message = msg;
+        font = f;
+        position = new Vec2f(0, 0);
+        color = c;
     }
 
     public String getMessage() {

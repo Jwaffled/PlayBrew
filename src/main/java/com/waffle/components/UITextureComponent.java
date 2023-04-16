@@ -10,11 +10,11 @@ public final class UITextureComponent implements IComponent {
     private List<UITexture> textures;
 
     public UITextureComponent(List<UITexture> t) {
-        setTextures(t);
+        textures = t;
     }
 
     public UITextureComponent() {
-        setTextures(new ArrayList<>());
+        textures = new ArrayList<>();
     }
 
     public List<UITexture> getTextures() {

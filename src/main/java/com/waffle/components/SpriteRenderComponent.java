@@ -9,11 +9,11 @@ import java.util.List;
 public class SpriteRenderComponent implements IComponent {
     private List<SpriteRenderer> sprites;
     public SpriteRenderComponent(List<SpriteRenderer> l) {
-        setSprites(l);
+        sprites = l;
     }
 
     public SpriteRenderComponent() {
-        setSprites(new ArrayList<>());
+        sprites = new ArrayList<>();
     }
 
     public List<SpriteRenderer> getSprites() {

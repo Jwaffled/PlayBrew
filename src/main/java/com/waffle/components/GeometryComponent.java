@@ -9,12 +9,12 @@ import java.util.List;
 public class GeometryComponent implements IComponent {
     private List<RenderShape> shapes;
 
-    public GeometryComponent(List<RenderShape> shapes) {
-        this.setShapes(shapes);
+    public GeometryComponent(List<RenderShape> s) {
+        shapes = s;
     }
 
     public GeometryComponent() {
-        setShapes(new ArrayList<>());
+        shapes = new ArrayList<>();
     }
 
     public List<RenderShape> getShapes() {

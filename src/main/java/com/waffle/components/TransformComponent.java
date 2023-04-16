@@ -7,11 +7,11 @@ public class TransformComponent implements IComponent {
     private Vec2f position;
 
     public TransformComponent(float x, float y) {
-        setPosition(new Vec2f(x, y));
+        position = new Vec2f(x, y);
     }
 
     public TransformComponent(Vec2f pos) {
-        setPosition(new Vec2f(pos));
+        position = new Vec2f(pos);
     }
 
     public Vec2f getPosition() {

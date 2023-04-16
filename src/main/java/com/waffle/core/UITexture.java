@@ -8,11 +8,11 @@ public class UITexture {
     private int width;
     private int height;
 
-    public UITexture(Vec2f position, BufferedImage sprite, int width, int height) {
-        this.setPosition(position);
-        this.setSprite(sprite);
-        this.setWidth(width);
-        this.setHeight(height);
+    public UITexture(Vec2f pos, BufferedImage spr, int w, int h) {
+        position = pos;
+        sprite = spr;
+        width = w;
+        height = h;
     }
 
     public Vec2f getPosition() {

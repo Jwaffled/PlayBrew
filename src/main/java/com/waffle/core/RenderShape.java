@@ -10,12 +10,12 @@ public class RenderShape {
     private Color color;
     private Vec2f position;
     public RenderShape(Constants.ShapeType s, Constants.DrawMode m, Color c, int w, int h, Vec2f p) {
-        setShape(s);
-        setMode(m);
-        setColor(c);
-        setWidth(w);
-        setHeight(h);
-        setPosition(p);
+        shape = s;
+        mode = m;
+        color = c;
+        width = w;
+        height = h;
+        position = p;
     }
 
     public int getWidth() {

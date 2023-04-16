@@ -9,10 +9,10 @@ public class SpriteRenderer {
     private BufferedImage sprite;
 
     public SpriteRenderer(Vec2f pos, BufferedImage spr, int w, int h) {
-        setPosition(pos);
-        setSprite(spr);
-        setWidth(w);
-        setHeight(h);
+        position = pos;
+        sprite = spr;
+        width = w;
+        height = h;
     }
 
     public Vec2f getPosition() {
