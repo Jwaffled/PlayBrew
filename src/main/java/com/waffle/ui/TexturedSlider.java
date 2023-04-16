@@ -2,7 +2,9 @@ package com.waffle.ui;
 
 import com.waffle.components.GeometryComponent;
 import com.waffle.components.TransformComponent;
+import com.waffle.components.UITextureComponent;
 import com.waffle.core.RenderShape;
+import com.waffle.core.UITexture;
 import com.waffle.core.Vec2f;
 import com.waffle.ecs.GameObject;
 import com.waffle.input.Input;
@@ -11,11 +13,11 @@ import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
-public class Slider extends GameObject implements MouseListener {
+public class TexturedSlider extends GameObject implements MouseListener {
     public TransformComponent position;
-    public GeometryComponent geometryComponent;
-    RenderShape sliderRect;
-    RenderShape sliderTrack;
+    public UITextureComponent texture;
+    UITexture sliderRect;
+    UITexture sliderTrack;
     int maxValue, minValue;
     int width, height;
     private boolean heldDown = false;
@@ -26,8 +28,8 @@ public class Slider extends GameObject implements MouseListener {
 
     @Override
     public void start() {
-        geometryComponent.shapes.add(sliderTrack);
-        geometryComponent.shapes.add(sliderRect);
+        texture.textures.add(sliderTrack);
+        texture.textures.add(sliderRect);
         Input.getInstance().addMouseListener(this);
     }
 
@@ -38,21 +40,21 @@ public class Slider extends GameObject implements MouseListener {
             float minX = position.position.x;
             float maxX = position.position.x + width;
             if(mousePt.x <= minX) {
-              sliderRect.pos.x = 0;
+                sliderRect.position.x = 0;
             } else if(mousePt.x >= maxX) {
-                sliderRect.pos.x = width;
+                sliderRect.position.x = width;
             } else {
-                sliderRect.pos.x = mousePt.x - position.position.x;
+                sliderRect.position.x = mousePt.x - position.position.x;
             }
         }
     }
 
     public float getValue() {
-        return minValue + (sliderRect.pos.x / width) * (maxValue - minValue);
+        return minValue + (sliderRect.position.x / width) * (maxValue - minValue);
     }
 
     public float getNormalizedValue() {
-        return sliderRect.pos.x / width;
+        return sliderRect.position.x / width;
     }
 
     @Override
@@ -83,7 +85,7 @@ public class Slider extends GameObject implements MouseListener {
     }
 
     public boolean mouseWithin() {
-        Vec2f sliderPoint = position.position.add(sliderRect.pos);
+        Vec2f sliderPoint = position.position.add(sliderRect.position);
         Point e = Input.getInstance().mousePosition;
         return sliderPoint.x <= e.getX()
                 && sliderPoint.x + sliderRect.width >= e.getX()

@@ -2,6 +2,7 @@ package com.waffle;
 
 import com.waffle.audio.StereoSoundEffect;
 import com.waffle.core.Game;
+import com.waffle.core.UITexture;
 import com.waffle.core.Utils;
 import com.waffle.core.Vec2f;
 import com.waffle.input.*;
@@ -9,6 +10,7 @@ import com.waffle.render.Camera;
 import com.waffle.ui.ButtonEventListener;
 import com.waffle.ui.Slider;
 import com.waffle.ui.TexturedButton;
+import com.waffle.ui.TexturedSlider;
 
 import java.awt.*;
 import java.awt.event.KeyEvent;
@@ -22,7 +24,7 @@ public class GameTest extends Game {
     private StereoSoundEffect bgm;
     private DebugMenu debug;
     private TexturedButton button;
-    public Slider slider;
+    public TexturedSlider slider;
     public Camera camera;
     public KeybindManager keybinds;
     public float currentVolume;
@@ -112,12 +114,12 @@ public class GameTest extends Game {
 
                     @Override
                     public void buttonPressed() {
-                        button.texture.sprite = tint;
+                        button.setCurrentTexture(tint);
                     }
 
                     @Override
                     public void buttonReleased() {
-                        button.texture.sprite = texture;
+                        button.setCurrentTexture(texture);
                     }
 
                     @Override
@@ -134,15 +136,21 @@ public class GameTest extends Game {
                 })
                 .buildTexturedButton();
 
-        slider = Slider.newBuilder()
+        BufferedImage sliderRect = Utils.loadImageFromPath("SliderRect.png");
+        BufferedImage sliderTrack = Utils.loadImageFromPath("SliderTrack.png");
+
+        slider = TexturedSlider.newBuilder()
                 .setX(300)
                 .setY(200)
                 .setWidth(200)
-                .setHeight(50)
-                .setMinValue(-50)
-                .setMaxValue(150)
+                .setHeight(300)
+                .setMinValue(0)
+                .setMaxValue(600)
+                .setSliderWidth(10)
                 .setStartingValue(50)
-                .buildSlider();
+                .setSliderTexture(sliderRect)
+                .setTrackTexture(sliderTrack)
+                .buildTexturedSlider();
 
 
         try {

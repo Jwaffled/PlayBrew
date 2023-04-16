@@ -5,6 +5,7 @@ import com.waffle.components.GeometryComponent;
 import com.waffle.components.TransformComponent;
 import com.waffle.components.UITextureComponent;
 import com.waffle.core.RenderShape;
+import com.waffle.core.UITexture;
 import com.waffle.core.Vec2f;
 
 import javax.imageio.ImageIO;
@@ -111,8 +112,11 @@ public class ButtonBuilder {
             throw new IllegalStateException("Tried to build textured button without a valid texture. (Call addButtonTexture()?)");
         }
         b.listeners = listeners;
-        b.texture = new UITextureComponent(new Vec2f(0, 0), buttonTexture, width, height);
+        b.texture = new UITextureComponent();
+        b.texture.textures.add(new UITexture(new Vec2f(0, 0), buttonTexture, width, height));
         b.position = new TransformComponent(x, y);
+        b.width = width;
+        b.height = height;
         if(!buttonMessage.equals("")) {
             b.text = new FontRenderComponent(buttonMessage);
             b.text.color = fontColor;

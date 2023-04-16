@@ -1,20 +1,19 @@
 package com.waffle.components;
 
-import com.waffle.core.Vec2f;
+import com.waffle.core.UITexture;
 import com.waffle.ecs.IComponent;
 
-import java.awt.image.BufferedImage;
+import java.util.ArrayList;
+import java.util.List;
 
 public final class UITextureComponent implements IComponent {
-    public Vec2f position;
-    public BufferedImage sprite;
-    public int width;
-    public int height;
+    public List<UITexture> textures;
 
-    public UITextureComponent(Vec2f position, BufferedImage sprite, int width, int height) {
-        this.position = position;
-        this.sprite = sprite;
-        this.width = width;
-        this.height = height;
+    public UITextureComponent(List<UITexture> t) {
+        textures = t;
+    }
+
+    public UITextureComponent() {
+        textures = new ArrayList<>();
     }
 }

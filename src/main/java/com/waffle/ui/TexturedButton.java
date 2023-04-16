@@ -9,6 +9,7 @@ import com.waffle.input.Input;
 import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
 public class TexturedButton extends GameObject implements MouseListener {
@@ -16,6 +17,7 @@ public class TexturedButton extends GameObject implements MouseListener {
     public TransformComponent position;
     public FontRenderComponent text;
     public ArrayList<ButtonEventListener> listeners = new ArrayList<>();
+    public int width, height;
     private boolean mouseWithinLastFrame = false;
     public static ButtonBuilder newBuilder() {
         return new ButtonBuilder();
@@ -44,6 +46,10 @@ public class TexturedButton extends GameObject implements MouseListener {
 
     public void addButtonListener(ButtonEventListener l) {
         listeners.add(l);
+    }
+
+    public void setCurrentTexture(BufferedImage b) {
+        texture.textures.get(0).sprite = b;
     }
 
     @Override
@@ -84,8 +90,8 @@ public class TexturedButton extends GameObject implements MouseListener {
     public boolean mouseWithin() {
         Point e = Input.getInstance().mousePosition;
         return position.position.x <= e.getX()
-                && position.position.x + texture.width >= e.getX()
+                && position.position.x + width >= e.getX()
                 && position.position.y <= e.getY()
-                && position.position.y + texture.height >= e.getY();
+                && position.position.y + height >= e.getY();
     }
 }

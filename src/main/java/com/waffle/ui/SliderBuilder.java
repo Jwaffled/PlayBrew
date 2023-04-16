@@ -2,10 +2,13 @@ package com.waffle.ui;
 
 import com.waffle.components.GeometryComponent;
 import com.waffle.components.TransformComponent;
+import com.waffle.components.UITextureComponent;
 import com.waffle.core.RenderShape;
+import com.waffle.core.UITexture;
 import com.waffle.core.Vec2f;
 
 import java.awt.*;
+import java.awt.image.BufferedImage;
 
 import static com.waffle.core.Constants.*;
 
@@ -13,7 +16,10 @@ public class SliderBuilder {
     private int maxValue, minValue;
     private int startingValue;
     private int width, height;
+    private int sliderWidth;
     private int x, y;
+    private BufferedImage sliderSprite;
+    private BufferedImage trackSprite;
 
     public SliderBuilder() {
         maxValue = 100;
@@ -23,6 +29,7 @@ public class SliderBuilder {
         height = 50;
         x = 0;
         y = 0;
+        sliderWidth = width / 10;
     }
 
     public SliderBuilder setMaxValue(int max) {
@@ -50,6 +57,11 @@ public class SliderBuilder {
         return this;
     }
 
+    public SliderBuilder setSliderWidth(int w) {
+        sliderWidth = w;
+        return this;
+    }
+
     public SliderBuilder setX(int newX) {
         x = newX;
         return this;
@@ -60,12 +72,22 @@ public class SliderBuilder {
         return this;
     }
 
+    public SliderBuilder setTrackTexture(BufferedImage s) {
+        trackSprite = s;
+        return this;
+    }
+
+    public SliderBuilder setSliderTexture(BufferedImage s){
+        sliderSprite = s;
+        return this;
+    }
+
     public Slider buildSlider() {
         Slider s = new Slider();
         s.geometryComponent = new GeometryComponent();
         s.position = new TransformComponent(x, y);
         s.sliderRect = new RenderShape(ShapeType.RECTANGLE, DrawMode.FILLED, Color.BLACK,
-                width / 10, height,
+                sliderWidth, height,
                 new Vec2f(calculateSliderRectX(), 0)
         );
         s.sliderTrack = new RenderShape(ShapeType.RECTANGLE, DrawMode.FILLED, Color.GRAY,
@@ -78,7 +100,23 @@ public class SliderBuilder {
         return s;
     }
 
+    public TexturedSlider buildTexturedSlider() {
+        TexturedSlider s = new TexturedSlider();
+        s.texture = new UITextureComponent();
+        s.position = new TransformComponent(x, y);
+        if(sliderSprite == null || trackSprite == null) {
+            throw new IllegalStateException("Tried to build textured slider without both a track and slider texture. (Call setTrackTexture() and setSliderTexture()?)");
+        }
+        s.sliderRect = new UITexture(new Vec2f(calculateSliderRectX(), 0), sliderSprite, sliderWidth, height);
+        s.sliderTrack = new UITexture(new Vec2f(0, height / 2f - height / 12f), trackSprite, width, height / 6);
+        s.width = width;
+        s.height = height;
+        s.maxValue = maxValue;
+        s.minValue = minValue;
+        return s;
+    }
+
     private int calculateSliderRectX() {
-        return (int)((float)startingValue / (maxValue + minValue) * width);
+        return (int)((float)(startingValue - minValue) / (maxValue - minValue) * width);
     }
 }
