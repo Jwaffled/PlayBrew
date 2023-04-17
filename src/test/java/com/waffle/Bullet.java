@@ -32,7 +32,7 @@ public class Bullet extends GameObject {
     }
 
     public void update(float dt) {
-        transform.getPosition().addY(speed * dt);
+        transform.getPosition().y += speed * dt;
     }
 
     @Override

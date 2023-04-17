@@ -24,19 +24,19 @@ public class Player extends GameObject {
     public void update(float dt) {
         sprite.getSprites().get(0).setSprite(animation.getFrame());
         if(GameTest.INSTANCE.keybinds.triggered("MoveLeft")) {
-            transform.getPosition().addX(-450 * dt);
+            transform.getPosition().x += -450 * dt;
         }
 
         if(GameTest.INSTANCE.keybinds.triggered("MoveRight")) {
-            transform.getPosition().addX(450 * dt);
+            transform.getPosition().x += 450 * dt;
         }
 
         if(GameTest.INSTANCE.keybinds.triggered("MoveUp")) {
-            transform.getPosition().addY(-450 * dt);
+            transform.getPosition().y += -450 * dt;
         }
 
         if(GameTest.INSTANCE.keybinds.triggered("MoveDown")) {
-            transform.getPosition().addY(450 * dt);
+            transform.getPosition().y += 450 * dt;
         }
     }
 
