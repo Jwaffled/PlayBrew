@@ -93,7 +93,7 @@ public class TexturedButton extends GameObject implements MouseListener {
         return transform.getPosition().x <= e.getX()
                 && transform.getPosition().x + width >= e.getX()
                 && transform.getPosition().y <= e.getY()
-                && transform.getPosition().y + width >= e.getY();
+                && transform.getPosition().y + height >= e.getY();
     }
 
     public UITextureComponent getTexture() {

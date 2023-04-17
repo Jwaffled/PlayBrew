@@ -63,19 +63,19 @@ public class GameTest extends Game {
         }
 
         if(keybinds.triggered("PanUp")) {
-            camera.getPosition().addY(-10 * camera.getZoomScale());
+            camera.getPosition().y += -10 * camera.getZoomScale();
         }
 
         if(keybinds.triggered("PanDown")) {
-            camera.getPosition().addY(10 * camera.getZoomScale());
+            camera.getPosition().y += 10 * camera.getZoomScale();
         }
 
         if(keybinds.triggered("PanLeft")) {
-            camera.getPosition().addX(-10 * camera.getZoomScale());
+            camera.getPosition().x += -10 * camera.getZoomScale();
         }
 
         if(keybinds.triggered("PanRight")) {
-            camera.getPosition().addX(10 * camera.getZoomScale());
+            camera.getPosition().x += 10 * camera.getZoomScale();
         }
 
         if(keybinds.triggered("Fire") && player.canShoot()) {
@@ -99,8 +99,9 @@ public class GameTest extends Game {
 
         BufferedImage tint = Utils.applyTint(texture, new Color(90, 90, 90, 100));
 
-        BufferedImage grassTex = Utils.loadImageFromPath("Grass.png");
-        BufferedImage dirtTex = Utils.loadImageFromPath("Dirt.png");
+        BufferedImage tile1 = Utils.loadImageFromPath("Tile-CounterTop-F0.png");
+        BufferedImage tile2 = Utils.loadImageFromPath("Tile-CounterTop-F1.png");
+        BufferedImage tile3 = Utils.loadImageFromPath("Tile-CounterTop-F2.png");
 
         player = new Player();
         frameCounter = new FrameCounter();
@@ -108,13 +109,14 @@ public class GameTest extends Game {
 
 
         tilemap = Tilemap.newBuilder()
-                .addTilemapping(1, grassTex)
-                .addTilemapping(2, dirtTex)
+                .addTilemapping(1, tile1)
+                .addTilemapping(2, tile2)
+                .addTilemapping(3, tile3)
                 .setWidth(960)
-                .setHeight(129)
+                .setHeight(128)
                 .setY(300)
-                .setTileHeight(32)
-                .setTileWidth(32)
+                .setTileHeight(30)
+                .setTileWidth(30)
                 .setRandomTiles()
                 .buildTilemap();
 
