@@ -19,9 +19,9 @@ public class SpriteRenderSystem extends ECSSystem {
                 SpriteRenderComponent sprites = world.getComponent(entity, SpriteRenderComponent.class);
                 Vec2f drawPos;
                 Vec2f scalar;
-                for(SpriteRenderer s : sprites.getSprites()) {
+                for(SpriteRenderer s : sprites.sprites) {
                     if(camera != null) {
-                        drawPos = comp.getPosition()
+                        drawPos = comp.position
                                 .add(s.getPosition())
                                 .sub(camera.getPosition());
 
@@ -29,7 +29,7 @@ public class SpriteRenderSystem extends ECSSystem {
                                 .div(new Vec2f(camera.getWidth(), camera.getHeight()))
                                 .div(camera.getZoomScale());
                     } else {
-                        drawPos = comp.getPosition().add(s.getPosition());
+                        drawPos = comp.position.add(s.getPosition());
                         scalar = new Vec2f(1, 1);
                     }
 

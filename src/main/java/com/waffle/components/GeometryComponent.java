@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class GeometryComponent implements IComponent {
-    private List<RenderShape> shapes;
+    public List<RenderShape> shapes;
 
     public GeometryComponent(List<RenderShape> s) {
         shapes = s;
@@ -15,13 +15,5 @@ public class GeometryComponent implements IComponent {
 
     public GeometryComponent() {
         shapes = new ArrayList<>();
-    }
-
-    public List<RenderShape> getShapes() {
-        return shapes;
-    }
-
-    public void setShapes(List<RenderShape> shapes) {
-        this.shapes = shapes;
     }
 }

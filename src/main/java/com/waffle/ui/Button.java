@@ -85,10 +85,10 @@ public class Button extends GameObject implements MouseListener {
 
     public boolean mouseWithin() {
         Point e = Input.getInstance().getMousePosition();
-        return transform.getPosition().x <= e.getX()
-                && transform.getPosition().x + width >= e.getX()
-                && transform.getPosition().y <= e.getY()
-                && transform.getPosition().y + height >= e.getY();
+        return transform.position.x <= e.getX()
+                && transform.position.x + width >= e.getX()
+                && transform.position.y <= e.getY()
+                && transform.position.y + height >= e.getY();
     }
 
     public TransformComponent getTransform() {

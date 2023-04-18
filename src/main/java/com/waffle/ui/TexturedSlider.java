@@ -26,8 +26,8 @@ public class TexturedSlider extends GameObject implements MouseListener {
 
     @Override
     public void start() {
-        getTexture().getTextures().add(sliderTrack);
-        getTexture().getTextures().add(sliderRect);
+        texture.textures.add(sliderTrack);
+        texture.textures.add(sliderRect);
         Input.getInstance().addMouseListener(this);
     }
 
@@ -35,14 +35,14 @@ public class TexturedSlider extends GameObject implements MouseListener {
     public void update(float dt) {
         if(heldDown) {
             Point mousePt = Input.getInstance().getMousePosition();
-            float minX = transform.getPosition().x;
-            float maxX = transform.getPosition().x + width;
+            float minX = transform.position.x;
+            float maxX = transform.position.x + width;
             if(mousePt.x <= minX) {
                 sliderRect.getPosition().x = 0;
             } else if(mousePt.x >= maxX) {
                 sliderRect.getPosition().x = width;
             } else {
-                sliderRect.getPosition().x = mousePt.x - transform.getPosition().x;
+                sliderRect.getPosition().x = mousePt.x - transform.position.x;
             }
         }
     }
@@ -87,7 +87,7 @@ public class TexturedSlider extends GameObject implements MouseListener {
     }
 
     public boolean mouseWithin() {
-        Vec2f sliderPoint = transform.getPosition().add(sliderRect.getPosition());
+        Vec2f sliderPoint = transform.position.add(sliderRect.getPosition());
         Point e = Input.getInstance().getMousePosition();
         return sliderPoint.x <= e.getX()
                 && sliderPoint.x + sliderRect.getWidth() >= e.getX()

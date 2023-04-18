@@ -1,5 +1,6 @@
 package com.waffle;
 
+import com.waffle.components.KinematicComponent;
 import com.waffle.components.SpriteRenderComponent;
 import com.waffle.components.TransformComponent;
 import com.waffle.core.SpriteRenderer;
@@ -21,18 +22,21 @@ public class Bullet extends GameObject {
         }
     }
     private final TransformComponent transform;
+    private final KinematicComponent kinematics;
     private final SpriteRenderComponent sprite;
     private final int speed;
 
     public Bullet(int speed, float x, float y) {
         this.speed = speed;
         sprite = new SpriteRenderComponent();
-        sprite.getSprites().add(new SpriteRenderer(new Vec2f(), image, 50, 50));
+        kinematics = new KinematicComponent();
+        kinematics.v = new Vec2f(0, -speed);
+        kinematics.a = new Vec2f(15, 0);
+        sprite.sprites.add(new SpriteRenderer(new Vec2f(), image, 50, 50));
         transform = new TransformComponent(new Vec2f(x, y));
     }
 
     public void update(float dt) {
-        transform.getPosition().y += speed * dt;
     }
 
     @Override

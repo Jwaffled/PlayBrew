@@ -6,10 +6,10 @@ import com.waffle.ecs.IComponent;
 import java.awt.*;
 
 public class FontRenderComponent implements IComponent {
-    private String message;
-    private Vec2f position;
-    private Font font;
-    private Color color;
+    public String message;
+    public Vec2f position;
+    public Font font;
+    public Color color;
 
     public FontRenderComponent(String msg) {
         message = msg;
@@ -23,37 +23,5 @@ public class FontRenderComponent implements IComponent {
         font = f;
         position = new Vec2f(0, 0);
         color = c;
-    }
-
-    public String getMessage() {
-        return message;
-    }
-
-    public void setMessage(String message) {
-        this.message = message;
-    }
-
-    public Vec2f getPosition() {
-        return position;
-    }
-
-    public void setPosition(Vec2f position) {
-        this.position = position;
-    }
-
-    public Font getFont() {
-        return font;
-    }
-
-    public void setFont(Font font) {
-        this.font = font;
-    }
-
-    public Color getColor() {
-        return color;
-    }
-
-    public void setColor(Color color) {
-        this.color = color;
     }
 }

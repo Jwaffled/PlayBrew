@@ -113,14 +113,14 @@ public class ButtonBuilder {
         }
         b.listeners = listeners;
         b.texture = new UITextureComponent();
-        b.texture.getTextures().add(new UITexture(new Vec2f(0, 0), buttonTexture, width, height));
+        b.texture.textures.add(new UITexture(new Vec2f(0, 0), buttonTexture, width, height));
         b.transform = new TransformComponent(x, y);
         b.width = width;
         b.height = height;
         if(!buttonMessage.equals("")) {
             b.text = new FontRenderComponent(buttonMessage);
-            b.text.setColor(fontColor);
-            b.text.setPosition(messageOffset);
+            b.text.color = fontColor;
+            b.text.position = messageOffset;
         }
         return b;
     }
@@ -129,13 +129,13 @@ public class ButtonBuilder {
         Button b = new Button();
         b.listeners = listeners;
         b.geometry = new GeometryComponent();
-        b.geometry.getShapes().add(new RenderShape(shapeType, drawMode, backgroundColor, width, height, new Vec2f()));
+        b.geometry.shapes.add(new RenderShape(shapeType, drawMode, backgroundColor, width, height, new Vec2f()));
         b.width = width;
         b.height = height;
         b.transform = new TransformComponent(x, y);
         b.text = new FontRenderComponent(buttonMessage);
-        b.text.setPosition(messageOffset);
-        b.text.setColor(fontColor);
+        b.text.position = messageOffset;
+        b.text.color = fontColor;
         return b;
     }
 

@@ -101,6 +101,7 @@ public abstract class Game implements Runnable, FreeableResource {
         {
             BitSet sig = new BitSet();
             sig.set(world.getComponentType(TransformComponent.class));
+            sig.set(world.getComponentType(KinematicComponent.class));
             world.setSystemSignature(sig, PhysicsSystem.class);
         }
 
@@ -135,6 +136,7 @@ public abstract class Game implements Runnable, FreeableResource {
         world.registerComponent(FontRenderComponent.class);
         world.registerComponent(GeometryComponent.class);
         world.registerComponent(UITextureComponent.class);
+        world.registerComponent(KinematicComponent.class);
     }
 
     /**

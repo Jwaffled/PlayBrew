@@ -30,7 +30,7 @@ public class Tilemap extends GameObject {
         sprites = new SpriteRenderComponent();
         for(int i = 0; i < tiles.length; i++) {
             for(int j = 0; j < tiles[i].length; j++) {
-                sprites.getSprites().add(new SpriteRenderer(
+                sprites.sprites.add(new SpriteRenderer(
                         new Vec2f(i * tileWidth, j * tileHeight),
                         numToTile.get(tiles[i][j]),
                         tileWidth, tileHeight

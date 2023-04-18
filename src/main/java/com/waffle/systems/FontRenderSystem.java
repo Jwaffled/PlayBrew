@@ -14,12 +14,12 @@ public class FontRenderSystem extends ECSSystem {
             for(int entity : layer) {
                 TransformComponent comp = world.getComponent(entity, TransformComponent.class);
                 FontRenderComponent s = world.getComponent(entity, FontRenderComponent.class);
-                Vec2f drawPos = comp.getPosition().add(s.getPosition());
+                Vec2f drawPos = comp.position.add(s.position);
                 final int fontHeight = window.getFontMetrics().getHeight();
                 int lineOffset = 0;
-                window.setColor(s.getColor());
-                window.setFont(s.getFont());
-                for(String sLine : s.getMessage().split("\n")) {
+                window.setColor(s.color);
+                window.setFont(s.font);
+                for(String sLine : s.message.split("\n")) {
                     window.drawString(sLine, (int)drawPos.x, (int)(drawPos.y + lineOffset + fontHeight / 2));
                     lineOffset += fontHeight;
                 }

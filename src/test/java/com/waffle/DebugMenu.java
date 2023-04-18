@@ -23,15 +23,15 @@ public class DebugMenu extends GameObject {
     public void start() {
         counter = GameTest.INSTANCE.frameCounter;
         outline = new GeometryComponent();
-        outline.getShapes().add(new RenderShape(ShapeType.RECTANGLE, DrawMode.OUTLINE, Color.BLACK, 300, 5 + 5 + (STRING_COUNT * 16), new Vec2f()));
+        outline.shapes.add(new RenderShape(ShapeType.RECTANGLE, DrawMode.OUTLINE, Color.BLACK, 300, 5 + 5 + (STRING_COUNT * 16), new Vec2f()));
         text = new FontRenderComponent("");
-        text.setPosition(new Vec2f(5, 10));
+        text.position = new Vec2f(5, 10);
         transform = new TransformComponent(20, 20);
     }
 
     @Override
     public void update(float dt) {
-        text.setMessage(String.format(
+        text.message = String.format(
                 "Current FPS: %.4f\n"
                 + "Volume (dB): %.2f\n"
                 + "Entity count: %d\n"
@@ -50,6 +50,6 @@ public class DebugMenu extends GameObject {
                 GameTest.INSTANCE.slider.getValue(),
                 Input.getInstance().getMousePosition().x, Input.getInstance().getMousePosition().y,
                 GameTest.INSTANCE.slider.getNormalizedValue()
-        ));
+        );
     }
 }

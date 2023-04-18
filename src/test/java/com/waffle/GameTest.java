@@ -20,6 +20,7 @@ import java.awt.image.BufferedImage;
 public class GameTest extends Game {
     public Player player;
     public Tilemap tilemap;
+    private Background background;
     private StereoSoundEffect effect;
     private StereoSoundEffect bgm;
     private DebugMenu debug;
@@ -90,7 +91,7 @@ public class GameTest extends Game {
         INSTANCE = this;
         currentVolume = -20;
         camera = new Camera(960, 540);
-        window = createWindow(960, 540, "Testing", camera);
+        window = createWindow("Testing", camera);
         window.addMouseListener(Input.getInstance());
         window.addKeyListener(Input.getInstance());
         window.addMouseWheelListener(e -> camera.setZoomScale(camera.getZoomScale() + e.getWheelRotation() * 0.1f));
@@ -106,6 +107,7 @@ public class GameTest extends Game {
         player = new Player();
         frameCounter = new FrameCounter();
         debug = new DebugMenu();
+        background = new Background();
 
 
         tilemap = Tilemap.newBuilder()
@@ -132,7 +134,7 @@ public class GameTest extends Game {
                     @Override
                     public void buttonClicked() {
                         player.setCanShoot(!player.canShoot());
-                        button.getText().setMessage("Player can shoot: " + player.canShoot());
+                        button.getText().message = "Player can shoot: " + player.canShoot();
                     }
 
                     @Override
@@ -186,10 +188,10 @@ public class GameTest extends Game {
         }
 
         bgm.start();
-
+        world.createGameObject(background, 0);
         world.createGameObject(slider);
-        world.createGameObject(tilemap, 1);
-        world.createGameObject(player, 2);
+        world.createGameObject(tilemap, 2);
+        world.createGameObject(player, 3);
         world.createGameObject(debug);
         world.createGameObject(button);
 
