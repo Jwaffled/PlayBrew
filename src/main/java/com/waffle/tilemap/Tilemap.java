@@ -44,6 +44,32 @@ public class Tilemap extends GameObject {
 
     }
 
+    public void setTile(int row, int col, int tileMapping) {
+        tiles[row][col] = tileMapping;
+        // Assumes stored in column-major order, implementation-specific
+        int index = col * tiles.length + row;
+        /*
+
+        FIX THIS
+
+
+         */
+        sprites.sprites.set(index, new SpriteRenderer(
+                new Vec2f(col * tileWidth, row * tileHeight),
+                numToTile.get(tileMapping),
+                tileWidth, tileHeight
+        ));
+    }
+
+    // TODO: Come up with better names for these methods
+    public int getTilemapWidth() {
+        return tiles.length;
+    }
+
+    public int getTilemapHeight() {
+        return tiles[0].length;
+    }
+
     public TransformComponent getTransform() {
         return transform;
     }

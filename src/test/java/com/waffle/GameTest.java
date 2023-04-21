@@ -2,11 +2,13 @@ package com.waffle;
 
 import com.waffle.audio.StereoSoundEffect;
 import com.waffle.core.Game;
+import com.waffle.core.SpriteRenderer;
 import com.waffle.core.Utils;
 import com.waffle.core.Vec2f;
 import com.waffle.input.*;
 import com.waffle.render.Camera;
 import com.waffle.tilemap.Tilemap;
+import com.waffle.ui.Background;
 import com.waffle.ui.ButtonEventListener;
 import com.waffle.ui.TexturedButton;
 import com.waffle.ui.TexturedSlider;
@@ -43,6 +45,11 @@ public class GameTest extends Game {
         currentVolume = slider.getValue();
         effect.getVolumeControl().setValue(currentVolume);
         bgm.getVolumeControl().setValue(currentVolume);
+
+//        tilemap.setTile(
+//                Utils.unseededRandInclusive(0, tilemap.getTilemapWidth() - 1),
+//                Utils.unseededRandInclusive(0, tilemap.getTilemapHeight() - 1),
+//                Utils.unseededRandInclusive(1, 3));
 
 
         if(keybinds.triggered("Exit")) {
@@ -104,23 +111,29 @@ public class GameTest extends Game {
         BufferedImage tile2 = Utils.loadImageFromPath("Tile-CounterTop-F1.png");
         BufferedImage tile3 = Utils.loadImageFromPath("Tile-CounterTop-F2.png");
 
+        BufferedImage testTile = Utils.loadImageFromPath("Dirt.png");
+
         player = new Player();
         frameCounter = new FrameCounter();
         debug = new DebugMenu();
-        background = new Background();
+        //background = new Background("DreDes-BG-Nighttime.png");
 
 
         tilemap = Tilemap.newBuilder()
                 .addTilemapping(1, tile1)
                 .addTilemapping(2, tile2)
                 .addTilemapping(3, tile3)
+                //.addTilemapping(4, testTile)
                 .setWidth(960)
                 .setHeight(128)
                 .setY(300)
                 .setTileHeight(30)
                 .setTileWidth(30)
+                //.setAll(1)
                 .setRandomTiles()
                 .buildTilemap();
+
+
 
         button = TexturedButton.newBuilder()
                 .setX(750)
@@ -188,12 +201,17 @@ public class GameTest extends Game {
         }
 
         bgm.start();
-        world.createGameObject(background, 0);
+        //world.createGameObject(background, 0);
         world.createGameObject(slider);
         world.createGameObject(tilemap, 2);
         world.createGameObject(player, 3);
         world.createGameObject(debug);
         world.createGameObject(button);
+
+
+//        tilemap.setTile(0, 0, 4);
+//        tilemap.setTile(0, 1, 4);
+//        tilemap.setTile(2, 0, 4);
 
         keybinds = new KeybindManager();
         addBindings();

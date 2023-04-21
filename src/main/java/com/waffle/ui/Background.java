@@ -1,4 +1,4 @@
-package com.waffle;
+package com.waffle.ui;
 
 import com.waffle.components.SpriteRenderComponent;
 import com.waffle.components.TransformComponent;
@@ -12,15 +12,18 @@ import java.awt.image.BufferedImage;
 public class Background extends GameObject {
     private TransformComponent pos;
     private SpriteRenderComponent bg;
+    private String imagePath;
 
-    public Background() {}
+    public Background(String path) {
+        imagePath = path;
+    }
 
 
     @Override
     public void start() {
         pos = new TransformComponent(0, 0);
         bg = new SpriteRenderComponent();
-        BufferedImage b = Utils.loadImageFromPath("DreDes-BG-Nighttime.png");
+        BufferedImage b = Utils.loadImageFromPath(imagePath);
         bg.sprites.add(new SpriteRenderer(new Vec2f(), b, 960, 540));
     }
 
