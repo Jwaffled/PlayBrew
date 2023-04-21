@@ -24,14 +24,13 @@ public class Bullet extends GameObject {
     private final TransformComponent transform;
     private final KinematicComponent kinematics;
     private final SpriteRenderComponent sprite;
-    private final int speed;
+    private final float speed;
 
-    public Bullet(int speed, float x, float y) {
+    public Bullet(float speed, float x, float y) {
         this.speed = speed;
         sprite = new SpriteRenderComponent();
-        kinematics = new KinematicComponent();
-        kinematics.v = new Vec2f(0, -speed);
-        kinematics.a = new Vec2f(15, 0);
+        kinematics = new KinematicComponent(new Vec2f(speed, -speed), new Vec2f(0, 0), 100);
+        kinematics.applyGravity = true;
         sprite.sprites.add(new SpriteRenderer(new Vec2f(), image, 50, 50));
         transform = new TransformComponent(new Vec2f(x, y));
     }

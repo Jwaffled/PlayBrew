@@ -17,6 +17,7 @@ public class Canvas extends JPanel {
     private final BufferStrategy strategy;
     private final Camera camera;
     private int width, height;
+    private boolean isMinimized;
     public Canvas(SpriteRenderSystem sys, FontRenderSystem sys2, GeometryRenderSystem sys3, UIRenderSystem sys4, Camera cam, int width, int height, BufferStrategy s) {
         spriteRenderSystem = sys;
         fontRenderSystem = sys2;
@@ -26,6 +27,7 @@ public class Canvas extends JPanel {
         this.width = width;
         this.height = height;
         this.setDoubleBuffered(false);
+        isMinimized = false;
         strategy = s;
     }
 
@@ -42,17 +44,20 @@ public class Canvas extends JPanel {
     public void render() {
         do {
             do {
-                Graphics g = strategy.getDrawGraphics();
+                if(!isMinimized) {
+                    Graphics g = strategy.getDrawGraphics();
 
-                g.setColor(Color.WHITE);
-                g.fillRect(0, 0, width, height);
+                    g.setColor(Color.WHITE);
+                    g.fillRect(0, 0, width, height);
 
-                spriteRenderSystem.update(g, camera, width, height);
-                uiRenderSystem.update(g);
-                geometryRenderSystem.update(g);
-                fontRenderSystem.update(g);
+                    spriteRenderSystem.update(g, camera, width, height);
+                    uiRenderSystem.update(g);
+                    geometryRenderSystem.update(g);
+                    fontRenderSystem.update(g);
 
-                g.dispose();
+                    g.dispose();
+                }
+
             } while(strategy.contentsRestored());
 
             strategy.show();
@@ -66,5 +71,9 @@ public class Canvas extends JPanel {
 
     public void setHeight(int height) {
         this.height = height;
+    }
+
+    public void setIsMinimized(boolean m) {
+        isMinimized = m;
     }
 }

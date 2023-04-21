@@ -13,7 +13,7 @@ import static com.waffle.core.Constants.*;
 
 public class GeometryRenderSystem extends ECSSystem {
     public void update(Graphics window) {
-        for(Set<Integer> layer : entities.values()) {
+        for(Set<Integer> layer : entities) {
             for(int entity : layer) {
                 GeometryComponent g = world.getComponent(entity, GeometryComponent.class);
                 TransformComponent t = world.getComponent(entity, TransformComponent.class);

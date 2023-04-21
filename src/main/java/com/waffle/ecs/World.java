@@ -8,7 +8,6 @@ public class World {
     private final ComponentManager componentManager;
     private final SystemManager systemManager;
     private final Set<GameObject> gameObjects;
-    private final Map<Integer, Integer> entityToLayerMap;
     private int validLayers = 0;
 
     /**
@@ -23,7 +22,6 @@ public class World {
         entityManager = new EntityManager(maxEntities);
         componentManager = new ComponentManager(maxEntities);
         systemManager = new SystemManager();
-        entityToLayerMap = new HashMap<>();
         gameObjects = new HashSet<>();
     }
 
@@ -81,7 +79,7 @@ public class World {
         validLayers = upper;
         for(ECSSystem sys : systemManager.getSystems().values()) {
             for(int i = 0; i < upper; i++) {
-                sys.entities.put(i, new HashSet<>());
+                sys.entities.add(new HashSet<>());
             }
         }
     }
@@ -138,8 +136,6 @@ public class World {
         if(entitySig == null) {
             entitySig = new BitSet();
         }
-
-        //
 
         entitySig.set(componentManager.getComponentType(component.getClass()), true);
         entityManager.setSignature(entity, entitySig);

@@ -10,7 +10,7 @@ import java.util.Set;
 
 public class FontRenderSystem extends ECSSystem {
     public void update(Graphics window) {
-        for(Set<Integer> layer : entities.values()) {
+        for(Set<Integer> layer : entities) {
             for(int entity : layer) {
                 TransformComponent comp = world.getComponent(entity, TransformComponent.class);
                 FontRenderComponent s = world.getComponent(entity, FontRenderComponent.class);

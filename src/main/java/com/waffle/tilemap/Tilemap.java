@@ -45,15 +45,13 @@ public class Tilemap extends GameObject {
     }
 
     public void setTile(int row, int col, int tileMapping) {
-        tiles[row][col] = tileMapping;
+        tiles[col][row] = tileMapping;
         // Assumes stored in column-major order, implementation-specific
-        int index = col * tiles.length + row;
-        /*
-
-        FIX THIS
-
-
-         */
+        int index = col * tiles[0].length + row;
+//        System.out.printf("Calculated Offset: (%d, %d), actual offset: %s, Index: %d\n",
+//                row * tileWidth, col * tileHeight,
+//                sprites.sprites.get(index).getPosition(),
+//                index);
         sprites.sprites.set(index, new SpriteRenderer(
                 new Vec2f(col * tileWidth, row * tileHeight),
                 numToTile.get(tileMapping),
@@ -63,11 +61,11 @@ public class Tilemap extends GameObject {
 
     // TODO: Come up with better names for these methods
     public int getTilemapWidth() {
-        return tiles.length;
+        return tiles[0].length;
     }
 
     public int getTilemapHeight() {
-        return tiles[0].length;
+        return tiles.length;
     }
 
     public TransformComponent getTransform() {

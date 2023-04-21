@@ -11,7 +11,7 @@ import java.util.Set;
 
 public class UIRenderSystem extends ECSSystem {
     public void update(Graphics window) {
-        for(Set<Integer> layer : entities.values()) {
+        for(Set<Integer> layer : entities) {
             for(int entity : layer) {
                 TransformComponent t = world.getComponent(entity, TransformComponent.class);
                 UITextureComponent a = world.getComponent(entity, UITextureComponent.class);

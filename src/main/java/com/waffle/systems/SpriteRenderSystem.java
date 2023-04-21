@@ -13,7 +13,7 @@ import java.util.Set;
 
 public class SpriteRenderSystem extends ECSSystem {
     public void update(Graphics window, Camera camera, int sWidth, int sHeight) {
-        for(Set<Integer> layer : entities.values()) {
+        for(Set<Integer> layer : entities) {
             for(int entity : layer) {
                 TransformComponent comp = world.getComponent(entity, TransformComponent.class);
                 SpriteRenderComponent sprites = world.getComponent(entity, SpriteRenderComponent.class);

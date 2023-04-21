@@ -38,6 +38,22 @@ public class Window extends JFrame {
         createBufferStrategy(2);
         canvas = new Canvas(sys, sys2, sys3, sys4, cam, width, height, getBufferStrategy());
         setContentPane(canvas);
+        addWindowStateListener(e -> {
+            canvas.setIsMinimized((e.getNewState() & Frame.ICONIFIED) == Frame.ICONIFIED);
+        });
+        addWindowFocusListener(new WindowFocusListener() {
+            @Override
+            public void windowGainedFocus(WindowEvent e) {
+                System.out.println("Focused");
+                canvas.setIsMinimized(false);
+            }
+
+            @Override
+            public void windowLostFocus(WindowEvent e) {
+                System.out.println("Unfocused");
+                canvas.setIsMinimized(true);
+            }
+        });
         addComponentListener(new ComponentAdapter() {
             @Override
             public void componentResized(ComponentEvent e) {

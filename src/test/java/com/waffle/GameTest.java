@@ -46,10 +46,10 @@ public class GameTest extends Game {
         effect.getVolumeControl().setValue(currentVolume);
         bgm.getVolumeControl().setValue(currentVolume);
 
-//        tilemap.setTile(
-//                Utils.unseededRandInclusive(0, tilemap.getTilemapWidth() - 1),
-//                Utils.unseededRandInclusive(0, tilemap.getTilemapHeight() - 1),
-//                Utils.unseededRandInclusive(1, 3));
+        tilemap.setTile(
+                Utils.unseededRandInclusive(0, tilemap.getTilemapWidth() - 1),
+                Utils.unseededRandInclusive(0, tilemap.getTilemapHeight() - 1),
+                Utils.unseededRandInclusive(1, 3));
 
 
         if(keybinds.triggered("Exit")) {
@@ -123,14 +123,13 @@ public class GameTest extends Game {
                 .addTilemapping(1, tile1)
                 .addTilemapping(2, tile2)
                 .addTilemapping(3, tile3)
-                //.addTilemapping(4, testTile)
+                .addTilemapping(4, testTile)
                 .setWidth(960)
                 .setHeight(128)
                 .setY(300)
                 .setTileHeight(30)
                 .setTileWidth(30)
-                //.setAll(1)
-                .setRandomTiles()
+                .setAll(1)
                 .buildTilemap();
 
 
@@ -209,9 +208,9 @@ public class GameTest extends Game {
         world.createGameObject(button);
 
 
-//        tilemap.setTile(0, 0, 4);
-//        tilemap.setTile(0, 1, 4);
-//        tilemap.setTile(2, 0, 4);
+        tilemap.setTile(0, 0, 4);
+        tilemap.setTile(0, 1, 4);
+        tilemap.setTile(2, 0, 4);
 
         keybinds = new KeybindManager();
         addBindings();

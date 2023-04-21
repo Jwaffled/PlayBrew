@@ -8,11 +8,13 @@ import java.util.Set;
 
 public class PhysicsSystem extends ECSSystem {
     public void update(float dt) {
-        for(Set<Integer> layer : entities.values()) {
+        for(Set<Integer> layer : entities) {
             for(int entity : layer) {
                 TransformComponent t = world.getComponent(entity, TransformComponent.class);
                 KinematicComponent k = world.getComponent(entity, KinematicComponent.class);
-
+                if(k.applyGravity) {
+                    k.v.y += k.gravity * dt;
+                }
                 k.v = k.v.add(k.a.mul(dt));
                 t.position = t.position.add(k.v.mul(dt));
             }
