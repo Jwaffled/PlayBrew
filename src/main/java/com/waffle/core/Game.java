@@ -19,6 +19,7 @@ public abstract class Game implements Runnable, FreeableResource {
     protected final World world;
     protected SpriteRenderSystem spriteRenderSystem;
     protected PhysicsSystem physicsSystem;
+    protected CollisionSystem collisionSystem;
     protected FontRenderSystem fontRenderSystem;
     protected GeometryRenderSystem geometryRenderSystem;
     protected UIRenderSystem uiRenderSystem;
@@ -80,6 +81,7 @@ public abstract class Game implements Runnable, FreeableResource {
         // Update other systems here
         updateInput();
         physicsSystem.update(dt);
+        collisionSystem.update(dt);
         world.update(dt);
         window.canvas.render();
     }
@@ -127,6 +129,14 @@ public abstract class Game implements Runnable, FreeableResource {
             sig.set(world.getComponentType(UITextureComponent.class));
             sig.set(world.getComponentType(TransformComponent.class));
             world.setSystemSignature(sig, UIRenderSystem.class);
+        }
+        collisionSystem = world.registerSystem(CollisionSystem.class);
+        {
+            BitSet sig = new BitSet();
+            sig.set(world.getComponentType(TransformComponent.class));
+            sig.set(world.getComponentType(ColliderComponent.class));
+            sig.set(world.getComponentType(KinematicComponent.class));
+            world.setSystemSignature(sig, CollisionSystem.class);
         }
     }
 
