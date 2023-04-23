@@ -44,13 +44,11 @@ public class Window extends JFrame {
         addWindowFocusListener(new WindowFocusListener() {
             @Override
             public void windowGainedFocus(WindowEvent e) {
-                System.out.println("Focused");
                 canvas.setIsMinimized(false);
             }
 
             @Override
             public void windowLostFocus(WindowEvent e) {
-                System.out.println("Unfocused");
                 canvas.setIsMinimized(true);
             }
         });

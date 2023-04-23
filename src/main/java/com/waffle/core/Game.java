@@ -8,6 +8,7 @@ import com.waffle.render.Window;
 import com.waffle.systems.*;
 
 import java.awt.*;
+import java.awt.event.WindowEvent;
 import java.util.BitSet;
 import java.util.concurrent.*;
 
@@ -66,15 +67,13 @@ public abstract class Game implements Runnable, FreeableResource {
                 }
             }
         } catch(Exception e) {
-            System.out.println("EXCEPTION INTERNAL GAME: " + e.getMessage() + " STACKTRACE: " + e.getStackTrace());
-            throw e;
+            Constants.LOGGER.logException(e, LogLevel.FATAL);
+        } finally {
+            if(window != null) {
+                window.dispatchEvent(new WindowEvent(window, WindowEvent.WINDOW_CLOSING));
+            }
+            this.free();
         }
-//        } finally {
-//            if(window != null) {
-//                window.dispatchEvent(new WindowEvent(window, WindowEvent.WINDOW_CLOSING));
-//            }
-//            this.free();
-//        }
     }
 
     public void update(float dt) {
@@ -147,6 +146,7 @@ public abstract class Game implements Runnable, FreeableResource {
         world.registerComponent(GeometryComponent.class);
         world.registerComponent(UITextureComponent.class);
         world.registerComponent(KinematicComponent.class);
+        world.registerComponent(ColliderComponent.class);
     }
 
     /**

@@ -8,22 +8,31 @@ import com.waffle.core.Constants;
 import com.waffle.core.Vec2f;
 import com.waffle.ecs.ECSSystem;
 
-import java.util.Set;
+import java.util.*;
 
 public class CollisionSystem extends ECSSystem {
     public void update(float dt) {
         for(Set<Integer> layer : entities) {
-            for(int entOne = 0; entOne < layer.size(); entOne++) {
-                for(int entTwo = entOne + 1; entTwo < layer.size(); entTwo++) {
+            Iterator<Integer> it = layer.iterator();
+            Set<ColliderComponent> toCall = new HashSet<>();
+            while(it.hasNext()) {
+                int entOne = it.next();
+                Iterator<Integer> itTwo = layer.iterator();
+                while(itTwo.hasNext()) {
+                    int entTwo = itTwo.next();
+                    if(entTwo == entOne) continue;
                     TransformComponent tOne = world.getComponent(entOne, TransformComponent.class);
                     TransformComponent tTwo = world.getComponent(entTwo, TransformComponent.class);
                     ColliderComponent cOne = world.getComponent(entOne, ColliderComponent.class);
                     ColliderComponent cTwo = world.getComponent(entTwo, ColliderComponent.class);
                     if(intersects(cOne.hitbox, cTwo.hitbox, tOne.position, tTwo.position)) {
-                        cOne.listener.collideWith(new CollisionEvent());
-                        cTwo.listener.collideWith(new CollisionEvent());
+                        toCall.add(cOne);
+                        toCall.add(cTwo);
                     }
                 }
+            }
+            for(ColliderComponent c : toCall) {
+                c.listener.collideWith(new CollisionEvent());
             }
         }
     }

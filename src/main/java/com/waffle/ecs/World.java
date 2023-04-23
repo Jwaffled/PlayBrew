@@ -34,6 +34,7 @@ public class World {
         gameObj.start();
         int objID = createEntity(layer);
         gameObj.ID = objID;
+        gameObj.layer = layer;
         gameObj.setWorld(this);
 
         try {
@@ -58,7 +59,7 @@ public class World {
     }
 
     public <T extends GameObject> void removeGameObject(T gameObj) {
-        destroyEntity(gameObj.ID);
+        destroyEntity(gameObj.ID, gameObj.layer);
         gameObjects.remove(gameObj);
     }
 
@@ -107,10 +108,10 @@ public class World {
      * Removes an entity from the world and deallocates it from existence
      * @param entity the unique ID of an entity
      */
-    public void destroyEntity(int entity) {
+    public void destroyEntity(int entity, int layer) {
         entityManager.removeEntity(entity);
         componentManager.entityDestroyed(entity);
-        systemManager.entityDestroyed(entity);
+        systemManager.entityDestroyed(entity, layer);
     }
 
     /**

@@ -57,9 +57,9 @@ public class SystemManager {
         signatures.put(name, signature);
     }
 
-    public void entityDestroyed(int entity) {
+    public void entityDestroyed(int entity, int layer) {
         for(ECSSystem system : systems.values()) {
-            system.entities.remove(entity);
+            system.entities.get(layer).remove(entity);
         }
     }
 

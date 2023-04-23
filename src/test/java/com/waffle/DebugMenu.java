@@ -17,7 +17,7 @@ public class DebugMenu extends GameObject {
     private TransformComponent transform;
     private FontRenderComponent text;
     private FrameCounter counter;
-    private static final int STRING_COUNT = 9;
+    private static final int STRING_COUNT = 10;
 
     @Override
     public void start() {
@@ -40,7 +40,8 @@ public class DebugMenu extends GameObject {
                 + "Camera position: (%.2f, %.2f)\n"
                 + "Slider value: %.2f\n"
                 + "Mouse position: (%d, %d)\n"
-                + "Normalized slider val: %.2f",
+                + "Normalized slider val: %.2f\n"
+                + "Collision count: %d",
                 counter.getFps(),
                 GameTest.INSTANCE.currentVolume,
                 world.getLivingEntityCount(),
@@ -49,7 +50,8 @@ public class DebugMenu extends GameObject {
                 GameTest.INSTANCE.camera.getPosition().x, GameTest.INSTANCE.camera.getPosition().y,
                 GameTest.INSTANCE.slider.getValue(),
                 Input.getInstance().getMousePosition().x, Input.getInstance().getMousePosition().y,
-                GameTest.INSTANCE.slider.getNormalizedValue()
+                GameTest.INSTANCE.slider.getNormalizedValue(),
+                GameTest.INSTANCE.testObj.counter
         );
     }
 }

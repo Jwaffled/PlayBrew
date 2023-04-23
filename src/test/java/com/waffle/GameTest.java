@@ -2,7 +2,6 @@ package com.waffle;
 
 import com.waffle.audio.StereoSoundEffect;
 import com.waffle.core.Game;
-import com.waffle.core.SpriteRenderer;
 import com.waffle.core.Utils;
 import com.waffle.core.Vec2f;
 import com.waffle.input.*;
@@ -22,6 +21,7 @@ import java.awt.image.BufferedImage;
 public class GameTest extends Game {
     public Player player;
     public Tilemap tilemap;
+    public TestCollisionObject testObj;
     private Background background;
     private StereoSoundEffect effect;
     private StereoSoundEffect bgm;
@@ -98,7 +98,7 @@ public class GameTest extends Game {
         INSTANCE = this;
         currentVolume = -20;
         camera = new Camera(960, 540);
-        window = createWindow("Testing", camera);
+        window = createWindow(960, 540, "Testing", camera);
         window.addMouseListener(Input.getInstance());
         window.addKeyListener(Input.getInstance());
         window.addMouseWheelListener(e -> camera.setZoomScale(camera.getZoomScale() + e.getWheelRotation() * 0.1f));
@@ -116,6 +116,7 @@ public class GameTest extends Game {
         player = new Player();
         frameCounter = new FrameCounter();
         debug = new DebugMenu();
+        testObj = new TestCollisionObject();
         //background = new Background("DreDes-BG-Nighttime.png");
 
 
@@ -204,6 +205,7 @@ public class GameTest extends Game {
         world.createGameObject(slider);
         world.createGameObject(tilemap, 2);
         world.createGameObject(player, 3);
+        world.createGameObject(testObj, 1);
         world.createGameObject(debug);
         world.createGameObject(button);
 
