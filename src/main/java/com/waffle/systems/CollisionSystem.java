@@ -2,15 +2,13 @@ package com.waffle.systems;
 
 import com.waffle.components.ColliderComponent;
 import com.waffle.components.TransformComponent;
-import com.waffle.core.BoundingBox;
-import com.waffle.core.CollisionEvent;
-import com.waffle.core.Constants;
-import com.waffle.core.Vec2f;
+import com.waffle.core.*;
 import com.waffle.ecs.ECSSystem;
 
 import java.util.*;
 
 public class CollisionSystem extends ECSSystem {
+    private DynamicQuadTreeContainer<Integer> quadTree = new DynamicQuadTreeContainer<>();
     public void update(float dt) {
         for(Set<Integer> layer : entities) {
             Iterator<Integer> it = layer.iterator();
@@ -25,6 +23,7 @@ public class CollisionSystem extends ECSSystem {
                     TransformComponent tTwo = world.getComponent(entTwo, TransformComponent.class);
                     ColliderComponent cOne = world.getComponent(entOne, ColliderComponent.class);
                     ColliderComponent cTwo = world.getComponent(entTwo, ColliderComponent.class);
+                    if(toCall.contains(cOne) && toCall.contains(cTwo)) continue;
                     if(intersects(cOne.hitbox, cTwo.hitbox, tOne.position, tTwo.position)) {
                         toCall.add(cOne);
                         toCall.add(cTwo);
@@ -35,6 +34,18 @@ public class CollisionSystem extends ECSSystem {
                 c.listener.collideWith(new CollisionEvent());
             }
         }
+    }
+
+    @Override
+    public void entityAdded(int layer, int entity) {
+        entities.get(layer).add(entity);
+        // Add to quad
+    }
+
+    @Override
+    public void entityRemoved(int layer, int entity) {
+        entities.get(layer).remove(entity);
+        // Remove from quad
     }
 
     private boolean intersects(BoundingBox boxOne, BoundingBox boxTwo, Vec2f posOne, Vec2f posTwo) {

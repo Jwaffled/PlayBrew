@@ -78,11 +78,7 @@ public class World {
      */
     public void createLayers(int upper) {
         validLayers = upper;
-        for(ECSSystem sys : systemManager.getSystems().values()) {
-            for(int i = 0; i < upper; i++) {
-                sys.entities.add(new HashSet<>());
-            }
-        }
+        systemManager.layersCreated(upper);
     }
 
     public int createEntity() {

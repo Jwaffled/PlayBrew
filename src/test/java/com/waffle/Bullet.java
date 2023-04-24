@@ -27,7 +27,7 @@ public class Bullet extends GameObject {
     private final TransformComponent transform;
     private final KinematicComponent kinematics;
     private final SpriteRenderComponent sprite;
-    private final ColliderComponent collider;
+    //private final ColliderComponent collider;
     private final float speed;
 
     public Bullet(float speed, float x, float y) {
@@ -37,11 +37,11 @@ public class Bullet extends GameObject {
         kinematics.applyGravity = true;
         sprite.sprites.add(new SpriteRenderer(new Vec2f(), image, 50, 50));
         transform = new TransformComponent(new Vec2f(x, y));
-        collider = new ColliderComponent(
-                new Vec2f(),
-                new BoundingBox(Constants.ShapeType.RECTANGLE, 50, 50),
-                e -> { world.removeGameObject(this); }
-        );
+//        collider = new ColliderComponent(
+//                new Vec2f(),
+//                new BoundingBox(Constants.ShapeType.RECTANGLE, 50, 50),
+//                e -> { world.removeGameObject(this); }
+//        );
     }
 
     public void update(float dt) {

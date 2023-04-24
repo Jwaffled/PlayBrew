@@ -16,6 +16,7 @@ public abstract class Game implements Runnable, FreeableResource {
     public static final int DEFAULT_MAX_ENTITIES = 100000;
     private final int fpsCap;
     private final ExecutorService executinator = Executors.newSingleThreadExecutor();
+    public float renderTime;
     protected Window window;
     protected final World world;
     protected SpriteRenderSystem spriteRenderSystem;
@@ -82,7 +83,9 @@ public abstract class Game implements Runnable, FreeableResource {
         physicsSystem.update(dt);
         collisionSystem.update(dt);
         world.update(dt);
+        long start = System.nanoTime();
         window.canvas.render();
+        renderTime = (System.nanoTime() - start) / 1e3f;
     }
 
     private void updateInput() {

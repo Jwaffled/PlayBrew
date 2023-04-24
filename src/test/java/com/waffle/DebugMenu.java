@@ -17,7 +17,7 @@ public class DebugMenu extends GameObject {
     private TransformComponent transform;
     private FontRenderComponent text;
     private FrameCounter counter;
-    private static final int STRING_COUNT = 10;
+    private static final int STRING_COUNT = 11;
 
     @Override
     public void start() {
@@ -32,16 +32,18 @@ public class DebugMenu extends GameObject {
     @Override
     public void update(float dt) {
         text.message = String.format(
-                "Current FPS: %.4f\n"
-                + "Volume (dB): %.2f\n"
-                + "Entity count: %d\n"
-                + "Camera zoom: %.1f\n"
-                + "Player position: (%.2f, %.2f)\n"
-                + "Camera position: (%.2f, %.2f)\n"
-                + "Slider value: %.2f\n"
-                + "Mouse position: (%d, %d)\n"
-                + "Normalized slider val: %.2f\n"
-                + "Collision count: %d",
+                """
+                        Current FPS: %.4f
+                        Volume (dB): %.2f
+                        Entity count: %d
+                        Camera zoom: %.1f
+                        Player position: (%.2f, %.2f)
+                        Camera position: (%.2f, %.2f)
+                        Slider value: %.2f
+                        Mouse position: (%d, %d)
+                        Normalized slider val: %.2f
+                        Collision count: %d
+                        Render time: %.1fus""",
                 counter.getFps(),
                 GameTest.INSTANCE.currentVolume,
                 world.getLivingEntityCount(),
@@ -51,7 +53,8 @@ public class DebugMenu extends GameObject {
                 GameTest.INSTANCE.slider.getValue(),
                 Input.getInstance().getMousePosition().x, Input.getInstance().getMousePosition().y,
                 GameTest.INSTANCE.slider.getNormalizedValue(),
-                GameTest.INSTANCE.testObj.counter
+                GameTest.INSTANCE.testObj.counter,
+                GameTest.INSTANCE.renderTime
         );
     }
 }

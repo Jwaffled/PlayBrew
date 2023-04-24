@@ -1,5 +1,7 @@
 package com.waffle;
 
+import com.waffle.core.StaticQuadTree;
+
 public class Main {
 
     public static void main(String[] args) {

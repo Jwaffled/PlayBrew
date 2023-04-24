@@ -14,7 +14,7 @@ public class FontRenderComponent implements IComponent {
     public FontRenderComponent(String msg) {
         message = msg;
         position = new Vec2f(0, 0);
-        font = new Font(Font.SANS_SERIF, Font.PLAIN, 12);
+        font = new Font(Font.MONOSPACED, Font.PLAIN, 12);
         color = Color.black;
     }
 
