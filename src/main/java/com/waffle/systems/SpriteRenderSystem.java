@@ -16,18 +16,10 @@ import java.util.Set;
 public class SpriteRenderSystem extends ECSSystem {
     private ArrayList<StaticQuadTreeContainer<Integer>> ents;
     public void update(Graphics window, Camera camera, int sWidth, int sHeight) {
-        ents.clear();
-        for(int i = 0; i < entities.size(); i++) {
-            for(int ent : entities.get(i)) {
-                TransformComponent t = world.getComponent(ent, TransformComponent.class);
-                SpriteRenderComponent s = world.getComponent(ent, SpriteRenderComponent.class);
-                ents.get(i).insert(ent, new Rectangle(t.position, new Vec2f(s.sprites.get(0).getWidth(), s.sprites.get(0).getHeight())));
-            }
-        }
-        for(StaticQuadTreeContainer<Integer> layer : ents) {
-            for(int entity : layer.search(new Rectangle(camera.getPosition(), new Vec2f(camera.getWidth(), camera.getHeight())))) {
-                TransformComponent comp = world.getComponent(layer.get(entity), TransformComponent.class);
-                SpriteRenderComponent sprites = world.getComponent(layer.get(entity), SpriteRenderComponent.class);
+        for(Set<Integer> layer : entities) {
+            for(int entity : layer) {
+                TransformComponent comp = world.getComponent(entity, TransformComponent.class);
+                SpriteRenderComponent sprites = world.getComponent(entity, SpriteRenderComponent.class);
                 Vec2f drawPos;
                 Vec2f scalar;
                 for(SpriteRenderer s : sprites.sprites) {
@@ -49,11 +41,9 @@ public class SpriteRenderSystem extends ECSSystem {
                     final int finalX = (int)(drawPos.x * scalar.x);
                     final int finalY = (int)(drawPos.y * scalar.y);
 
-                    window.drawImage(s.getSprite(), finalX, finalY, finalWidth, finalHeight, null);
-
-//                    if(Utils.shouldRender(drawPos, finalWidth, finalHeight, camera)) {
-//                        window.drawImage(s.getSprite(), finalX, finalY, finalWidth, finalHeight, null);
-//                    }
+                    if(Utils.shouldRender(drawPos, finalWidth, finalHeight, camera)) {
+                        window.drawImage(s.getSprite(), finalX, finalY, finalWidth, finalHeight, null);
+                    }
                 }
             }
         }
@@ -64,21 +54,11 @@ public class SpriteRenderSystem extends ECSSystem {
     @Override
     public void entityAdded(int layer, int entity) {
         entities.get(layer).add(entity);
-        TransformComponent t = world.getComponent(entity, TransformComponent.class);
-        SpriteRenderComponent s = world.getComponent(entity, SpriteRenderComponent.class);
-        ents.get(layer).insert(entity, new Rectangle(t.position, new Vec2f(s.sprites.get(0).getWidth(), s.sprites.get(0).getHeight())));
     }
 
     @Override
     public void entityRemoved(int layer, int entity) {
         entities.get(layer).remove(entity);
-        StaticQuadTreeContainer<Integer> tree = ents.get(layer);
-        tree.clear();
-        for(int e : entities.get(layer)) {
-            TransformComponent t = world.getComponent(entity, TransformComponent.class);
-            SpriteRenderComponent s = world.getComponent(entity, SpriteRenderComponent.class);
-            tree.insert(e, new Rectangle(t.position, new Vec2f(s.sprites.get(0).getWidth(), s.sprites.get(0).getHeight())));
-        }
     }
 
     @Override
@@ -87,7 +67,7 @@ public class SpriteRenderSystem extends ECSSystem {
         ents = new ArrayList<>(layerAmount);
         for(int i = 0; i < layerAmount; i++) {
             StaticQuadTreeContainer<Integer> container = new StaticQuadTreeContainer<>();
-            container.resize(new Rectangle(new Vec2f(0, 0), new Vec2f(100000, 100000)));
+            container.resize(new Rectangle(new Vec2f(0, 0), new Vec2f(10000, 10000)));
             ents.add(container);
         }
     }
