@@ -4,12 +4,11 @@ import com.waffle.components.ColliderComponent;
 import com.waffle.components.TransformComponent;
 import com.waffle.core.*;
 import com.waffle.ecs.ECSSystem;
-import com.waffle.struct.DynamicQuadTreeContainer;
 
 import java.util.*;
 
 public class CollisionSystem extends ECSSystem {
-    private DynamicQuadTreeContainer<Integer> quadTree = new DynamicQuadTreeContainer<>();
+//    private DynamicQuadTreeContainer<Integer> quadTree = new DynamicQuadTreeContainer<>();
     public void update(float dt) {
         for(Set<Integer> layer : entities) {
             Iterator<Integer> it = layer.iterator();
