@@ -4,6 +4,7 @@ import com.waffle.components.ColliderComponent;
 import com.waffle.components.TransformComponent;
 import com.waffle.core.*;
 import com.waffle.ecs.ECSSystem;
+import com.waffle.struct.DynamicQuadTreeContainer;
 
 import java.util.*;
 
@@ -49,11 +50,11 @@ public class CollisionSystem extends ECSSystem {
     }
 
     private boolean intersects(BoundingBox boxOne, BoundingBox boxTwo, Vec2f posOne, Vec2f posTwo) {
-        if(boxOne.getShapeType() == Constants.ShapeType.RECTANGLE && boxTwo.getShapeType() == Constants.ShapeType.RECTANGLE) {
-            return posOne.x < posTwo.x + boxTwo.getWidth()
-                    && posOne.x + boxOne.getWidth() > posTwo.x
-                    && posOne.y < posTwo.y + boxTwo.getHeight()
-                    && posOne.y + boxOne.getHeight() > posTwo.y;
+        if(boxOne.shapeType() == Constants.ShapeType.RECTANGLE && boxTwo.shapeType() == Constants.ShapeType.RECTANGLE) {
+            return posOne.x < posTwo.x + boxTwo.width()
+                    && posOne.x + boxOne.width() > posTwo.x
+                    && posOne.y < posTwo.y + boxTwo.height()
+                    && posOne.y + boxOne.height() > posTwo.y;
         }
 
         return false;

@@ -1,28 +1,36 @@
-package com.waffle.core;
+package com.waffle.struct;
 
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
+import com.waffle.core.Pair;
+import com.waffle.core.Rectangle;
+import com.waffle.core.Vec2f;
 
-public class StaticQuadTree<T> {
-    public static int MAX_DEPTH = 8;
+import java.util.*;
+
+public class DynamicQuadTree<T> {
+    public final static int MAX_DEPTH = 8;
     protected int depth;
     protected Rectangle rect;
     protected Rectangle[] childRects = new Rectangle[4];
-    protected ArrayList<StaticQuadTree<T>> children = new ArrayList<>(4);
+    protected ArrayList<DynamicQuadTree<T>> children = new ArrayList<>(4);
     protected ArrayList<Pair<Rectangle, T>> items;
 
-    public StaticQuadTree() {
+    public DynamicQuadTree() {
         rect = new Rectangle(new Vec2f(0, 0), new Vec2f(100, 100));
         depth = 0;
         items = new ArrayList<>();
+        for(int i = 0; i < 4; i++) {
+            children.add(null);
+        }
         resize(rect);
     }
 
-    public StaticQuadTree(Rectangle size, int depth) {
+    public DynamicQuadTree(Rectangle size, int depth) {
         rect = size;
         this.depth = depth;
         items = new ArrayList<>();
+        for(int i = 0; i < 4; i++) {
+            children.add(null);
+        }
         resize(rect);
     }
 
@@ -41,19 +49,16 @@ public class StaticQuadTree<T> {
 
         for(int i = 0; i < 4; i++) {
             childRects[i] = null;
-            if(children.size() > i && children.get(i) != null) {
+            if(children.get(i) != null) {
                 children.get(i).clear();
             }
         }
-
-        children.clear();
-
     }
 
     public int size() {
         int count = items.size();
         for(int i = 0; i < 4; i++) {
-            if(children.size() > i && children.get(i) != null) {
+            if(children.get(i) != null) {
                 count += children.get(i).size();
             }
         }
@@ -61,16 +66,15 @@ public class StaticQuadTree<T> {
         return count;
     }
 
-    public void insert(T item, Rectangle itemSize) {
+    public QuadTreeLocation<T> insert(T item, Rectangle itemSize) {
         for(int i = 0; i < 4; i++) {
             if(childRects[i].contains(itemSize)) {
                 if(depth + 1 > MAX_DEPTH) {
-                    if(children.size() > i && children.get(i) == null) {
-                        children.set(i, new StaticQuadTree<>(childRects[i], depth + 1));
+                    if(children.get(i) == null) {
+                        children.set(i, new DynamicQuadTree<>(childRects[i], depth + 1));
                     }
 
-                    children.get(i).insert(item, itemSize);
-                    return;
+                    return children.get(i).insert(item, itemSize);
                 }
             }
         }
@@ -85,7 +89,7 @@ public class StaticQuadTree<T> {
     }
 
     public void search(Rectangle rectArea, List<T> listItems) {
-        for(Pair<Rectangle, T> p : items) {
+        for(Pair<Rectangle, T> p : items.values()) {
             if(rectArea.overlaps(p.first)) {
                 listItems.add(p.second);
             }
@@ -103,12 +107,12 @@ public class StaticQuadTree<T> {
     }
 
     public void items(List<T> listItems) {
-        for(Pair<Rectangle, T> p : items) {
+        for(Pair<Rectangle, T> p : items.values()) {
             listItems.add(p.second);
         }
 
         for(int i = 0; i < 4; i++) {
-            if(children.size() > i && children.get(i) != null) {
+            if(children.get(i) != null) {
                 children.get(i).items(listItems);
             }
         }

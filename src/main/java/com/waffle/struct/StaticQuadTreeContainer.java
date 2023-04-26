@@ -1,4 +1,7 @@
-package com.waffle.core;
+package com.waffle.struct;
+
+import com.waffle.core.Rectangle;
+import com.waffle.core.Vec2f;
 
 import java.util.ArrayList;
 import java.util.Iterator;

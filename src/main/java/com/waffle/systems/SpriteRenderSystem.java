@@ -6,17 +6,19 @@ import com.waffle.core.*;
 import com.waffle.core.Rectangle;
 import com.waffle.ecs.ECSSystem;
 import com.waffle.render.Camera;
+import com.waffle.struct.DynamicQuadTreeContainer;
+import com.waffle.struct.StaticQuadTreeContainer;
 
 import java.awt.*;
 import java.util.ArrayList;
 
 public class SpriteRenderSystem extends ECSSystem {
-    private ArrayList<StaticQuadTreeContainer<Integer>> ents;
+    private ArrayList<DynamicQuadTreeContainer<Integer>> ents;
     public void update(Graphics window, Camera camera, int sWidth, int sHeight) {
-        for(StaticQuadTreeContainer<Integer> layer : ents) {
+        for(DynamicQuadTreeContainer<Integer> layer : ents) {
             for(int entity : layer.search(new Rectangle(camera.getPosition(), new Vec2f(camera.getWidth(), camera.getHeight())))) {
-                TransformComponent comp = world.getComponent(layer.get(entity), TransformComponent.class);
-                SpriteRenderComponent sprites = world.getComponent(layer.get(entity), SpriteRenderComponent.class);
+                TransformComponent comp = world.getComponent(layer.get(entity).item, TransformComponent.class);
+                SpriteRenderComponent sprites = world.getComponent(layer.get(entity).item, SpriteRenderComponent.class);
                 Vec2f drawPos;
                 Vec2f scalar;
                 for(SpriteRenderer s : sprites.sprites) {
@@ -58,11 +60,17 @@ public class SpriteRenderSystem extends ECSSystem {
     }
 
     @Override
+    public void entityRemoved(int layer, int entity) {
+        DynamicQuadTreeContainer<Integer> tree = ents.get(layer);
+        tree.remove(tree.get(entity).item);
+    }
+
+    @Override
     public void layersCreated(int layerAmount) {
         super.layersCreated(layerAmount);
         ents = new ArrayList<>(layerAmount);
         for(int i = 0; i < layerAmount; i++) {
-            StaticQuadTreeContainer<Integer> container = new StaticQuadTreeContainer<>();
+            DynamicQuadTreeContainer<Integer> container = new DynamicQuadTreeContainer<>();
             container.resize(new Rectangle(new Vec2f(0, 0), new Vec2f(100000, 100000)));
             ents.add(container);
         }

@@ -56,7 +56,9 @@ public class Player extends GameObject {
 
     public void shoot() {
         if(canShoot) {
-            world.createGameObject(new Bullet(50, transform.position.x, transform.position.y), 1);
+            for(int i = 0; i < 100; i++) {
+                world.createGameObject(new Bullet(50, transform.position.x, transform.position.y), 1);
+            }
         }
     }
 

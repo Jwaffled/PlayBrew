@@ -1,6 +1,6 @@
 package com.waffle;
 
-import com.waffle.core.StaticQuadTree;
+import com.waffle.struct.DynamicQuadTreeContainer;
 
 public class Main {
 

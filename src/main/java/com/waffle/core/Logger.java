@@ -3,7 +3,7 @@ package com.waffle.core;
 import java.awt.*;
 
 public class Logger {
-    public void log(String message, LogLevel level) {
+    public void log(Object message, LogLevel level) {
         switch(level) {
             case DEBUG -> System.out.println(color("[DEBUG]: " + message, Color.CYAN));
             case INFO -> System.out.println(color("[INFO]: " + message, Color.CYAN));
@@ -13,23 +13,23 @@ public class Logger {
         }
     }
 
-    public void logInfo(String message) {
+    public void logInfo(Object message) {
         log(message, LogLevel.INFO);
     }
 
-    public void logDebug(String message) {
+    public void logDebug(Object message) {
         log(message, LogLevel.DEBUG);
     }
 
-    public void logWarning(String message) {
+    public void logWarning(Object message) {
         log(message, LogLevel.WARNING);
     }
 
-    public void logSevere(String message) {
+    public void logSevere(Object message) {
         log(message, LogLevel.SEVERE);
     }
 
-    public void logFatal(String message) {
+    public void logFatal(Object message) {
         log(message, LogLevel.FATAL);
     }
 

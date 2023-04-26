@@ -46,10 +46,10 @@ public class GameTest extends Game {
         effect.getVolumeControl().setValue(currentVolume);
         bgm.getVolumeControl().setValue(currentVolume);
 
-        tilemap.setTile(
-                Utils.unseededRandInclusive(0, tilemap.getTilemapWidth() - 1),
-                Utils.unseededRandInclusive(0, tilemap.getTilemapHeight() - 1),
-                Utils.unseededRandInclusive(1, 3));
+//        tilemap.setTile(
+//                Utils.unseededRandInclusive(0, tilemap.getTilemapWidth() - 1),
+//                Utils.unseededRandInclusive(0, tilemap.getTilemapHeight() - 1),
+//                Utils.unseededRandInclusive(1, 3));
 
 
         if(keybinds.triggered("Exit")) {

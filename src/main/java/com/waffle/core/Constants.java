@@ -12,6 +12,6 @@ public final class Constants {
         ELLIPSE
     }
 
-    public static Logger LOGGER = new Logger();
+    public final static Logger LOGGER = new Logger();
 
 }
