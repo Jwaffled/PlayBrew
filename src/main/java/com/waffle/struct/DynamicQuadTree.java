@@ -12,8 +12,8 @@ public class DynamicQuadTree<T> {
     protected Rectangle rect;
     protected Rectangle[] childRects = new Rectangle[4];
     protected ArrayList<DynamicQuadTree<T>> children = new ArrayList<>(4);
-    private final Deque<Integer> availableSlots = new LinkedList<>();
-    protected ArrayList<Pair<Rectangle, T>> items = new ArrayList<>();
+    //private final Deque<Integer> availableSlots = new LinkedList<>();
+    protected Map<T, Rectangle> items = new HashMap<>();
 
     public DynamicQuadTree() {
         rect = new Rectangle(new Vec2f(0, 0), new Vec2f(100, 100));
@@ -21,19 +21,19 @@ public class DynamicQuadTree<T> {
         for(int i = 0; i < 4; i++) {
             children.add(null);
         }
-        for(int i = 0; i < 1000; i++) {
-            availableSlots.push(i);
-        }
+//        for(int i = 0; i < 1000; i++) {
+//            availableSlots.push(i);
+//        }
         resize(rect);
     }
 
-    private int allocate() {
-        return availableSlots.pop();
-    }
-
-    private void delete(int id) {
-        availableSlots.push(id);
-    }
+//    private int allocate() {
+//        return availableSlots.pop();
+//    }
+//
+//    private void delete(int id) {
+//        availableSlots.push(id);
+//    }
 
     public DynamicQuadTree(Rectangle size, int depth) {
         rect = size;
@@ -76,7 +76,7 @@ public class DynamicQuadTree<T> {
         return count;
     }
 
-    public void insert(T item, Rectangle itemSize) {
+    public Map<T, Rectangle> insert(T item, Rectangle itemSize) {
         for(int i = 0; i < 4; i++) {
             if(childRects[i].contains(itemSize)) {
                 if(depth + 1 > MAX_DEPTH) {
@@ -84,31 +84,30 @@ public class DynamicQuadTree<T> {
                         children.set(i, new DynamicQuadTree<>(childRects[i], depth + 1));
                     }
 
-                    children.get(i).insert(item, itemSize);
+                    return children.get(i).insert(item, itemSize);
                 }
             }
         }
-        //int loc = allocate();
-        //items.put(loc, new Pair<>(itemSize, item));
-        //return loc;
-        items.add(new Pair<>(itemSize, item));
+
+        items.put(item, itemSize);
+        return items;
     }
 
     public List<T> search(Rectangle rectArea) {
-        LinkedList<T> listItems = new LinkedList<>();
+        List<T> listItems = new ArrayList<>();
         search(rectArea, listItems);
         return listItems;
     }
 
     public void search(Rectangle rectArea, List<T> listItems) {
-        for(Pair<Rectangle, T> p : items) {
-            if(rectArea.overlaps(p.first)) {
-                listItems.add(p.second);
+        for(Map.Entry<T, Rectangle> p : items.entrySet()) {
+            if(rectArea.overlaps(p.getValue())) {
+                listItems.add(p.getKey());
             }
         }
 
         for(int i = 0; i < 4; i++) {
-            if(children.size() > i && children.get(i) != null) {
+            if(children.get(i) != null) {
                 if(rectArea.contains(childRects[i])) {
                     children.get(i).items(listItems);
                 } else if(childRects[i].overlaps(rectArea)) {
@@ -119,9 +118,7 @@ public class DynamicQuadTree<T> {
     }
 
     public void items(List<T> listItems) {
-        for(Pair<Rectangle, T> p : items) {
-            listItems.add(p.second);
-        }
+        listItems.addAll(items.keySet());
 
         for(int i = 0; i < 4; i++) {
             if(children.get(i) != null) {

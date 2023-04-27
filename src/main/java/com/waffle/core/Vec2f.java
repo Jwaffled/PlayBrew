@@ -16,36 +16,45 @@ public class Vec2f {
         this.y = y;
     }
     public Vec2f add(Vec2f other) {
-        return new Vec2f(this.x + other.x, this.y + other.y);
+        this.x += other.x;
+        this.y += other.y;
+        return this;
     }
 
     public Vec2f sub(Vec2f other) {
-        return new Vec2f(this.x - other.x, this.y - other.y);
+        this.x -= other.x;
+        this.y -= other.y;
+        return this;
     }
 
     public Vec2f mul(Vec2f other) {
-        return new Vec2f(this.x * other.x, this.y * other.y);
+        this.x *= other.x;
+        this.y *= other.y;
+        return this;
     }
 
     public Vec2f mul(float scalar) {
-        return new Vec2f(this.x * scalar, this.y * scalar);
+        this.x *= scalar;
+        this.y *= scalar;
+        return this;
     }
 
     public Vec2f div(Vec2f other) {
-        return new Vec2f(this.x / other.x, this.y / other.y);
+        this.x /= other.x;
+        this.y /= other.y;
+        return this;
     }
 
     public Vec2f div(float scalar) {
-        return new Vec2f(this.x / scalar, this.y / scalar);
-    }
-
-    public void setVec(Vec2f other) {
-        this.x = other.x;
-        this.y = other.y;
+        this.x /= scalar;
+        this.y /= scalar;
+        return this;
     }
 
     public Vec2f negate() {
-        return new Vec2f(-this.x, -this.y);
+        this.x = -this.x;
+        this.y = -this.y;
+        return this;
     }
     @Override
     public String toString() {

@@ -89,7 +89,7 @@ public class Slider extends GameObject implements MouseListener {
     }
 
     public boolean mouseWithin() {
-        Vec2f sliderPoint = transform.position.add(sliderRect.getPosition());
+        Vec2f sliderPoint = new Vec2f(transform.position).add(sliderRect.getPosition());
         Point e = Input.getInstance().getMousePosition();
         return sliderPoint.x <= e.getX()
                 && sliderPoint.x + sliderRect.getWidth() >= e.getX()

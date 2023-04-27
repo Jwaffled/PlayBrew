@@ -2,6 +2,7 @@ package com.waffle.systems;
 
 import com.waffle.components.KinematicComponent;
 import com.waffle.components.TransformComponent;
+import com.waffle.core.Vec2f;
 import com.waffle.ecs.ECSSystem;
 
 import java.util.Set;
@@ -15,8 +16,8 @@ public class PhysicsSystem extends ECSSystem {
                 if(k.applyGravity) {
                     k.v.y += k.gravity * dt;
                 }
-                k.v = k.v.add(k.a.mul(dt));
-                t.position = t.position.add(k.v.mul(dt));
+                k.v.add(new Vec2f(k.a).mul(dt));
+                t.position.add(new Vec2f(k.v).mul(dt));
             }
         }
 

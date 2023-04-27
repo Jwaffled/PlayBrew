@@ -56,7 +56,7 @@ public class SystemManager {
 
     public void entityDestroyed(int entity, int layer) {
         for(ECSSystem system : systems.values()) {
-            system.entities.get(layer).remove(entity);
+            system.entityRemoved(layer, entity);
         }
     }
 

@@ -1,19 +1,20 @@
 package com.waffle.struct;
 
+import com.waffle.core.Pair;
 import com.waffle.core.Rectangle;
 import com.waffle.core.Vec2f;
 
 import java.util.*;
 
-public class DynamicQuadTreeContainer<T> implements Iterable<QuadTreeItem<T>> {
-    protected Map<Integer, T> allItems;
+public class DynamicQuadTreeContainer<T> implements Iterable<Pair<T, Map<Integer, Rectangle>>> {
+    protected Map<Integer, Pair<T, Map<Integer, Rectangle>>> allItems;
     protected Deque<Integer> availableSlots = new LinkedList<>();
     protected DynamicQuadTree<Integer> root;
 
-    public DynamicQuadTreeContainer() {
+    public DynamicQuadTreeContainer(int maxElements) {
         root = new DynamicQuadTree<>(new Rectangle(new Vec2f(0, 0), new Vec2f(100, 100)), 0);
         allItems = new HashMap<>();
-        for(int i = 0; i < 10_000; i++) {
+        for(int i = 0; i < maxElements; i++) {
             availableSlots.push(i);
         }
     }
@@ -48,25 +49,32 @@ public class DynamicQuadTreeContainer<T> implements Iterable<QuadTreeItem<T>> {
         root.clear();
     }
 
-    public void insert(T item, Rectangle itemSize) {
+    public int insert(T item, Rectangle itemSize) {
         int id = allocate();
-        root.insert(id, itemSize);
-        allItems.put(id, item);
+        Map<Integer, Rectangle> mapOfPointers = root.insert(id, itemSize);
+        allItems.put(id, new Pair<>(item, mapOfPointers));
+        return id;
     }
 
-    public List<Integer> search(Rectangle rectArea) {
-        LinkedList<Integer> itemPointers = new LinkedList<>();
+    public List<T> search(Rectangle rectArea) {
+        ArrayList<Integer> itemPointers = new ArrayList<>(allItems.size());
+        List<T> list = new ArrayList<>();
         root.search(rectArea, itemPointers);
-        return itemPointers;
+        for(int i : itemPointers) {
+            list.add(allItems.get(i).first);
+        }
+        return list;
     }
 
     public void remove(int item) {
         // TODO
-
+        allItems.get(item).second.remove(item);
+        allItems.remove(item);
+        free(item);
     }
 
     @Override
-    public Iterator<QuadTreeItem<T>> iterator() {
-        return null;
+    public Iterator<Pair<T, Map<Integer, Rectangle>>> iterator() {
+        return allItems.values().iterator();
     }
 }

@@ -18,7 +18,7 @@ public class GeometryRenderSystem extends ECSSystem {
                 GeometryComponent g = world.getComponent(entity, GeometryComponent.class);
                 TransformComponent t = world.getComponent(entity, TransformComponent.class);
                 for(RenderShape c : g.shapes) {
-                    Vec2f drawPos = t.position.add(c.getPosition());
+                    Vec2f drawPos = new Vec2f(t.position).add(c.getPosition());
                     final int x = (int)drawPos.x;
                     final int y = (int)drawPos.y;
                     window.setColor(c.getColor());

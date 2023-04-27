@@ -45,6 +45,9 @@ public class Bullet extends GameObject {
     }
 
     public void update(float dt) {
+        if(transform.position.y >= 10000) {
+            world.removeGameObject(this);
+        }
     }
 
     @Override

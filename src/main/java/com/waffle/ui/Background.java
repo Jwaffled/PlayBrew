@@ -12,7 +12,7 @@ import java.awt.image.BufferedImage;
 public class Background extends GameObject {
     private TransformComponent pos;
     private SpriteRenderComponent bg;
-    private String imagePath;
+    private final String imagePath;
 
     public Background(String path) {
         imagePath = path;

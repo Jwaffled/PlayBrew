@@ -14,7 +14,7 @@ public class FontRenderSystem extends ECSSystem {
             for(int entity : layer) {
                 TransformComponent comp = world.getComponent(entity, TransformComponent.class);
                 FontRenderComponent s = world.getComponent(entity, FontRenderComponent.class);
-                Vec2f drawPos = comp.position.add(s.position);
+                Vec2f drawPos = new Vec2f(comp.position).add(s.position);
                 final int fontHeight = window.getFontMetrics().getHeight();
                 int lineOffset = 0;
                 window.setColor(s.color);

@@ -1,5 +1,8 @@
 package com.waffle.ecs;
 
+import com.waffle.core.Constants;
+import com.waffle.core.LogLevel;
+
 import java.lang.reflect.Field;
 import java.util.*;
 
@@ -8,6 +11,7 @@ public class World {
     private final ComponentManager componentManager;
     private final SystemManager systemManager;
     private final Set<GameObject> gameObjects;
+    private final Set<GameObject> toRemove;
     private int validLayers = 0;
 
     /**
@@ -23,6 +27,7 @@ public class World {
         componentManager = new ComponentManager(maxEntities);
         systemManager = new SystemManager();
         gameObjects = new HashSet<>();
+        toRemove = new HashSet<>();
     }
 
     public <T extends GameObject> void createGameObject(T gameObj) {
@@ -59,8 +64,15 @@ public class World {
     }
 
     public <T extends GameObject> void removeGameObject(T gameObj) {
-        destroyEntity(gameObj.ID, gameObj.layer);
-        gameObjects.remove(gameObj);
+        toRemove.add(gameObj);
+    }
+
+    private void sweepMarked() {
+        gameObjects.removeAll(toRemove);
+        for(GameObject gameObj : toRemove) {
+            destroyEntity(gameObj.ID, gameObj.layer);
+        }
+        toRemove.clear();
     }
 
     public void update(float dt) {
@@ -69,6 +81,7 @@ public class World {
                 obj.update(dt);
             }
         }
+        sweepMarked();
     }
 
     /**

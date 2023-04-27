@@ -12,7 +12,7 @@ public final class Utils {
     private Utils() {}
 
     public static boolean shouldRender(Vec2f drawPos, int width, int height, Camera cam) {
-        return !(drawPos.x + width < 0 || drawPos.x > cam.getWidth() * cam.getZoomScale() || drawPos.y + height < 0 || drawPos.y - height > cam.getHeight() * cam.getZoomScale());
+        return !(drawPos.x + width < 0 || drawPos.x > cam.getSize().x * cam.getZoomScale() || drawPos.y + height < 0 || drawPos.y - height > cam.getSize().y * cam.getZoomScale());
     }
 
     public static BufferedImage applyTint(BufferedImage src, Color color) {

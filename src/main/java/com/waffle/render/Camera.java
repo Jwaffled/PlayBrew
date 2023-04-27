@@ -3,30 +3,23 @@ package com.waffle.render;
 import com.waffle.core.Vec2f;
 
 public class Camera {
-    private final int width;
-    private final int height;
+    private final Vec2f size;
     private Vec2f position;
     private float zoomScale;
 
-    public Camera(int width, int height) {
-        this.width = width;
-        this.height = height;
+    public Camera(float width, float height) {
+        size = new Vec2f(width, height);
         this.setPosition(new Vec2f(0, 0));
         setZoomScale(1);
     }
 
-    public Camera(int width, int height, Vec2f position) {
-        this.width = width;
-        this.height = height;
+    public Camera(float width, float height, Vec2f position) {
+        size = new Vec2f(width, height);
         this.setPosition(position);
     }
 
-    public int getWidth() {
-        return this.width;
-    }
-
-    public int getHeight() {
-        return this.height;
+    public Vec2f getSize() {
+        return size;
     }
 
     public Vec2f getPosition() {
