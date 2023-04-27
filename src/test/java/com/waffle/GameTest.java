@@ -93,6 +93,7 @@ public class GameTest extends Game {
         }
     }
 
+    @Override
     public void start() {
         world.createLayers(4);
         INSTANCE = this;
