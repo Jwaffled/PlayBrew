@@ -1,5 +1,6 @@
 package com.waffle.struct;
 
+import com.waffle.core.Constants;
 import com.waffle.core.Pair;
 import com.waffle.core.Rectangle;
 import com.waffle.core.Vec2f;
@@ -67,10 +68,13 @@ public class DynamicQuadTreeContainer<T> implements Iterable<Pair<T, Map<Integer
     }
 
     public void remove(int item) {
-        // TODO
-        allItems.get(item).second.remove(item);
-        allItems.remove(item);
-        free(item);
+        if(allItems.containsKey(item)) {
+            allItems.get(item).second.remove(item);
+            allItems.remove(item);
+            free(item);
+        } else {
+            Constants.LOGGER.logWarning("Object with pointer ID " + item + " does not exist in quadtree.");
+        }
     }
 
     @Override

@@ -4,28 +4,30 @@ import com.waffle.components.ColliderComponent;
 import com.waffle.components.TransformComponent;
 import com.waffle.core.*;
 import com.waffle.ecs.ECSSystem;
+import com.waffle.struct.DynamicQuadTreeContainer;
 
 import java.util.*;
 
 public class CollisionSystem extends ECSSystem {
-//    private DynamicQuadTreeContainer<Integer> quadTree = new DynamicQuadTreeContainer<>();
+    private ArrayList<DynamicQuadTreeContainer<Integer>> quadTrees = new ArrayList<>();
+    private final Map<Integer, Integer> entityToIndexMap = new HashMap<>();
     public void update(float dt) {
-        for(Set<Integer> layer : entities) {
-            Iterator<Integer> it = layer.iterator();
+        for(DynamicQuadTreeContainer<Integer> tree : quadTrees) {
             Set<ColliderComponent> toCall = new HashSet<>();
-            while(it.hasNext()) {
-                int entOne = it.next();
-                Iterator<Integer> itTwo = layer.iterator();
-                while(itTwo.hasNext()) {
-                    int entTwo = itTwo.next();
-                    if(entTwo == entOne) continue;
-                    TransformComponent tOne = world.getComponent(entOne, TransformComponent.class);
-                    TransformComponent tTwo = world.getComponent(entTwo, TransformComponent.class);
-                    ColliderComponent cOne = world.getComponent(entOne, ColliderComponent.class);
-                    ColliderComponent cTwo = world.getComponent(entTwo, ColliderComponent.class);
-                    if(toCall.contains(cOne) && toCall.contains(cTwo)) continue;
-                    if(intersects(cOne.hitbox, cTwo.hitbox, tOne.position, tTwo.position)) {
-                        toCall.add(cOne);
+            List<Integer> list = tree.search(new Rectangle(new Vec2f(0, 0), new Vec2f(10000, 10000)));
+            for(int entity : list) {
+                TransformComponent t = world.getComponent(entity, TransformComponent.class);
+                ColliderComponent c = world.getComponent(entity, ColliderComponent.class);
+                tree.remove(entityToIndexMap.get(entity));
+                Vec2f colliderPos = new Vec2f(t.position).add(c.position);
+                Rectangle searchRect = new Rectangle(colliderPos, c.size);
+                entityToIndexMap.put(entity, tree.insert(entity, searchRect));
+                for(int checkAgainst : tree.search(searchRect)) {
+                    if(entity == checkAgainst) continue;
+                    TransformComponent tTwo = world.getComponent(checkAgainst, TransformComponent.class);
+                    ColliderComponent cTwo = world.getComponent(checkAgainst, ColliderComponent.class);
+                    if(intersects(c, cTwo, t.position, tTwo.position)) {
+                        toCall.add(c);
                         toCall.add(cTwo);
                     }
                 }
@@ -38,24 +40,36 @@ public class CollisionSystem extends ECSSystem {
 
     @Override
     public void entityAdded(int layer, int entity) {
-        entities.get(layer).add(entity);
-        // Add to quad
+        if(!entityToIndexMap.containsKey(entity)) {
+            ColliderComponent collider = world.getComponent(entity, ColliderComponent.class);
+            TransformComponent t = world.getComponent(entity, TransformComponent.class);
+            int id = quadTrees.get(layer).insert(entity, new Rectangle(new Vec2f(t.position).add(collider.position), collider.size));
+            entityToIndexMap.put(entity, id);
+        }
     }
 
     @Override
     public void entityRemoved(int layer, int entity) {
-        entities.get(layer).remove(entity);
-        // Remove from quad
+        if(entityToIndexMap.containsKey(entity)) {
+            quadTrees.get(layer).remove(entityToIndexMap.get(entity));
+            entityToIndexMap.remove(entity);
+        }
     }
 
-    private boolean intersects(BoundingBox boxOne, BoundingBox boxTwo, Vec2f posOne, Vec2f posTwo) {
-        if(boxOne.shapeType() == Constants.ShapeType.RECTANGLE && boxTwo.shapeType() == Constants.ShapeType.RECTANGLE) {
-            return posOne.x < posTwo.x + boxTwo.width()
-                    && posOne.x + boxOne.width() > posTwo.x
-                    && posOne.y < posTwo.y + boxTwo.height()
-                    && posOne.y + boxOne.height() > posTwo.y;
+    @Override
+    public void layersCreated(int layerAmount) {
+        quadTrees = new ArrayList<>(layerAmount);
+        for(int i = 0; i < layerAmount; i++) {
+            DynamicQuadTreeContainer<Integer> container = new DynamicQuadTreeContainer<>(world.getMaxEntities());
+            container.resize(new Rectangle(new Vec2f(0, 0), new Vec2f(10000, 10000)));
+            quadTrees.add(container);
         }
+    }
 
-        return false;
+    private boolean intersects(ColliderComponent boxOne, ColliderComponent boxTwo, Vec2f posOne, Vec2f posTwo) {
+            return posOne.x < posTwo.x + boxTwo.size.x
+                    && posOne.x + boxOne.size.x > posTwo.x
+                    && posOne.y < posTwo.y + boxTwo.size.y
+                    && posOne.y + boxOne.size.y > posTwo.y;
     }
 }

@@ -18,7 +18,7 @@ public class TestCollisionObject extends GameObject {
     @Override
     public void start() {
         k = new KinematicComponent(new Vec2f(), new Vec2f());
-        c = new ColliderComponent(new Vec2f(), new BoundingBox(Constants.ShapeType.RECTANGLE, 50, 50), e -> counter++);
+        c = new ColliderComponent(new Vec2f(), new Vec2f(50, 50), e -> counter++);
         sprite = new SpriteRenderComponent();
         sprite.sprites.add(new SpriteRenderer(new Vec2f(), Utils.loadImageFromPath("Grass.png"), 50, 50));
         t = new TransformComponent(200, 200);

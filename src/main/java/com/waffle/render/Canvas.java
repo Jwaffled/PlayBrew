@@ -44,7 +44,7 @@ public class Canvas extends JPanel {
     public void render() {
         do {
             do {
-                if(!isMinimized) {
+                //if(!isMinimized) {
                     Graphics g = strategy.getDrawGraphics();
 
                     g.setColor(Color.WHITE);
@@ -56,7 +56,7 @@ public class Canvas extends JPanel {
                     fontRenderSystem.update(g);
 
                     g.dispose();
-                }
+                //}
 
             } while(strategy.contentsRestored());
 

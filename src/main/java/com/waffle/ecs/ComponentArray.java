@@ -1,5 +1,6 @@
 package com.waffle.ecs;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -53,7 +54,7 @@ public class ComponentArray<T extends IComponent> implements IComponentArray {
 
     public T getData(int entity) {
         if(!entityToIndexMap.containsKey(entity)) {
-            throw new IllegalStateException("Attempted to retrieve non-existent component");
+            throw new IllegalStateException("Attempted to retrieve non-existent component on entity " + entity);
         }
 
         return componentArray[entityToIndexMap.get(entity)];

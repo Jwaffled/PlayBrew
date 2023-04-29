@@ -19,13 +19,14 @@ public class SpriteRenderSystem extends ECSSystem {
     private final Map<Integer, Integer> entityToIndexMap = new HashMap<>();
     public void update(Graphics window, Camera camera, int sWidth, int sHeight) {
         Vec2f viewPort = new Vec2f(camera.getSize()).mul(camera.getZoomScale());
+        Rectangle searchRect = new Rectangle(camera.getPosition(), viewPort);
         for(DynamicQuadTreeContainer<Integer> layer : ents) {
-            List<Integer> list = layer.search(new Rectangle(camera.getPosition(), viewPort));
+            List<Integer> list = layer.search(searchRect);
             for(int entity : list) {
                 TransformComponent comp = world.getComponent(entity, TransformComponent.class);
                 SpriteRenderComponent sprites = world.getComponent(entity, SpriteRenderComponent.class);
                 layer.remove(entityToIndexMap.get(entity));
-                layer.insert(entity, new Rectangle(comp.position, new Vec2f(sprites.sprites.get(0).getWidth(), sprites.sprites.get(0).getHeight())));
+                entityToIndexMap.put(entity, layer.insert(entity, new Rectangle(comp.position, new Vec2f(sprites.sprites.get(0).getWidth(), sprites.sprites.get(0).getHeight()))));
                 Vec2f drawPos;
                 Vec2f scalar;
                 for(SpriteRenderer s : sprites.sprites) {
@@ -52,10 +53,12 @@ public class SpriteRenderSystem extends ECSSystem {
 
     @Override
     public void entityAdded(int layer, int entity) {
-        TransformComponent t = world.getComponent(entity, TransformComponent.class);
-        SpriteRenderComponent s = world.getComponent(entity, SpriteRenderComponent.class);
-        int id = ents.get(layer).insert(entity, new Rectangle(t.position, new Vec2f(s.sprites.get(0).getWidth(), s.sprites.get(0).getHeight())));
-        entityToIndexMap.put(entity, id);
+        if(!entityToIndexMap.containsKey(entity)) {
+            TransformComponent t = world.getComponent(entity, TransformComponent.class);
+            SpriteRenderComponent s = world.getComponent(entity, SpriteRenderComponent.class);
+            int id = ents.get(layer).insert(entity, new Rectangle(t.position, new Vec2f(s.sprites.get(0).getWidth(), s.sprites.get(0).getHeight())));
+            entityToIndexMap.put(entity, id);
+        }
     }
 
     @Override
@@ -68,10 +71,10 @@ public class SpriteRenderSystem extends ECSSystem {
 
     @Override
     public void layersCreated(int layerAmount) {
-        super.layersCreated(layerAmount);
+        //super.layersCreated(layerAmount);
         ents = new ArrayList<>(layerAmount);
         for(int i = 0; i < layerAmount; i++) {
-            DynamicQuadTreeContainer<Integer> container = new DynamicQuadTreeContainer<>(100000);
+            DynamicQuadTreeContainer<Integer> container = new DynamicQuadTreeContainer<>(world.getMaxEntities());
             container.resize(new Rectangle(new Vec2f(0, 0), new Vec2f(10000, 10000)));
             ents.add(container);
         }
