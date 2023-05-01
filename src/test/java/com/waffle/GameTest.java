@@ -3,7 +3,7 @@ package com.waffle;
 import com.waffle.audio.StereoSoundEffect;
 import com.waffle.core.Game;
 import com.waffle.core.Utils;
-import com.waffle.core.Vec2f;
+import com.waffle.struct.Vec2f;
 import com.waffle.input.*;
 import com.waffle.render.Camera;
 import com.waffle.tilemap.Tilemap;

@@ -5,7 +5,7 @@ import com.waffle.components.TransformComponent;
 import com.waffle.components.UITextureComponent;
 import com.waffle.core.RenderShape;
 import com.waffle.core.UITexture;
-import com.waffle.core.Vec2f;
+import com.waffle.struct.Vec2f;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;

@@ -1,6 +1,6 @@
 package com.waffle.render;
 
-import com.waffle.core.Vec2f;
+import com.waffle.struct.Vec2f;
 
 public class Camera {
     private final Vec2f size;

@@ -1,5 +1,7 @@
 package com.waffle.core;
 
+import com.waffle.struct.Vec2f;
+
 import java.awt.image.BufferedImage;
 
 public class SpriteRenderer {
@@ -45,5 +47,9 @@ public class SpriteRenderer {
 
     public void setSprite(BufferedImage sprite) {
         this.sprite = sprite;
+    }
+
+    public String toString() {
+        return String.format("Position: %s, Width: %dpx, Height: %dpx", position, width, height);
     }
 }

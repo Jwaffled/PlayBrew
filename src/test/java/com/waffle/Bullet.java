@@ -4,10 +4,8 @@ import com.waffle.components.ColliderComponent;
 import com.waffle.components.KinematicComponent;
 import com.waffle.components.SpriteRenderComponent;
 import com.waffle.components.TransformComponent;
-import com.waffle.core.BoundingBox;
-import com.waffle.core.Constants;
 import com.waffle.core.SpriteRenderer;
-import com.waffle.core.Vec2f;
+import com.waffle.struct.Vec2f;
 import com.waffle.ecs.GameObject;
 
 import javax.imageio.ImageIO;
@@ -33,7 +31,7 @@ public class Bullet extends GameObject {
     public Bullet(float speed, float x, float y) {
         this.speed = speed;
         sprite = new SpriteRenderComponent();
-        kinematics = new KinematicComponent(new Vec2f(speed, -speed), new Vec2f(0, 0), 100);
+        kinematics = new KinematicComponent(new Vec2f(speed, -speed), new Vec2f(0, 0), 0);
         kinematics.applyGravity = true;
         sprite.sprites.add(new SpriteRenderer(new Vec2f(), image, 50, 50));
         transform = new TransformComponent(new Vec2f(x, y));

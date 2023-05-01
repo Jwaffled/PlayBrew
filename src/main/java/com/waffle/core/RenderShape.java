@@ -1,5 +1,7 @@
 package com.waffle.core;
 
+import com.waffle.struct.Vec2f;
+
 import java.awt.*;
 
 public class RenderShape {
@@ -64,5 +66,13 @@ public class RenderShape {
 
     public void setPosition(Vec2f position) {
         this.position = position;
+    }
+
+    public String toString() {
+        return String.format("Width: %d, Height: %d, Shape: %s, DrawingMode: %s, Color: %s, Position: %s",
+                width, height,
+                shape, mode,
+                color, position
+        );
     }
 }

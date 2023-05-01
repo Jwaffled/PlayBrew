@@ -1,6 +1,7 @@
 package com.waffle.core;
 
 import com.waffle.render.Camera;
+import com.waffle.struct.Vec2f;
 
 import javax.imageio.ImageIO;
 import java.awt.*;

@@ -1,4 +1,4 @@
-package com.waffle.core;
+package com.waffle.struct;
 
 public class Vec2f {
     public float x, y;

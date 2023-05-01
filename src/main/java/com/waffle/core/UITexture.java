@@ -1,5 +1,7 @@
 package com.waffle.core;
 
+import com.waffle.struct.Vec2f;
+
 import java.awt.image.BufferedImage;
 
 public class UITexture {
@@ -45,5 +47,9 @@ public class UITexture {
 
     public void setHeight(int height) {
         this.height = height;
+    }
+
+    public String toString() {
+        return String.format("Position: %s, Width: %dpx, Height: %dpx", position, width, height);
     }
 }

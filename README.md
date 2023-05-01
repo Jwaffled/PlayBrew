@@ -26,29 +26,29 @@ I think it's easier to learn PlayBrew by jumping into some examples, so here we 
 ```java
 import com.waffle.core.*;
 import com.waffle.ecs.*;
-import java.awt.*;
+import com.waffle.struct.Vec2f;
 
 class Player extends GameObject {
     private TransformComponent transform;
     private SpriteRenderComponent sprites;
     private final static float SPEED = 50;
-    
+
     @Override
     public void start() {
         BufferedImage img = null;
         try {
             // Relative to the "resources" folder of your project.
             img = Utils.loadImageFromPath("path/to/image");
-        } catch(Exception e) {
+        } catch (Exception e) {
             System.out.println("Something went wrong! " + e.getMessage());
         }
-        if(img != null) {
+        if (img != null) {
             transform = new TransformComponent(200, 300);
             sprites = new SpriteRenderComponent();
             sprites.sprites.add(new SpriteRenderer(new Vec2f(), img, 50, 50));
         }
     }
-    
+
     // Called each frame, "dt" is the difference in time between the last frame and the current frame
     @Override
     public void update(float dt) {
@@ -58,23 +58,26 @@ class Player extends GameObject {
 
 class TestGame extends Game {
     private Player player;
-    
+
     @Override
     public void start() {
         // "world" is a protected member of Game, it is used to manage the ECS
         world.createLayers(2);
         player = new Player();
-        
+
         // Defaults to bottom "layer", 0
         world.createGameObject(player);
     }
-    
+
     // Called each frame, just like <Player>.update(float)
     @Override
-    public void update(float dt) {}
+    public void update(float dt) {
+    }
+
     // Called when the game exits or crashes, used for resource cleanup.
     @Override
-    public void free() {}
+    public void free() {
+    }
 }
 
 public class Main {

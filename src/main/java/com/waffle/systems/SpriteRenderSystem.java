@@ -3,10 +3,11 @@ package com.waffle.systems;
 import com.waffle.components.SpriteRenderComponent;
 import com.waffle.components.TransformComponent;
 import com.waffle.core.*;
-import com.waffle.core.Rectangle;
+import com.waffle.struct.Rectangle;
 import com.waffle.ecs.ECSSystem;
 import com.waffle.render.Camera;
 import com.waffle.struct.DynamicQuadTreeContainer;
+import com.waffle.struct.Vec2f;
 
 import java.awt.*;
 import java.util.List;

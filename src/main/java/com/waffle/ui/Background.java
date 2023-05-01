@@ -4,7 +4,7 @@ import com.waffle.components.SpriteRenderComponent;
 import com.waffle.components.TransformComponent;
 import com.waffle.core.SpriteRenderer;
 import com.waffle.core.Utils;
-import com.waffle.core.Vec2f;
+import com.waffle.struct.Vec2f;
 import com.waffle.ecs.GameObject;
 
 import java.awt.image.BufferedImage;

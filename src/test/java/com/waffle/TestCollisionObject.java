@@ -6,6 +6,7 @@ import com.waffle.components.SpriteRenderComponent;
 import com.waffle.components.TransformComponent;
 import com.waffle.core.*;
 import com.waffle.ecs.GameObject;
+import com.waffle.struct.Vec2f;
 
 public class TestCollisionObject extends GameObject {
     private TransformComponent t;

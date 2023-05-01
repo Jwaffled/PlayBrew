@@ -15,4 +15,8 @@ public class SpriteRenderComponent implements IComponent {
     public SpriteRenderComponent() {
         sprites = new ArrayList<>();
     }
+
+    public String toString() {
+        return sprites.toString();
+    }
 }

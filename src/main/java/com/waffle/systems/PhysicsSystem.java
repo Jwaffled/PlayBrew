@@ -2,7 +2,7 @@ package com.waffle.systems;
 
 import com.waffle.components.KinematicComponent;
 import com.waffle.components.TransformComponent;
-import com.waffle.core.Vec2f;
+import com.waffle.struct.Vec2f;
 import com.waffle.ecs.ECSSystem;
 
 import java.util.Set;

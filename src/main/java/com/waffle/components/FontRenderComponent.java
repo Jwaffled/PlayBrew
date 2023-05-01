@@ -1,6 +1,6 @@
 package com.waffle.components;
 
-import com.waffle.core.Vec2f;
+import com.waffle.struct.Vec2f;
 import com.waffle.ecs.IComponent;
 
 import java.awt.*;
@@ -23,5 +23,9 @@ public class FontRenderComponent implements IComponent {
         font = f;
         position = new Vec2f(0, 0);
         color = c;
+    }
+
+    public String toString() {
+        return String.format("Message: '%s', Position: %s, Font: %s, Color: %s", message, position, font, color);
     }
 }

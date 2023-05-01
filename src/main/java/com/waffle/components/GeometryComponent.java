@@ -16,4 +16,8 @@ public class GeometryComponent implements IComponent {
     public GeometryComponent() {
         shapes = new ArrayList<>();
     }
+
+    public String toString() {
+        return "Shapes: " + shapes.toString();
+    }
 }

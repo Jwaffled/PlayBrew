@@ -3,10 +3,9 @@ package com.waffle;
 import com.waffle.animation.LoopingAnimation;
 import com.waffle.components.SpriteRenderComponent;
 import com.waffle.components.TransformComponent;
-import com.waffle.core.Constants;
 import com.waffle.core.SpriteRenderer;
 import com.waffle.core.Utils;
-import com.waffle.core.Vec2f;
+import com.waffle.struct.Vec2f;
 import com.waffle.ecs.GameObject;
 
 import java.awt.image.BufferedImage;
@@ -61,7 +60,9 @@ public class Player extends GameObject {
 //            for(int i = 0; i < 10; i++) {
 //                world.createGameObject(new Bullet(50, transform.position.x, transform.position.y), 1);
 //            }
-            world.createGameObject(new Bullet(50, transform.position.x, transform.position.y), 1);
+            for(int i = 0; i < 10; i++) {
+                world.createGameObject(new Bullet(0, Utils.unseededRandInclusive(0, 10000), Utils.unseededRandInclusive(0, 10000)), 1);
+            }
         }
     }
 

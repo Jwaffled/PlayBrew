@@ -1,6 +1,6 @@
 package com.waffle.components;
 
-import com.waffle.core.Vec2f;
+import com.waffle.struct.Vec2f;
 import com.waffle.ecs.IComponent;
 
 public class KinematicComponent implements IComponent {
@@ -28,5 +28,9 @@ public class KinematicComponent implements IComponent {
         v = new Vec2f();
         gravity = grav;
         applyGravity = true;
+    }
+
+    public String toString() {
+        return String.format("Acceleration: %s, Velocity: %s, Gravity: %f", a, v, gravity);
     }
 }

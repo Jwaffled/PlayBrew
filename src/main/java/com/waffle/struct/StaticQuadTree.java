@@ -1,9 +1,5 @@
 package com.waffle.struct;
 
-import com.waffle.core.Pair;
-import com.waffle.core.Rectangle;
-import com.waffle.core.Vec2f;
-
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;

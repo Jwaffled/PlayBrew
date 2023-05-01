@@ -5,6 +5,8 @@ import com.waffle.components.TransformComponent;
 import com.waffle.core.*;
 import com.waffle.ecs.ECSSystem;
 import com.waffle.struct.DynamicQuadTreeContainer;
+import com.waffle.struct.Rectangle;
+import com.waffle.struct.Vec2f;
 
 import java.util.*;
 

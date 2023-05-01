@@ -1,4 +1,4 @@
-package com.waffle.core;
+package com.waffle.struct;
 
 public class Pair<One, Two> {
     public final One first;

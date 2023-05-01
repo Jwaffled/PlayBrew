@@ -1,9 +1,6 @@
 package com.waffle.struct;
 
 import com.waffle.core.Constants;
-import com.waffle.core.Pair;
-import com.waffle.core.Rectangle;
-import com.waffle.core.Vec2f;
 
 import java.util.*;
 
@@ -28,9 +25,12 @@ public class DynamicQuadTreeContainer<T> implements Iterable<Pair<T, Map<Integer
         availableSlots.push(id);
     }
 
-    public DynamicQuadTreeContainer(Rectangle size) {
+    public DynamicQuadTreeContainer(Rectangle size, int maxElements) {
         root = new DynamicQuadTree<>(size, 0);
         allItems = new HashMap<>();
+        for(int i = 0; i < maxElements; i++) {
+            availableSlots.push(i);
+        }
     }
 
     public void resize(Rectangle size) {

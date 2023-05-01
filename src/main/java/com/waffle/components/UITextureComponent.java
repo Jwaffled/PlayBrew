@@ -16,4 +16,8 @@ public final class UITextureComponent implements IComponent {
     public UITextureComponent() {
         textures = new ArrayList<>();
     }
+
+    public String toString() {
+        return textures.toString();
+    }
 }
