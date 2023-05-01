@@ -52,7 +52,7 @@ public class Button extends GameObject implements MouseListener {
     public void mouseClicked(MouseEvent e) {
         if(mouseWithin()) {
             for(ButtonEventListener l : listeners) {
-                l.buttonClicked();
+                l.buttonClicked(e);
             }
         }
     }
@@ -61,7 +61,7 @@ public class Button extends GameObject implements MouseListener {
     public void mousePressed(MouseEvent e) {
         if(mouseWithin()) {
             for(ButtonEventListener l : listeners) {
-                l.buttonPressed();
+                l.buttonPressed(e);
             }
         }
     }
@@ -69,7 +69,7 @@ public class Button extends GameObject implements MouseListener {
     @Override
     public void mouseReleased(MouseEvent e) {
         for(ButtonEventListener l : getListeners()) {
-            l.buttonReleased();
+            l.buttonReleased(e);
         }
     }
 

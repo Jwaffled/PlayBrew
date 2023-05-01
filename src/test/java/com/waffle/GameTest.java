@@ -146,18 +146,18 @@ public class GameTest extends Game {
                 .setButtonTexture(texture)
                 .addButtonListener(new ButtonEventListener() {
                     @Override
-                    public void buttonClicked() {
+                    public void buttonClicked(MouseEvent e) {
                         player.setCanShoot(!player.canShoot());
                         button.getText().message = "Player can shoot: " + player.canShoot();
                     }
 
                     @Override
-                    public void buttonPressed() {
+                    public void buttonPressed(MouseEvent e) {
                         button.setCurrentTexture(tint);
                     }
 
                     @Override
-                    public void buttonReleased() {
+                    public void buttonReleased(MouseEvent e) {
                         button.setCurrentTexture(texture);
                     }
 
