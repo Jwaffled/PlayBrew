@@ -1,6 +1,15 @@
 package com.waffle.core;
 
+/**
+ * A set of constants used within the PlayBrew engine
+ */
 public final class Constants {
+    /**
+     * Enum representing the mode to draw a geometric shape in<br>
+     * Filled - Fills this shape a solid color<br>
+     * Outline - Only outlines this shape<br>
+     * Filled Border - Fills the shape AND produces an outline on the border of the shape
+     */
     public enum DrawMode {
         FILLED,
         OUTLINE,
@@ -24,6 +33,9 @@ public final class Constants {
         }
     }
 
+    /**
+     * Enum representing the options for a shape
+     */
     public enum ShapeType {
         RECTANGLE,
         ELLIPSE;
@@ -43,6 +55,9 @@ public final class Constants {
         }
     }
 
+    /**
+     * The global logger for PlayBrew games
+     */
     public final static Logger LOGGER = new Logger();
 
 }

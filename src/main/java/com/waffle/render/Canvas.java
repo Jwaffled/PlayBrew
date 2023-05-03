@@ -1,5 +1,6 @@
 package com.waffle.render;
 
+import com.waffle.core.Constants;
 import com.waffle.systems.FontRenderSystem;
 import com.waffle.systems.GeometryRenderSystem;
 import com.waffle.systems.SpriteRenderSystem;
@@ -10,14 +11,24 @@ import java.awt.*;
 import java.awt.image.BufferStrategy;
 
 public class Canvas extends JPanel {
-    private final SpriteRenderSystem spriteRenderSystem;
-    private final FontRenderSystem fontRenderSystem;
-    private final GeometryRenderSystem geometryRenderSystem;
-    private final UIRenderSystem uiRenderSystem;
+    private SpriteRenderSystem spriteRenderSystem;
+    private FontRenderSystem fontRenderSystem;
+    private GeometryRenderSystem geometryRenderSystem;
+    private UIRenderSystem uiRenderSystem;
     private final BufferStrategy strategy;
     private final Camera camera;
     private int width, height;
     private boolean isMinimized;
+
+    public Canvas(int width, int height, Camera cam, BufferStrategy s) {
+        this.width = width;
+        this.height = height;
+        camera = cam;
+        strategy = s;
+        isMinimized = false;
+        this.setDoubleBuffered(false);
+    }
+
     public Canvas(SpriteRenderSystem sys, FontRenderSystem sys2, GeometryRenderSystem sys3, UIRenderSystem sys4, Camera cam, int width, int height, BufferStrategy s) {
         spriteRenderSystem = sys;
         fontRenderSystem = sys2;
@@ -75,5 +86,21 @@ public class Canvas extends JPanel {
 
     public void setIsMinimized(boolean m) {
         isMinimized = m;
+    }
+
+    public void setSpriteRenderSystem(SpriteRenderSystem spriteRenderSystem) {
+        this.spriteRenderSystem = spriteRenderSystem;
+    }
+
+    public void setFontRenderSystem(FontRenderSystem fontRenderSystem) {
+        this.fontRenderSystem = fontRenderSystem;
+    }
+
+    public void setGeometryRenderSystem(GeometryRenderSystem geometryRenderSystem) {
+        this.geometryRenderSystem = geometryRenderSystem;
+    }
+
+    public void setUiRenderSystem(UIRenderSystem uiRenderSystem) {
+        this.uiRenderSystem = uiRenderSystem;
     }
 }

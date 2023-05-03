@@ -63,10 +63,13 @@ class TestGame extends Game {
     public void start() {
         // "world" is a protected member of Game, it is used to manage the ECS
         world.createLayers(2);
+        window = createWindow(960, 540, "My test game", new Camera(960, 540));
         player = new Player();
 
         // Defaults to bottom "layer", 0
         world.createGameObject(player);
+        
+        window.setVisible(true);
     }
 
     // Called each frame, just like <Player>.update(float)

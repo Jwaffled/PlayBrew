@@ -2,7 +2,15 @@ package com.waffle.core;
 
 import java.awt.*;
 
+/**
+ * A class used for logging different colors and different severity levels
+ */
 public class Logger {
+    /**
+     * Logs a message in stdout with a specified LogLevel
+     * @param message the message to log
+     * @param level the level to log the message under
+     */
     public void log(Object message, LogLevel level) {
         switch(level) {
             case DEBUG -> System.out.println(color("[DEBUG]: " + message, Color.CYAN));
@@ -13,26 +21,53 @@ public class Logger {
         }
     }
 
+    /**
+     * Logs a message in stdout at LogLevel.INFO
+     * @param message the message to log
+     */
     public void logInfo(Object message) {
         log(message, LogLevel.INFO);
     }
 
+    /**
+     * Logs a message in stdout at LogLevel.DEBUG
+     * @param message the message to log
+     */
     public void logDebug(Object message) {
         log(message, LogLevel.DEBUG);
     }
 
+    /**
+     * Logs a message in stdout at LogLevel.WARNING
+     * @param message the message to log
+     */
     public void logWarning(Object message) {
         log(message, LogLevel.WARNING);
     }
 
+    /**
+     * Logs a message in stdout at LogLevel.SEVERE<br>
+     * Usually denotes a non-fatal error
+     * @param message the message to log
+     */
     public void logSevere(Object message) {
         log(message, LogLevel.SEVERE);
     }
 
+    /**
+     * Logs a message in stdout at LogLevel.FATAL<br>
+     * Usually denotes an unrecoverable error
+     * @param message
+     */
     public void logFatal(Object message) {
         log(message, LogLevel.FATAL);
     }
 
+    /**
+     * Logs an exception with a specified LogLevel
+     * @param e the exception to log
+     * @param level the level to log at
+     */
     public void logException(Exception e, LogLevel level) {
         String msg = e.getMessage();
         StringBuilder st = new StringBuilder(msg + "\n");

@@ -27,6 +27,10 @@ public class Window extends JFrame {
         device.setFullScreenWindow(this);
     }
 
+    public Window(int width, int height, String title, Camera cam) {
+        this(width, height, title, null, null, null, null, cam);
+    }
+
     public Window(int width, int height, String title, SpriteRenderSystem sys, FontRenderSystem sys2, GeometryRenderSystem sys3, UIRenderSystem sys4, Camera cam) {
         super(title);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

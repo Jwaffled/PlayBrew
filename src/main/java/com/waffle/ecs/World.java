@@ -30,10 +30,21 @@ public class World {
         toRemove = new HashSet<>();
     }
 
+    /**
+     * Adds a GameObject (and all of its components) to the world on layer 0
+     * @param gameObj the instance of the GameObject to add
+     * @param <T> Type parameter
+     */
     public <T extends GameObject> void createGameObject(T gameObj) {
         createGameObject(gameObj, 0);
     }
 
+    /**
+     * Adds a GameObject (and all of its components) to the world on a specified layer
+     * @param gameObj the instance of the GameObject to add
+     * @param layer the layer to add the GameObject to
+     * @param <T> Type parameter
+     */
     public <T extends GameObject> void createGameObject(T gameObj, int layer) {
         // Instantiate all fields that inherit from IComponent
         gameObj.start();
@@ -63,6 +74,12 @@ public class World {
 
     }
 
+    /**
+     * Marks a GameObject for deletion<br>
+     * This method does NOT guarantee the instant removal of a GameObject
+     * @param gameObj the GameObject to remove
+     * @param <T> Type parameter
+     */
     public <T extends GameObject> void removeGameObject(T gameObj) {
         toRemove.add(gameObj);
     }
@@ -75,6 +92,11 @@ public class World {
         toRemove.clear();
     }
 
+    /**
+     * Updates all GameObjects in the ECS.<br>
+     * Sweeps up all "marked" GameObjects for deletion
+     * @param dt the time in between frames
+     */
     public void update(float dt) {
         for(GameObject obj : gameObjects) {
             if(obj.isActive()) {
@@ -94,6 +116,10 @@ public class World {
         systemManager.layersCreated(upper);
     }
 
+    /**
+     * Creates an entity on layer 0
+     * @return the ID of the entity
+     */
     public int createEntity() {
         if(validLayers == 0) {
             throw new IllegalArgumentException("Entity layer '0' out of range (Did you call createLayers()?).");
@@ -235,10 +261,18 @@ public class World {
         systemManager.setSignature(signature, tClass);
     }
 
+    /**
+     * Returns the amount of "living" (total) entities in the ECS
+     * @return the amount of living entities in the ECS
+     */
     public int getLivingEntityCount() {
         return entityManager.getLivingEntityCount();
     }
 
+    /**
+     * Returns the maximum amount of entities allowed in this ECS
+     * @return the maximum amount of entities  allowed in this ECS
+     */
     public int getMaxEntities() {
         return entityManager.getMaxEntityCount();
     }

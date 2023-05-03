@@ -1,5 +1,7 @@
 package com.waffle.ecs;
 
+import com.waffle.core.Constants;
+
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
