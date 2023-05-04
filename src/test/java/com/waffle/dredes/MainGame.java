@@ -2,6 +2,7 @@ package com.waffle.dredes;
 
 import com.waffle.core.Game;
 import com.waffle.dredes.scenes.MenuScene;
+import com.waffle.dredes.scenes.TitleScene;
 import com.waffle.input.Input;
 
 public class MainGame extends Game {
@@ -25,9 +26,8 @@ public class MainGame extends Game {
         INSTANCE = this;
         // Change this to make it so that each scene has its own ECS
         // And gameobjects
-        sceneManager.addScene("MenuScene", new MenuScene());
-        sceneManager.addScene("OtherScene", new OtherScene());
-        setCurrentScene("MenuScene");
+        sceneManager.addScene("TitleScene", new TitleScene());
+        setCurrentScene("TitleScene");
 
         window.addMouseListener(Input.getInstance());
         window.addKeyListener(Input.getInstance());

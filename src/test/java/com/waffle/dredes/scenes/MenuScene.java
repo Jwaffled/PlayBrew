@@ -18,7 +18,7 @@ import java.awt.image.BufferedImage;
 public class MenuScene extends DefaultScene {
     private TexturedSlider slider;
     private TexturedButton button;
-    private DebugMenu debug;
+    //private DebugMenu debug;
 
     public MenuScene() {
         super(100);
@@ -85,9 +85,9 @@ public class MenuScene extends DefaultScene {
                 })
                 .buildTexturedButton();
 
-        debug = new DebugMenu();
+        //debug = new DebugMenu();
 
-        world.createGameObject(debug);
+        //world.createGameObject(debug);
         world.createGameObject(button);
         world.createGameObject(slider);
     }
