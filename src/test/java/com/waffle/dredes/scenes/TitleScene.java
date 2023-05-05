@@ -1,6 +1,7 @@
 package com.waffle.dredes.scenes;
 
 import com.waffle.core.DefaultScene;
+import com.waffle.dredes.MainGame;
 import com.waffle.dredes.gameobject.Background;
 import com.waffle.ui.ButtonEventListener;
 import com.waffle.ui.TexturedButton;
@@ -28,8 +29,6 @@ public class TitleScene extends DefaultScene {
 
         buildButtons();
 
-
-
         world.createGameObject(sceneBackground);
     }
 
@@ -43,7 +42,7 @@ public class TitleScene extends DefaultScene {
                 .addButtonListener(new ButtonEventListener() {
                     @Override
                     public void buttonClicked(MouseEvent e) {
-                        System.exit(0);
+                        MainGame.INSTANCE.setCurrentScene("GameplayScene");
                     }
 
                     @Override

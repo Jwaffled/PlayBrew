@@ -1,9 +1,12 @@
-package com.waffle.dredes;
+package com.waffle.dredes.gameobject;
 
 import com.waffle.components.FontRenderComponent;
 import com.waffle.components.GeometryComponent;
+import com.waffle.components.KinematicComponent;
 import com.waffle.components.TransformComponent;
 import com.waffle.core.RenderShape;
+import com.waffle.dredes.MainGame;
+import com.waffle.dredes.scenes.GameplayScene;
 import com.waffle.struct.Vec2f;
 import com.waffle.ecs.GameObject;
 import com.waffle.input.Input;
@@ -16,7 +19,7 @@ public class DebugMenu extends GameObject {
     private GeometryComponent outline;
     private TransformComponent transform;
     private FontRenderComponent text;
-    private static final int STRING_COUNT = 3;
+    private static final int STRING_COUNT = 7;
 
     @Override
     public void start() {
@@ -29,14 +32,20 @@ public class DebugMenu extends GameObject {
 
     @Override
     public void update(float dt) {
+        KinematicComponent k = GameplayScene.INSTANCE.player.kinematics;
         text.message = String.format(
                 """
                         Entity count: %d
                         Mouse position: (%d, %d)
-                        Render time: %.1fus""",
+                        Render time: %.1fus
+                        Player velocity: %s
+                        Player accel: %s
+                        Player force: %s
+                        Player pos: %s""",
                 world.getLivingEntityCount(),
                 Input.getInstance().getMousePosition().x, Input.getInstance().getMousePosition().y,
-                MainGame.INSTANCE.renderTime
+                MainGame.INSTANCE.renderTime,
+                k.v, k.a, k.force, GameplayScene.INSTANCE.player.transform.position
         );
     }
 }

@@ -12,6 +12,7 @@ public class World {
     private final SystemManager systemManager;
     private final Set<GameObject> gameObjects;
     private final Set<GameObject> toRemove;
+    private final Set<GameObject> toAdd;
     private int validLayers = 0;
 
     /**
@@ -28,6 +29,7 @@ public class World {
         systemManager = new SystemManager();
         gameObjects = new HashSet<>();
         toRemove = new HashSet<>();
+        toAdd = new HashSet<>();
     }
 
     /**
@@ -70,7 +72,7 @@ public class World {
             throw new IllegalStateException("Something went wrong with creating GameObject " + gameObj.getClass().getTypeName() + ": " + e.getMessage());
         }
 
-        gameObjects.add(gameObj);
+        toAdd.add(gameObj);
 
     }
 
@@ -92,12 +94,18 @@ public class World {
         toRemove.clear();
     }
 
+    private void addQueued() {
+        gameObjects.addAll(toAdd);
+        toAdd.clear();
+    }
+
     /**
      * Updates all GameObjects in the ECS.<br>
      * Sweeps up all "marked" GameObjects for deletion
      * @param dt the time in between frames
      */
     public void update(float dt) {
+        addQueued();
         for(GameObject obj : gameObjects) {
             if(obj.isActive()) {
                 obj.update(dt);

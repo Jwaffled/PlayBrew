@@ -5,6 +5,10 @@ package com.waffle.core;
  */
 public final class Constants {
     /**
+     * For internal use only
+     */
+    public static final boolean DEBUG_MODE = false;
+    /**
      * Enum representing the mode to draw a geometric shape in<br>
      * Filled - Fills this shape a solid color<br>
      * Outline - Only outlines this shape<br>
