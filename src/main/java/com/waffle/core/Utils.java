@@ -59,4 +59,12 @@ public final class Utils {
     public static int unseededRandInclusive(int min, int max) {
         return (int) (Math.random() * (max - min + 1)) + min;
     }
+
+    public static float fcos(double rads) {
+        return (float)Math.cos(rads);
+    }
+
+    public static float fsin(double rads) {
+        return (float)Math.sin(rads);
+    }
 }

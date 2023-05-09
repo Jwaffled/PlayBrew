@@ -42,7 +42,6 @@ public class DefaultScene implements Scene {
         physicsSystem.update(dt);
         collisionSystem.update(dt);
         world.update(dt);
-
     }
 
     /**

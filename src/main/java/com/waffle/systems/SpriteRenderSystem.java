@@ -10,6 +10,8 @@ import com.waffle.struct.DynamicQuadTreeContainer;
 import com.waffle.struct.Vec2f;
 
 import java.awt.*;
+import java.awt.geom.AffineTransform;
+import java.awt.image.AffineTransformOp;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -44,7 +46,16 @@ public class SpriteRenderSystem extends ECSSystem {
                     final int finalX = (int)(drawPos.x * scalar.x);
                     final int finalY = (int)(drawPos.y * scalar.y);
 
-                    window.drawImage(s.getSprite(), finalX, finalY, finalWidth, finalHeight, null);
+                    AffineTransform tr = new AffineTransform();
+                    tr.translate(finalX, finalY);
+                    tr.rotate(-comp.rotation, 0, 0);
+                    tr.scale(finalWidth / (float)s.getSprite().getWidth(), finalHeight / (float)s.getSprite().getHeight());
+
+                    ((Graphics2D)window).drawImage(s.getSprite(), tr, null);
+                    if(Constants.DEBUG_MODE) {
+                        window.setColor(Color.red);
+                        window.drawRect(finalX, finalY, finalWidth, finalHeight);
+                    }
                 }
             }
         }

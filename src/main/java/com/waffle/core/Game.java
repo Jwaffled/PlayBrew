@@ -21,7 +21,7 @@ public abstract class Game implements Runnable, FreeableResource {
     public float renderTime;
     protected Window window;
     protected World world;
-    protected SceneManager sceneManager;
+    private SceneManager sceneManager;
 
     /**
      * Constructs a game with default parameters
@@ -85,6 +85,7 @@ public abstract class Game implements Runnable, FreeableResource {
             }
         } catch(Exception e) {
             Constants.LOGGER.logException(e, LogLevel.FATAL);
+            System.out.println(e);
         } finally {
             if(window != null) {
                 window.dispatchEvent(new WindowEvent(window, WindowEvent.WINDOW_CLOSING));
@@ -105,6 +106,31 @@ public abstract class Game implements Runnable, FreeableResource {
         window.canvas.setGeometryRenderSystem(s.getGeometryRenderSystem());
         window.canvas.setSpriteRenderSystem(s.getSpriteRenderSystem());
         window.canvas.setUiRenderSystem(s.getUIRenderSystem());
+    }
+
+    /**
+     * Adds a scene to the game
+     * @param name name of the scene
+     * @param scene the scene to be added
+     */
+    public void addScene(String name, Scene scene) {
+        sceneManager.addScene(name, scene);
+    }
+
+    /**
+     * Removes a scene from the game
+     * @param name name of the scene to remove
+     */
+    public void removeScene(String name) {
+        sceneManager.removeScene(name);
+    }
+
+    /**
+     * Returns the current scene
+     * @return the current scene
+     */
+    public Scene getCurrentScene() {
+        return sceneManager.getCurrentScene();
     }
 
     /**
