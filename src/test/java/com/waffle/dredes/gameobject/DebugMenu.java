@@ -19,7 +19,7 @@ public class DebugMenu extends GameObject {
     private GeometryComponent outline;
     private TransformComponent transform;
     private FontRenderComponent text;
-    private static final int STRING_COUNT = 7;
+    private static final int STRING_COUNT = 8;
 
     @Override
     public void start() {
@@ -41,11 +41,13 @@ public class DebugMenu extends GameObject {
                         Player velocity: %s
                         Player accel: %s
                         Player force: %s
-                        Player pos: %s""",
+                        Player pos: %s
+                        Collisions: %d""",
                 world.getLivingEntityCount(),
                 Input.getInstance().getMousePosition().x, Input.getInstance().getMousePosition().y,
                 MainGame.INSTANCE.renderTime,
-                k.v, k.a, k.force, GameplayScene.INSTANCE.player.transform.position
+                k.v, k.a, k.force, GameplayScene.INSTANCE.player.transform.position,
+                GameplayScene.INSTANCE.collisionObject.totalCollisions
         );
     }
 }

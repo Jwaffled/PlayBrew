@@ -7,7 +7,7 @@ public final class Constants {
     /**
      * For internal use only
      */
-    public static final boolean DEBUG_MODE = false;
+    public static final boolean DEBUG_MODE = true;
     /**
      * Enum representing the mode to draw a geometric shape in<br>
      * Filled - Fills this shape a solid color<br>

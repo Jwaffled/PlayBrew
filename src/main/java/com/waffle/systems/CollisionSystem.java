@@ -5,6 +5,7 @@ import com.waffle.components.TransformComponent;
 import com.waffle.core.*;
 import com.waffle.ecs.ECSSystem;
 import com.waffle.struct.DynamicQuadTreeContainer;
+import com.waffle.struct.Pair;
 import com.waffle.struct.Rectangle;
 import com.waffle.struct.Vec2f;
 
@@ -15,7 +16,7 @@ public class CollisionSystem extends ECSSystem {
     private final Map<Integer, Integer> entityToIndexMap = new HashMap<>();
     public void update(float dt) {
         for(DynamicQuadTreeContainer<Integer> tree : quadTrees) {
-            Set<ColliderComponent> toCall = new HashSet<>();
+            Map<Integer, ColliderComponent> toCall = new HashMap<>();
             List<Integer> list = tree.search(new Rectangle(new Vec2f(0, 0), new Vec2f(10000, 10000)));
             for(int entity : list) {
                 TransformComponent t = world.getComponent(entity, TransformComponent.class);
@@ -29,13 +30,13 @@ public class CollisionSystem extends ECSSystem {
                     TransformComponent tTwo = world.getComponent(checkAgainst, TransformComponent.class);
                     ColliderComponent cTwo = world.getComponent(checkAgainst, ColliderComponent.class);
                     if(intersects(c, cTwo, t.position, tTwo.position)) {
-                        toCall.add(c);
-                        toCall.add(cTwo);
+                        toCall.put(entity, cTwo);
+                        toCall.put(checkAgainst, c);
                     }
                 }
             }
-            for(ColliderComponent c : toCall) {
-                c.listener.collideWith(new CollisionEvent());
+            for(Integer key : toCall.keySet()) {
+                toCall.get(key).listener.collideWith(new CollisionEvent(world.getGameObject(key)));
             }
         }
     }

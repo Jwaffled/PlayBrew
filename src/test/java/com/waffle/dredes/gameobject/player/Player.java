@@ -91,6 +91,6 @@ public class Player extends GameObject {
     }
 
     public void shoot() {
-        world.createGameObject(new Bullet("TestGame/Dirt.png", 65, new Vec2f(transform.position), 00, 20, 5));
+        world.createGameObject(new Bullet("TestGame/Dirt.png", 65, new Vec2f(transform.position), 500, 20, 5));
     }
 }

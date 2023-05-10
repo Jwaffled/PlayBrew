@@ -1,5 +1,6 @@
 package com.waffle.dredes.gameobject;
 
+import com.waffle.components.ColliderComponent;
 import com.waffle.components.KinematicComponent;
 import com.waffle.components.SpriteRenderComponent;
 import com.waffle.components.TransformComponent;
@@ -14,6 +15,7 @@ public class Bullet extends GameObject {
     private TransformComponent transform;
     private SpriteRenderComponent sprite;
     private KinematicComponent kinematics;
+    private ColliderComponent collider;
 
     public Bullet(String path, float rotation, Vec2f position, float speed, int w, int h) {
         try {
@@ -21,6 +23,11 @@ public class Bullet extends GameObject {
             transform = new TransformComponent(position, rads);
             kinematics = new KinematicComponent(new Vec2f(speed * Utils.fcos(rads), -speed * Utils.fsin(rads)), new Vec2f());
             sprite = new SpriteRenderComponent();
+            collider = new ColliderComponent(new Vec2f(), new Vec2f(w, h), e -> {
+                if(e.getCollidedObject() instanceof CollisionObject) {
+                    world.removeGameObject(this);
+                }
+            });
             sprite.sprites.add(new SpriteRenderer(new Vec2f(), Utils.loadImageFromPath(path), w, h));
         } catch(Exception e) {
             Constants.LOGGER.logException(e, LogLevel.SEVERE);
@@ -38,5 +45,6 @@ public class Bullet extends GameObject {
         if(transform.position.x >= 5000 || transform.position.x <= -5000 || transform.position.y <= -5000 || transform.position.y >= 5000) {
             world.removeGameObject(this);
         }
+        kinematics.force.y += 100;
     }
 }
