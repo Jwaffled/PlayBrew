@@ -1,5 +1,6 @@
 package com.waffle.dredes.gameobject.player;
 
+import com.waffle.components.ColliderComponent;
 import com.waffle.components.KinematicComponent;
 import com.waffle.components.SpriteRenderComponent;
 import com.waffle.components.TransformComponent;
@@ -7,8 +8,6 @@ import com.waffle.core.Constants;
 import com.waffle.core.LogLevel;
 import com.waffle.core.SpriteRenderer;
 import com.waffle.core.Utils;
-import com.waffle.dredes.MainGame;
-import com.waffle.dredes.gameobject.Bullet;
 import com.waffle.ecs.GameObject;
 import com.waffle.input.KeybindManager;
 import com.waffle.struct.Vec2f;
@@ -22,22 +21,25 @@ public class Player extends GameObject {
     private SpriteRenderComponent sprites;
     public TransformComponent transform;
     public KinematicComponent kinematics;
+    private KeybindManager keybindManager;
+    public ColliderComponent gc;
+    public Boolean onGround;
+    public Vec2f inputD;
     //STATES
     public boolean faceLeft;
+    private Falling fallState;
     private Jumping jumpState;
     private Idling idleState;
     private Walking walkState;
-    private PlayerState current;
-    private KeybindManager keybindManager;
-    //STATS
-    public int traction;
+    private Turning turnState;
+    public PlayerState current;
+
+    public boolean committed;
 
 
 
-    public Player() {
-        keybindManager = MainGame.INSTANCE.keybindManager;
-        addBindings();
-    }
+
+    public Player() {}
 
 
     @Override
@@ -45,52 +47,113 @@ public class Player extends GameObject {
         try {
             BufferedImage b = Utils.loadImageFromPath("DreDes/DreDes-Will-FFPose-Gun.png");
             sprites = new SpriteRenderComponent();
-            sprites.sprites.add(new SpriteRenderer(new Vec2f(), b, 40, 200));
-            transform = new TransformComponent(400, 300);
-            kinematics = new KinematicComponent(new Vec2f(), new Vec2f(), 0, 10);
+            sprites.sprites.add(new SpriteRenderer(new Vec2f(), b, b.getWidth(), b.getHeight()));
+            transform = new TransformComponent(400, 0);
+            kinematics = new KinematicComponent(new Vec2f(), new Vec2f(), 0, 1);
+            gc = new ColliderComponent(new Vec2f(0, b.getHeight()), new Vec2f(b.getWidth(), 1) ,e -> {
+                onGround = true;
+                System.out.println("Colliding");
+            });
+            keybindManager = new KeybindManager();
+            addBindings();
+            setStates();
+            inputD = new Vec2f();
+            onGround = false;
         } catch(Exception e) {
             Constants.LOGGER.logException(e, LogLevel.SEVERE);
         }
     }
 
+    /**
+     * Falling
+     * Jumping
+     * Running
+     * Walking
+     * Idle
+     */
+
     @Override
     public void update(float dt) {
-        if(keybindManager.triggered("Shoot")) {
-            shoot();
+        applyDirection();
+        onGround = onGround || keybindManager.triggered("Levitate");
+        if(!onGround)
+        {
+            if(!(current instanceof Jumping) || (!current.active))
+            {
+                current = fallState.activate();
+            }
         }
+        else
+        {
+            committed = current instanceof Jumping && current.active;
+            if(keybindManager.triggered("Jump") && !committed) {
+                current = jumpState.activate();
+                committed = true;
+            }
+            committed = committed || (current instanceof Turning && current.active);
+            if(!committed && ((faceLeft && inputD.x > 0) || (!faceLeft && inputD.x < 0)))
+            {
+                current = turnState.activate();
+                faceLeft = !faceLeft;
+                committed = true;
 
-        if(keybindManager.triggered("Left")) {
-            transform.position.x -= 5;
+            }
+            committed = committed || current instanceof Walking;
+            if(!committed && inputD.x != 0)
+            {
+                current = walkState.activate();
+                committed = true;
+            }
+            committed = committed || current instanceof Idling;
+            if(!committed)
+            {
+                current = idleState.activate();
+            }
         }
-
-        if(keybindManager.triggered("Right")) {
-            transform.position.x += 5;
-        }
-
-        if(transform.position.y >= 400) {
-            transform.position.y = 400;
-            kinematics.v.y = 0;
-            kinematics.applyGravity = false;
-        } else {
-            kinematics.applyGravity = true;
-        }
+        current.apply(this);
+        onGround = false;
     }
 
-    public void addBindings() {
+    public void addBindings()
+    {
         keybindManager.addKeybind("Jump", KeyEvent.VK_SPACE);
-        keybindManager.addKeybind("Left", KeyEvent.VK_A);
-        keybindManager.addKeybind("Right", KeyEvent.VK_D);
-        keybindManager.addKeybind("Shoot", KeyEvent.VK_F);
-
+        keybindManager.addKeybind("Left", KeyEvent.VK_LEFT);
+        keybindManager.addKeybind("Right", KeyEvent.VK_RIGHT);
+        keybindManager.addKeybind("Up", KeyEvent.VK_UP);
+        keybindManager.addKeybind("Down", KeyEvent.VK_DOWN);
+        keybindManager.addKeybind("Levitate", KeyEvent.VK_SHIFT);
     }
 
-    public void setStates() {
-        jumpState = new Jumping(100,30);
+    public void setStates()
+    {
+        jumpState = new Jumping(100,20, 200, 30);
         walkState = new Walking(50);
         idleState = new Idling(50);
+        turnState = new Turning(5, 75);
+        fallState = new Falling(100,135, 9.8f, 45);
     }
 
-    public void shoot() {
-        world.createGameObject(new Bullet("TestGame/Dirt.png", 65, new Vec2f(transform.position), 500, 20, 5));
+    private void applyDirection()
+    {
+        float x = 0;
+        float y = 0;
+        if(keybindManager.triggered("Left"))
+        {
+            x -= 1;
+        }
+        if(keybindManager.triggered("Right"))
+        {
+            x += 1;
+        }
+        if(keybindManager.triggered("Up"))
+        {
+            y += 1;
+        }
+        if(keybindManager.triggered("Down"))
+        {
+            y -= 1;
+        }
+        inputD.x = x;
+        inputD.y = y;
     }
 }

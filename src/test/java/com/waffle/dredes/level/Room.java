@@ -1,4 +1,4 @@
-package com.waffle.dredes.room;
+package com.waffle.dredes.level;
 
 
 import com.waffle.ecs.GameObject;
@@ -54,17 +54,6 @@ public class Room {
         }
     }
 
-    public void flip()
-    {
-        int[][] neoConfig = new int[6][8];
-        for(int i = 0; i < configuration.length; i++)
-        {
-            for(int j = 0; j < configuration[i].length; j++)
-            {
-                neoConfig[i][configuration[i].length - 1 - j] = configuration[i][j];
-            }
-        }
-    }
 
     public void addNeighbors(Direction d , Room... rooms)
     {
@@ -86,6 +75,31 @@ public class Room {
         Object[] toCast = neighbors[d.ordinal()].toArray();
         for(int i = 0; i < toCast.length; i++)
             ret[i] = (Room)toCast[i];
+        return ret;
+    }
+
+    public Room flip()
+    {
+        int[][] neoConfig = new int[6][8];
+        for(int i = 0; i < configuration.length; i++)
+        {
+            for(int j = 0; j < configuration[i].length; j++)
+            {
+                neoConfig[i][configuration[i].length - 1 - j] = configuration[i][j];
+            }
+        }
+        ArrayList<Room>[] neoNeighbors = new ArrayList[8];
+        neoNeighbors[Direction.UP_LEFT.ordinal()] = neighbors[Direction.UP_RIGHT.ordinal()];
+        neoNeighbors[Direction.LEFT.ordinal()] = neighbors[Direction.RIGHT.ordinal()];
+        neoNeighbors[Direction.DOWN_LEFT.ordinal()] = neighbors[Direction.DOWN_RIGHT.ordinal()];
+        neoNeighbors[Direction.UP_RIGHT.ordinal()] = neighbors[Direction.UP_LEFT.ordinal()];
+        neoNeighbors[Direction.RIGHT.ordinal()] = neighbors[Direction.LEFT.ordinal()];
+        neoNeighbors[Direction.DOWN_RIGHT.ordinal()] = neighbors[Direction.DOWN_LEFT.ordinal()];
+        neoNeighbors[Direction.UP.ordinal()] = neighbors[Direction.UP.ordinal()];
+        neoNeighbors[Direction.DOWN.ordinal()] = neighbors[Direction.DOWN.ordinal()];
+        Room ret = new Room();
+        ret.configuration = neoConfig;
+        ret.neighbors = neoNeighbors;
         return ret;
     }
 

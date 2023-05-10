@@ -42,12 +42,16 @@ public class DebugMenu extends GameObject {
                         Player accel: %s
                         Player force: %s
                         Player pos: %s
-                        Collisions: %d""",
+                        Collisions: %d
+                        Player onGround: %s 
+                        Player State: %s
+                        State Counter: %d""",
                 world.getLivingEntityCount(),
                 Input.getInstance().getMousePosition().x, Input.getInstance().getMousePosition().y,
                 MainGame.INSTANCE.renderTime,
                 k.v, k.a, k.force, GameplayScene.INSTANCE.player.transform.position,
-                GameplayScene.INSTANCE.collisionObject.totalCollisions
+                GameplayScene.INSTANCE.collisionObject.totalCollisions, GameplayScene.INSTANCE.player.onGround,
+                GameplayScene.INSTANCE.player.current.getClass(), GameplayScene.INSTANCE.player.current.counter
         );
     }
 }

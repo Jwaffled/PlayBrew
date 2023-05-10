@@ -36,7 +36,7 @@ public class PhysicsSystem extends ECSSystem {
 
         k.a = new Vec2f(k.force);
 
-        //k.force = new Vec2f();
+        k.force = new Vec2f();
 
         k.v.add(new Vec2f(k.a).mul(dt));
         t.position.add(new Vec2f(k.v).mul(dt));
