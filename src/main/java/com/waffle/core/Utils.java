@@ -5,11 +5,14 @@ import java.awt.Graphics2D;
 import java.awt.AlphaComposite;
 import java.awt.Color;
 import java.awt.image.BufferedImage;
+import java.io.File;
 import java.io.IOException;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -70,10 +73,20 @@ public final class Utils {
             } else {
                 throw new IllegalArgumentException("File '" + path + "' could not be found!");
             }
-        } catch(Exception e) {
+        } catch(URISyntaxException | IOException e) {
             throw new IllegalStateException("Something went wrong while reading image file '" + path + "': " + e.getMessage());
         }
 
+    }
+
+    public static String[] getFilesInDirectory(String path) {
+        URL f = Utils.class.getClassLoader().getResource(path);
+        if(f != null) {
+            File file = new File(f.getPath());
+            return file.list();
+        } else {
+            throw new IllegalArgumentException("File '" + path + "' could not be found!");
+        }
     }
 
     /**

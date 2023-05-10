@@ -3,6 +3,7 @@ package com.waffle.dredes.room;
 import com.waffle.core.Constants;
 import com.waffle.core.Utils;
 
+import java.io.File;
 import java.lang.reflect.Array;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -26,6 +27,12 @@ public class RoomLoader {
 
     public RoomLoader() {
         rooms = new HashMap<>();
+    }
+
+    public void addDirectory(String dir) {
+        for(String path : Utils.getFilesInDirectory(dir)) {
+            addRoomPath(dir + "/" + path);
+        }
     }
 
     public void addRoomPath(String path) {
@@ -56,5 +63,9 @@ public class RoomLoader {
 
     public Room getRoom(String name) {
         return rooms.get(name);
+    }
+
+    public String toString() {
+        return rooms.toString();
     }
 }

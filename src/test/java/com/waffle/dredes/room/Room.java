@@ -14,8 +14,10 @@ public class Room {
 
     public enum TileType
     {
+        AIR,
         SURFACE,
         STRUCTURE,
+        WATER,
         WATER_BANK,
         SPECIAL_A,
         SPECIAL_B
