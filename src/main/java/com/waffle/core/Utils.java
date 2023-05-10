@@ -1,10 +1,16 @@
 package com.waffle.core;
 
 import javax.imageio.ImageIO;
-import java.awt.*;
+import java.awt.Graphics2D;
+import java.awt.AlphaComposite;
+import java.awt.Color;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.List;
 
 /**
  * A class containing static helper methods for miscellaneous operations
@@ -48,6 +54,26 @@ public final class Utils {
         }
 
         return img;
+    }
+
+    /**
+     * Loads the specified file path as a String
+     * @param path path relative to the resources folder
+     * @return the file data as a String
+     */
+    public static String loadFileAsString(String path) {
+        URL f = Utils.class.getClassLoader().getResource(path);
+        try {
+            if(f != null) {
+                byte[] data = Files.readAllBytes(Paths.get(f.toURI()));
+                return new String(data, StandardCharsets.UTF_8);
+            } else {
+                throw new IllegalArgumentException("File '" + path + "' could not be found!");
+            }
+        } catch(Exception e) {
+            throw new IllegalStateException("Something went wrong while reading image file '" + path + "': " + e.getMessage());
+        }
+
     }
 
     /**
