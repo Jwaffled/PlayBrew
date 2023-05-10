@@ -47,7 +47,7 @@ public class Player extends GameObject {
             sprites = new SpriteRenderComponent();
             sprites.sprites.add(new SpriteRenderer(new Vec2f(), b, 40, 200));
             transform = new TransformComponent(400, 300);
-            kinematics = new KinematicComponent(new Vec2f(), new Vec2f(), 2000, 10);
+            kinematics = new KinematicComponent(new Vec2f(), new Vec2f(), 0, 10);
         } catch(Exception e) {
             Constants.LOGGER.logException(e, LogLevel.SEVERE);
         }
