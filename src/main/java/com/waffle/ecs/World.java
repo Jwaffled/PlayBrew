@@ -10,8 +10,9 @@ public class World {
     private final EntityManager entityManager;
     private final ComponentManager componentManager;
     private final SystemManager systemManager;
-    private final Set<GameObject> gameObjects;
-    private final Set<GameObject> toRemove;
+//    private final Set<GameObject> gameObjects;
+    private final Set<Integer> toRemove;
+    private final Map<Integer, GameObject> gameObjects;
     private final Set<GameObject> toAdd;
     private int validLayers = 0;
 
@@ -27,7 +28,7 @@ public class World {
         entityManager = new EntityManager(maxEntities);
         componentManager = new ComponentManager(maxEntities);
         systemManager = new SystemManager();
-        gameObjects = new HashSet<>();
+        gameObjects = new HashMap<>();
         toRemove = new HashSet<>();
         toAdd = new HashSet<>();
     }
@@ -77,25 +78,37 @@ public class World {
     }
 
     /**
+     * Returns the GameObject with the specified entity ID
+     * @param id the ID to look for
+     * @return the GameObject with the specified entity ID
+     */
+    public GameObject getGameObject(int id) {
+        return gameObjects.get(id);
+    }
+
+    /**
      * Marks a GameObject for deletion<br>
      * This method does NOT guarantee the instant removal of a GameObject
      * @param gameObj the GameObject to remove
      * @param <T> Type parameter
      */
     public <T extends GameObject> void removeGameObject(T gameObj) {
-        toRemove.add(gameObj);
+        toRemove.add(gameObj.ID);
     }
 
     private void sweepMarked() {
-        gameObjects.removeAll(toRemove);
-        for(GameObject gameObj : toRemove) {
-            destroyEntity(gameObj.ID, gameObj.layer);
+        for(int gameObjID : toRemove) {
+            GameObject o = gameObjects.get(gameObjID);
+            destroyEntity(o.ID, o.layer);
         }
+        gameObjects.keySet().removeAll(toRemove);
         toRemove.clear();
     }
 
     private void addQueued() {
-        gameObjects.addAll(toAdd);
+        for(GameObject o : toAdd) {
+            gameObjects.put(o.ID, o);
+        }
         toAdd.clear();
     }
 
@@ -106,7 +119,7 @@ public class World {
      */
     public void update(float dt) {
         addQueued();
-        for(GameObject obj : gameObjects) {
+        for(GameObject obj : gameObjects.values()) {
             if(obj.isActive()) {
                 obj.update(dt);
             }
@@ -293,7 +306,7 @@ public class World {
 
         Set<GameObject> toRemove = new HashSet<>();
 
-        for(GameObject o : gameObjects) {
+        for(GameObject o : gameObjects.values()) {
             if(!protectedObjects.contains(o.ID)) {
                 toRemove.add(o);
             }

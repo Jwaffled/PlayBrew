@@ -4,13 +4,12 @@ import com.waffle.ecs.GameObject;
 
 public class CollisionEvent {
     private GameObject objectOne;
-    private GameObject objectTwo;
 
-    public GameObject getObjectOne() {
-        return objectOne;
+    public CollisionEvent(GameObject one) {
+        objectOne = one;
     }
 
-    public GameObject getObjectTwo() {
-        return objectTwo;
+    public GameObject getCollidedObject() {
+        return objectOne;
     }
 }
