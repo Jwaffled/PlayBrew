@@ -7,11 +7,12 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 public class Room {
-    public ArrayList<Room>[] neighbors;
+    public ArrayList<Room>[] strongNeighbors;
+    public ArrayList<Room>[] weakNeighbors;
     boolean important;
     boolean flipped;
     public int[][] configuration;
-    public GameObject[] tiles;
+
 
     public enum TileType {
         AIR,
@@ -36,8 +37,8 @@ public class Room {
 
     public Room() {
         configuration = new int[6][8];
-        neighbors = new ArrayList[8];
-        tiles = new GameObject[5];
+        weakNeighbors = new ArrayList[8];
+        strongNeighbors = new ArrayList[8];
         important = false;
         flipped = false;
     }
@@ -50,30 +51,39 @@ public class Room {
         }
     }
 
-
-    public void addNeighbors(Direction d , Room... rooms) {
-        for(int i = 0; i < rooms.length; i++) {
-            neighbors[d.ordinal()].add(rooms[i]);
-        }
-        important = true;
-    }
-
     public void addNeighbor(Direction d , Room room) {
-        neighbors[d.ordinal()].add(room);
+        strongNeighbors[d.ordinal()].add(room);
+        weakNeighbors[d.ordinal()].add(room);
         important = true;
     }
 
     public Room getNeighbor(Direction d) {
-        return neighbors[d.ordinal()].get((int)(Math.random() * neighbors[d.ordinal()].size()));
+        if(strongNeighbors[d.ordinal()].size() == 0)
+        {
+            return weakNeighbors[d.ordinal()].get((int)(Math.random() * weakNeighbors[d.ordinal()].size()));
+        }
+        return strongNeighbors[d.ordinal()].get((int)(Math.random() * strongNeighbors[d.ordinal()].size()));
+
+
     }
 
-    public Room[] getRoomPool(Direction d) {
-        Room[] ret = new Room[neighbors[d.ordinal()].size()];
-        Object[] toCast = neighbors[d.ordinal()].toArray();
+    public Room[] getRoomPool(Direction d, boolean strong) {
+        if(strong)
+        {
+            Room[] ret = new Room[strongNeighbors[d.ordinal()].size()];
+            Object[] toCast = strongNeighbors[d.ordinal()].toArray();
+            for(int i = 0; i < toCast.length; i++) {
+                ret[i] = (Room)toCast[i];
+            }
+            return ret;
+        }
+        Room[] ret = new Room[weakNeighbors[d.ordinal()].size()];
+        Object[] toCast = weakNeighbors[d.ordinal()].toArray();
         for(int i = 0; i < toCast.length; i++) {
             ret[i] = (Room)toCast[i];
         }
         return ret;
+
     }
 
     public Room flip() {
@@ -83,26 +93,37 @@ public class Room {
                 neoConfig[i][configuration[i].length - 1 - j] = configuration[i][j];
             }
         }
-        ArrayList<Room>[] neoNeighbors = new ArrayList[8];
-        neoNeighbors[Direction.UP_LEFT.ordinal()] = neighbors[Direction.UP_RIGHT.ordinal()];
-        neoNeighbors[Direction.LEFT.ordinal()] = neighbors[Direction.RIGHT.ordinal()];
-        neoNeighbors[Direction.DOWN_LEFT.ordinal()] = neighbors[Direction.DOWN_RIGHT.ordinal()];
-        neoNeighbors[Direction.UP_RIGHT.ordinal()] = neighbors[Direction.UP_LEFT.ordinal()];
-        neoNeighbors[Direction.RIGHT.ordinal()] = neighbors[Direction.LEFT.ordinal()];
-        neoNeighbors[Direction.DOWN_RIGHT.ordinal()] = neighbors[Direction.DOWN_LEFT.ordinal()];
-        neoNeighbors[Direction.UP.ordinal()] = neighbors[Direction.UP.ordinal()];
-        neoNeighbors[Direction.DOWN.ordinal()] = neighbors[Direction.DOWN.ordinal()];
+        ArrayList<Room>[] neoStrongNeighbors = new ArrayList[8];
+        neoStrongNeighbors[Direction.UP_LEFT.ordinal()] = strongNeighbors[Direction.UP_RIGHT.ordinal()];
+        neoStrongNeighbors[Direction.LEFT.ordinal()] = strongNeighbors[Direction.RIGHT.ordinal()];
+        neoStrongNeighbors[Direction.DOWN_LEFT.ordinal()] = strongNeighbors[Direction.DOWN_RIGHT.ordinal()];
+        neoStrongNeighbors[Direction.UP_RIGHT.ordinal()] = strongNeighbors[Direction.UP_LEFT.ordinal()];
+        neoStrongNeighbors[Direction.RIGHT.ordinal()] = strongNeighbors[Direction.LEFT.ordinal()];
+        neoStrongNeighbors[Direction.DOWN_RIGHT.ordinal()] = strongNeighbors[Direction.DOWN_LEFT.ordinal()];
+        neoStrongNeighbors[Direction.UP.ordinal()] = strongNeighbors[Direction.UP.ordinal()];
+        neoStrongNeighbors[Direction.DOWN.ordinal()] = strongNeighbors[Direction.DOWN.ordinal()];
+
+        ArrayList<Room>[] neoWeakNeighbors = new ArrayList[8];
+        neoWeakNeighbors[Direction.UP_LEFT.ordinal()] = weakNeighbors[Direction.UP_RIGHT.ordinal()];
+        neoWeakNeighbors[Direction.LEFT.ordinal()] = weakNeighbors[Direction.RIGHT.ordinal()];
+        neoWeakNeighbors[Direction.DOWN_LEFT.ordinal()] = weakNeighbors[Direction.DOWN_RIGHT.ordinal()];
+        neoWeakNeighbors[Direction.UP_RIGHT.ordinal()] = weakNeighbors[Direction.UP_LEFT.ordinal()];
+        neoWeakNeighbors[Direction.RIGHT.ordinal()] = weakNeighbors[Direction.LEFT.ordinal()];
+        neoWeakNeighbors[Direction.DOWN_RIGHT.ordinal()] = weakNeighbors[Direction.DOWN_LEFT.ordinal()];
+        neoWeakNeighbors[Direction.UP.ordinal()] = weakNeighbors[Direction.UP.ordinal()];
+        neoWeakNeighbors[Direction.DOWN.ordinal()] = weakNeighbors[Direction.DOWN.ordinal()];
         Room ret = new Room();
         ret.configuration = neoConfig;
-        ret.neighbors = neoNeighbors;
+        ret.strongNeighbors = neoStrongNeighbors;
+        ret.weakNeighbors = neoWeakNeighbors;
         flipped = !flipped;
         return ret;
     }
 
-    public String toString() {
-        return String.format("""
-                Neighbors: %s
-                Configuration: %s
-                Tiles: %s""", Arrays.toString(neighbors), Arrays.toString(configuration), Arrays.toString(tiles));
-    }
+//    public String toString() {
+//        return String.format("""
+//                Neighbors: %s
+//                Configuration: %s
+//                Tiles: %s""", Arrays.toString(neighbors), Arrays.toString(configuration), Arrays.toString(tiles));
+//    }
 }
