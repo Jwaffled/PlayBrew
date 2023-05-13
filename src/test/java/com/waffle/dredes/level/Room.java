@@ -12,8 +12,7 @@ public class Room {
     public int[][] configuration;
     public GameObject[] tiles;
 
-    public enum TileType
-    {
+    public enum TileType {
         AIR,
         SURFACE,
         STRUCTURE,
@@ -23,8 +22,7 @@ public class Room {
         SPECIAL_B
     }
 
-    public enum Direction
-    {
+    public enum Direction {
         UP_LEFT,
         UP,
         UP_RIGHT,
@@ -35,56 +33,46 @@ public class Room {
         LEFT
     }
 
-    public Room()
-    {
+    public Room() {
         configuration = new int[6][8];
         neighbors = new ArrayList[8];
         tiles = new GameObject[5];
         important = false;
     }
 
-    public void addConfig(int[][] config)
-    {
-        for(int i = 0; i < configuration.length; i++)
-        {
-            for(int j = 0; j < configuration[i].length; j++)
-            {
+    public void addConfig(int[][] config) {
+        for(int i = 0; i < configuration.length; i++) {
+            for(int j = 0; j < configuration[i].length; j++) {
                 configuration[i][j] = config[i][j];
             }
         }
     }
 
 
-    public void addNeighbors(Direction d , Room... rooms)
-    {
-        for(int i = 0; i < rooms.length; i++)
-        {
+    public void addNeighbors(Direction d , Room... rooms) {
+        for(int i = 0; i < rooms.length; i++) {
             neighbors[d.ordinal()].add(rooms[i]);
         }
         important = true;
     }
 
-    public Room getNeighbor(Direction d)
-    {
+    public Room getNeighbor(Direction d) {
         return neighbors[d.ordinal()].get((int)(Math.random() * neighbors[d.ordinal()].size()));
     }
 
-    public Room[] getRoomPool(Direction d)
-    {
+    public Room[] getRoomPool(Direction d) {
         Room[] ret = new Room[neighbors[d.ordinal()].size()];
         Object[] toCast = neighbors[d.ordinal()].toArray();
-        for(int i = 0; i < toCast.length; i++)
+        for(int i = 0; i < toCast.length; i++) {
             ret[i] = (Room)toCast[i];
+        }
         return ret;
     }
 
-    public Room flip()
-    {
+    public Room flip() {
         int[][] neoConfig = new int[6][8];
-        for(int i = 0; i < configuration.length; i++)
-        {
-            for(int j = 0; j < configuration[i].length; j++)
-            {
+        for(int i = 0; i < configuration.length; i++) {
+            for(int j = 0; j < configuration[i].length; j++) {
                 neoConfig[i][configuration[i].length - 1 - j] = configuration[i][j];
             }
         }

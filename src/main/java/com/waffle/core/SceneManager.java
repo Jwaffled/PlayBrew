@@ -5,7 +5,10 @@ import java.util.Map;
 
 public class SceneManager {
     private Map<String, Scene> scenes;
+    private String currentSceneName;
     private Scene currentScene;
+    private String previousSceneName;
+    private Scene previousScene;
 
     /**
      * Constructs a scene manager with a specified map of scenes
@@ -48,8 +51,26 @@ public class SceneManager {
         if(!scenes.containsKey(name)) {
             throw new IllegalStateException("Scene with name '" + name + "' does not exist!");
         }
-
+        previousScene = currentScene;
+        previousSceneName = currentSceneName;
+        currentSceneName = name;
         currentScene = scenes.get(name);
+    }
+
+    /**
+     * Returns the current scene name
+     * @return the current scene name
+     */
+    public String getCurrentSceneName() {
+        return currentSceneName;
+    }
+
+    /**
+     * Returns the previous scene name
+     * @return the previous scene name
+     */
+    public String getPreviousSceneName() {
+        return previousSceneName;
     }
 
     /**
@@ -60,6 +81,13 @@ public class SceneManager {
         return currentScene;
     }
 
+    /**
+     * Returns the previous scene, null if there wasn't any
+     * @return the previous scene
+     */
+    public Scene getPreviousScene() {
+        return previousScene;
+    }
     public String toString() {
         return scenes.toString();
     }

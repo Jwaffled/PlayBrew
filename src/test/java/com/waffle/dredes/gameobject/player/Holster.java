@@ -7,8 +7,7 @@ public class Holster {
 
     public Queue<Bullet> bullets;
 
-    public Holster()
-    {
+    public Holster() {
         bullets = new LinkedList<Bullet>();
     }
 }

@@ -8,51 +8,39 @@ public abstract class PlayerState
     private boolean countingUp;
     public boolean active;
 
-    public PlayerState(int r, int g, int b)
-    {
+    public PlayerState(int r, int g, int b) {
         color = new Color(r,b,g, 50);
         countingUp = true;
     }
-    public PlayerState(int r, int g, int b, int duration)
-    {
+    public PlayerState(int r, int g, int b, int duration) {
         color = new Color(r,b,g, 50);
         record = duration;
         countingUp = false;
     }
-    public Color getColor()
-    {
+    public Color getColor() {
         return color;
     }
 
-    public boolean equals(Object other)
-    {
+    public boolean equals(Object other) {
         return other instanceof PlayerState && ((PlayerState) other).color.equals(color);
     }
 
-    public PlayerState activate()
-    {
+    public PlayerState activate() {
         counter = countingUp? 0 : record;
         active = true;
         return this;
     }
 
-    public void update()
-    {
-        if(active)
-        {
-            if(countingUp)
-            {
+    public void update() {
+        if(active) {
+            if(countingUp) {
                 counter++;
-                if(counter > record)
-                {
+                if(counter > record) {
                     counter = record;
                 }
-            }
-            else
-            {
+            } else {
                 counter--;
-                if(counter < 0)
-                {
+                if(counter < 0) {
                     counter = 0;
                     active = false;
                 }

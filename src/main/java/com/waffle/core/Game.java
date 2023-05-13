@@ -16,6 +16,7 @@ import java.util.concurrent.*;
 public abstract class Game implements Runnable, FreeableResource {
     public static final int DEFAULT_MAX_ENTITIES = 100000;
     public static final String DEFAULT_SCENE = "DefaultScene";
+    public Camera gameCamera;
     private final int fpsCap;
     private final ExecutorService executinator = Executors.newSingleThreadExecutor();
     public float renderTime;
@@ -43,6 +44,7 @@ public abstract class Game implements Runnable, FreeableResource {
         sceneManager = new SceneManager();
         sceneManager.addScene(DEFAULT_SCENE, new DefaultScene(maxEntities));
         window = new Window(width, height, title, cam);
+        gameCamera = cam;
         setCurrentScene(DEFAULT_SCENE);
         world = sceneManager.getCurrentScene().getWorld();
 
@@ -85,7 +87,6 @@ public abstract class Game implements Runnable, FreeableResource {
             }
         } catch(Exception e) {
             Constants.LOGGER.logException(e, LogLevel.FATAL);
-            System.out.println(e);
         } finally {
             if(window != null) {
                 window.dispatchEvent(new WindowEvent(window, WindowEvent.WINDOW_CLOSING));
@@ -106,6 +107,7 @@ public abstract class Game implements Runnable, FreeableResource {
         window.canvas.setGeometryRenderSystem(s.getGeometryRenderSystem());
         window.canvas.setSpriteRenderSystem(s.getSpriteRenderSystem());
         window.canvas.setUiRenderSystem(s.getUIRenderSystem());
+        s.focus();
     }
 
     /**
@@ -126,11 +128,35 @@ public abstract class Game implements Runnable, FreeableResource {
     }
 
     /**
+     * Returns the current scene name
+     * @return the current scene name
+     */
+    public String getCurrentSceneName() {
+        return sceneManager.getCurrentSceneName();
+    }
+
+    /**
      * Returns the current scene
      * @return the current scene
      */
     public Scene getCurrentScene() {
         return sceneManager.getCurrentScene();
+    }
+
+    /**
+     * Returns the previous scene name
+     * @return the previous scene name
+     */
+    public String getPreviousSceneName() {
+        return sceneManager.getPreviousSceneName();
+    }
+
+    /**
+     * Returns the previous scene (null if none)
+     * @return the previous scene
+     */
+    public Scene getPreviousScene() {
+        return sceneManager.getPreviousScene();
     }
 
     /**

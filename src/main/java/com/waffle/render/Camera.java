@@ -27,7 +27,7 @@ public class Camera {
     }
 
     public void setPosition(Vec2f position) {
-        this.position = position;
+        this.position = new Vec2f(position);
     }
 
     public float getZoomScale() {

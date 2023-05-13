@@ -19,7 +19,7 @@ public class DebugMenu extends GameObject {
     private GeometryComponent outline;
     private TransformComponent transform;
     private FontRenderComponent text;
-    private static final int STRING_COUNT = 8;
+    private static final int STRING_COUNT = 11;
 
     @Override
     public void start() {

@@ -7,6 +7,7 @@ import com.waffle.systems.*;
 import java.util.BitSet;
 
 public class DefaultScene implements Scene {
+    private long framesActive;
     protected final int maxEntities;
     protected World world;
     protected SpriteRenderSystem spriteRenderSystem;
@@ -27,6 +28,11 @@ public class DefaultScene implements Scene {
         registerSystems();
     }
 
+    @Override
+    public void focus() {
+        resetFramesActive();
+    }
+
     /**
      * Updates the specified systems<br>
      * The default systems that are updated are
@@ -39,9 +45,22 @@ public class DefaultScene implements Scene {
      */
     @Override
     public void update(float dt) {
+        incrementFramesActive();
         physicsSystem.update(dt);
         collisionSystem.update(dt);
         world.update(dt);
+    }
+
+    public long getFramesActive() {
+        return framesActive;
+    }
+
+    public void resetFramesActive() {
+        framesActive = 0;
+    }
+
+    public void incrementFramesActive() {
+        framesActive++;
     }
 
     /**

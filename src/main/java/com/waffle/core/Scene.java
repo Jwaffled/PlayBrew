@@ -7,6 +7,7 @@ import com.waffle.systems.SpriteRenderSystem;
 import com.waffle.systems.UIRenderSystem;
 
 public interface Scene {
+    void focus();
     void update(float dt);
     void start();
     World getWorld();

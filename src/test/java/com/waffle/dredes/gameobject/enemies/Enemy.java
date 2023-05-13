@@ -5,9 +5,8 @@ import com.waffle.components.KinematicComponent;
 import com.waffle.components.SpriteRenderComponent;
 import com.waffle.components.TransformComponent;
 import com.waffle.core.SpriteRenderer;
-import com.waffle.dredes.level.SolidTile;
-import com.waffle.dredes.level.WaterTile;
 import com.waffle.dredes.gameobject.player.Bullet;
+import com.waffle.dredes.level.Tile;
 import com.waffle.ecs.GameObject;
 import com.waffle.struct.Vec2f;
 
@@ -24,21 +23,22 @@ public abstract class Enemy extends GameObject {
     public float baseMass;
     public SpriteRenderComponent spriteRender;
 
-    public Enemy(Vec2f hitBox, Vec2f offset, Vec2f moveSpeed, float health, float mass, BufferedImage sprite)
-    {
+    public Enemy(Vec2f hitBox, Vec2f offset, Vec2f moveSpeed, float health, float mass, BufferedImage sprite) {
         baseMass = mass;
         kinematics = new KinematicComponent(new Vec2f(), new Vec2f(), 9.8f, mass);
         hb = new ColliderComponent(offset, hitBox, e -> {
-            if(e.getCollidedObject() instanceof SolidTile)
-            {
-                gc = true;
+            if(e.getCollidedObject() instanceof Tile) {
+                if(((Tile) e.getCollidedObject()).water) {
+                    kinematics.mass = mass * 2;
+                } else {
+                    if(!((Tile) e.getCollidedObject()).fluid) {
+                        gc = true;
+                        kinematics.mass = mass;
+                    }
+                }
             }
-            if(e.getCollidedObject() instanceof WaterTile)
-            {
-                kinematics.mass = baseMass * 2;
-            }
-            if(e.getCollidedObject() instanceof Bullet)
-            {
+
+            if(e.getCollidedObject() instanceof Bullet) {
                 hp -= ((Bullet)e.getCollidedObject()).damage;
                 ((Bullet)e.getCollidedObject()).spoil.applyEffect(this);
             }
@@ -48,8 +48,7 @@ public abstract class Enemy extends GameObject {
         this.sprite = sprite;
     }
 
-    public void start()
-    {
+    public void start() {
         spriteRender = new SpriteRenderComponent();
         spriteRender.sprites.add(new SpriteRenderer(new Vec2f(), sprite, sprite.getWidth(), sprite.getHeight()));
         transform = new TransformComponent(new Vec2f());
