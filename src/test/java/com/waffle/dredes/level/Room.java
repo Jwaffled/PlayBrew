@@ -9,6 +9,7 @@ import java.util.Arrays;
 public class Room {
     public ArrayList<Room>[] neighbors;
     boolean important;
+    boolean flipped;
     public int[][] configuration;
     public GameObject[] tiles;
 
@@ -38,6 +39,7 @@ public class Room {
         neighbors = new ArrayList[8];
         tiles = new GameObject[5];
         important = false;
+        flipped = false;
     }
 
     public void addConfig(int[][] config) {
@@ -53,6 +55,11 @@ public class Room {
         for(int i = 0; i < rooms.length; i++) {
             neighbors[d.ordinal()].add(rooms[i]);
         }
+        important = true;
+    }
+
+    public void addNeighbor(Direction d , Room room) {
+        neighbors[d.ordinal()].add(room);
         important = true;
     }
 
@@ -88,6 +95,7 @@ public class Room {
         Room ret = new Room();
         ret.configuration = neoConfig;
         ret.neighbors = neoNeighbors;
+        flipped = !flipped;
         return ret;
     }
 

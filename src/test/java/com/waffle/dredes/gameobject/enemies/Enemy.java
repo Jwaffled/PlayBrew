@@ -53,5 +53,8 @@ public abstract class Enemy extends GameObject {
         spriteRender.sprites.add(new SpriteRenderer(new Vec2f(), sprite, sprite.getWidth(), sprite.getHeight()));
         transform = new TransformComponent(new Vec2f());
     }
-    public abstract void applyEffect(Enemy e);
+    public  void applyEffect(GameObject gameObject)
+    {
+
+    }
 }
