@@ -102,7 +102,8 @@ public class Player extends GameObject {
      */
 
     @Override
-    public void update(float dt) {
+    public void update(float dt)
+    {
         applyDirection();
         onGround = onGround || keybindManager.triggered("Levitate");
         if(!onGround) {
@@ -190,5 +191,6 @@ public class Player extends GameObject {
     public void applyCoefficients() {
         kinematics.v.div(vCoEff);
         idleState.traction = (int)(idleState.baseTraction * frictionCoEff);
+        turnState.friction = (int)(turnState.baseFriction * frictionCoEff);
     }
 }

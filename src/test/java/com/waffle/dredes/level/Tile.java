@@ -16,11 +16,12 @@ public class Tile extends GameObject {
     public final int width, height;
     public boolean fluid;
     public boolean water;
+    public float friction;
+    public Vec2f velocity;
     public ColliderComponent collider;
     public KinematicComponent k;
     public SpriteRenderComponent render;
     public TransformComponent transform;
-
     public Tile(BufferedImage sprite, int row ,int col, boolean fluid, boolean water) {
         transform = new TransformComponent(new Vec2f(col * 32, row * 32));
         width = sprite.getWidth();
@@ -31,6 +32,8 @@ public class Tile extends GameObject {
         collider = new ColliderComponent(new Vec2f(), new Vec2f(sprite.getWidth(), sprite.getHeight()), e -> {
             touchingPlayer = true;
         });
+        friction = 1;
+        velocity = new Vec2f(1,1);
     }
     public Tile(BufferedImage sprite, int row ,int col, boolean fluid, boolean water, float frictionCoefficient, Vec2f velocityCoefficient) {
         transform = new TransformComponent(new Vec2f(col * 32, row * 32));
@@ -39,6 +42,8 @@ public class Tile extends GameObject {
         height = sprite.getHeight();
         k = new KinematicComponent(new Vec2f(), new Vec2f());
         render.sprites.add(new SpriteRenderer(new Vec2f(), sprite, sprite.getWidth(), sprite.getHeight()));
+        friction = frictionCoefficient;
+        velocity = velocityCoefficient;
         collider = new ColliderComponent(new Vec2f(), new Vec2f(sprite.getWidth(), sprite.getHeight()), e -> {
             System.out.println("Colliding");
             if(e.getCollidedObject() instanceof Player) {
@@ -46,8 +51,12 @@ public class Tile extends GameObject {
                 ((Player)e.getCollidedObject()).frictionCoEff = frictionCoefficient;
                 ((Player)e.getCollidedObject()).vCoEff = velocityCoefficient;
             }
-
         });
+    }
+
+    public Tile copy(int newRow, int newCol)
+    {
+        return new Tile(render.sprites.get(0).getSprite(), newRow, newCol, fluid, water, friction, velocity);
     }
     @Override
     public void start(){}

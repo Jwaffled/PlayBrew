@@ -4,9 +4,12 @@ import com.waffle.ecs.GameObject;
 
 public class Turning extends State {
     int friction;
+    int baseFriction;
     public Turning(int frames, int friction)
     {
         super(150,150,200,frames);
+        this.friction = friction;
+        baseFriction = friction;
     }
 
     public void apply(GameObject gamob)
