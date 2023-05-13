@@ -82,8 +82,12 @@ public final class Utils {
     public static String[] getFilesInDirectory(String path) {
         URL f = Utils.class.getClassLoader().getResource(path);
         if(f != null) {
-            File file = new File(f.getPath());
-            return file.list();
+            try {
+                File file = new File(f.toURI().getPath());
+                return file.list();
+            } catch (URISyntaxException e) {
+                throw new IllegalStateException(e);
+            }
         } else {
             throw new IllegalArgumentException("File '" + path + "' could not be found!");
         }

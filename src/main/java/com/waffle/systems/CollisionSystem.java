@@ -17,7 +17,7 @@ public class CollisionSystem extends ECSSystem {
     public void update(float dt) {
         for(DynamicQuadTreeContainer<Integer> tree : quadTrees) {
             Map<Integer, ColliderComponent> toCall = new HashMap<>();
-            List<Integer> list = tree.search(new Rectangle(new Vec2f(0, 0), new Vec2f(10000, 10000)));
+            List<Integer> list = tree.search(new Rectangle(new Vec2f(0, -200), new Vec2f(10000, 10000)));
             for(int entity : list) {
                 TransformComponent t = world.getComponent(entity, TransformComponent.class);
                 ColliderComponent c = world.getComponent(entity, ColliderComponent.class);
@@ -70,9 +70,9 @@ public class CollisionSystem extends ECSSystem {
     }
 
     private boolean intersects(ColliderComponent boxOne, ColliderComponent boxTwo, Vec2f posOne, Vec2f posTwo) {
-            return posOne.x < posTwo.x + boxTwo.size.x
-                    && posOne.x + boxOne.size.x > posTwo.x
-                    && posOne.y < posTwo.y + boxTwo.size.y
-                    && posOne.y + boxOne.size.y > posTwo.y;
+            return posOne.x < posTwo.x + boxTwo.size.x + boxTwo.position.x
+                    && posOne.x + boxOne.size.x + boxOne.position.x > posTwo.x
+                    && posOne.y < posTwo.y + boxTwo.size.y + boxTwo.position.y
+                    && posOne.y + boxOne.size.y + boxOne.position.y > posTwo.y;
     }
 }

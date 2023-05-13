@@ -13,9 +13,9 @@ import com.waffle.struct.Vec2f;
 import java.awt.image.BufferedImage;
 
 public class CollisionObject extends GameObject {
-    private TransformComponent transform;
-    private SpriteRenderComponent spriteRenderComponent;
-    private ColliderComponent collider;
+    public TransformComponent transform;
+    public SpriteRenderComponent spriteRenderComponent;
+    public ColliderComponent collider;
     private KinematicComponent kinematics;
     public long totalCollisions = 0;
 
@@ -36,6 +36,5 @@ public class CollisionObject extends GameObject {
 
     @Override
     public void update(float dt) {
-
     }
 }
