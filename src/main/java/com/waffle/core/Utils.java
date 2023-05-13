@@ -11,11 +11,9 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
-import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * A class containing static helper methods for miscellaneous operations
@@ -84,13 +82,12 @@ public final class Utils {
     public static String[] getFilesInDirectory(String path) {
         URL f = Utils.class.getClassLoader().getResource(path);
         if(f != null) {
-            File file = null;
             try {
-                file = new File(f.toURI().getPath());
+                File file = new File(f.toURI().getPath());
+                return file.list();
             } catch (URISyntaxException e) {
-                throw new RuntimeException(e);
+                throw new IllegalStateException(e);
             }
-            return file.list();
         } else {
             throw new IllegalArgumentException("File '" + path + "' could not be found!");
         }
