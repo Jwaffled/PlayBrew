@@ -35,7 +35,7 @@ public class Player extends GameObject {
     private Idling idleState;
     private Walking walkState;
     private Turning turnState;
-    public PlayerState current;
+    public State current;
     public float frictionCoEff;
     public Vec2f vCoEff;
 
