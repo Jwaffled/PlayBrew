@@ -58,7 +58,7 @@ public class GameplayScene extends DefaultScene {
 
         for(int i = 0; i < room.configuration.length; i++) {
             for(int j = 0; j < room.configuration[i].length; j++) {
-                Tile t = new Tile(arr[room.configuration[i][j]], i, j, false, false);
+                Tile t = new Tile(arr[room.configuration[i][j]], i + 3, j + 3, false, false);
                 world.createGameObject(t);
             }
         }

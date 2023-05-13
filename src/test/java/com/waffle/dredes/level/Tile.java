@@ -13,6 +13,7 @@ import java.awt.image.BufferedImage;
 
 public class Tile extends GameObject {
     public boolean touchingPlayer;
+    public final int width, height;
     public boolean fluid;
     public boolean water;
     public ColliderComponent collider;
@@ -22,6 +23,8 @@ public class Tile extends GameObject {
 
     public Tile(BufferedImage sprite, int row ,int col, boolean fluid, boolean water) {
         transform = new TransformComponent(new Vec2f(col * 32, row * 32));
+        width = sprite.getWidth();
+        height = sprite.getHeight();
         render = new SpriteRenderComponent();
         k = new KinematicComponent(new Vec2f(), new Vec2f());
         render.sprites.add(new SpriteRenderer(new Vec2f(), sprite, sprite.getWidth(), sprite.getHeight()));
@@ -32,6 +35,8 @@ public class Tile extends GameObject {
     public Tile(BufferedImage sprite, int row ,int col, boolean fluid, boolean water, float frictionCoefficient, Vec2f velocityCoefficient) {
         transform = new TransformComponent(new Vec2f(col * 32, row * 32));
         render = new SpriteRenderComponent();
+        width = sprite.getWidth();
+        height = sprite.getHeight();
         k = new KinematicComponent(new Vec2f(), new Vec2f());
         render.sprites.add(new SpriteRenderer(new Vec2f(), sprite, sprite.getWidth(), sprite.getHeight()));
         collider = new ColliderComponent(new Vec2f(), new Vec2f(sprite.getWidth(), sprite.getHeight()), e -> {

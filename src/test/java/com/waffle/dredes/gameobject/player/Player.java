@@ -8,6 +8,7 @@ import com.waffle.core.Constants;
 import com.waffle.core.LogLevel;
 import com.waffle.core.SpriteRenderer;
 import com.waffle.core.Utils;
+import com.waffle.dredes.level.Tile;
 import com.waffle.ecs.GameObject;
 import com.waffle.input.KeybindManager;
 import com.waffle.struct.Vec2f;
@@ -56,9 +57,29 @@ public class Player extends GameObject {
             sprites.sprites.add(new SpriteRenderer(new Vec2f(), b, b.getWidth(), b.getHeight()));
             transform = new TransformComponent(400, 0);
             kinematics = new KinematicComponent(new Vec2f(), new Vec2f(), 0, 1);
-            gc = new ColliderComponent(new Vec2f(0, b.getHeight()), new Vec2f(b.getWidth(), 1) ,e -> {
-                onGround = true;
-                System.out.println("Colliding");
+            gc = new ColliderComponent(new Vec2f(0, b.getHeight()), new Vec2f(b.getWidth(), 1) , e -> {
+                if(e.getCollidedObject() instanceof Tile tile) {
+                    Vec2f mid = new Vec2f(transform.position.x + b.getWidth() / 2f, transform.position.y + b.getHeight() / 2f);
+                    if(kinematics.v.y > 0) {
+                        // Ceiling
+                        kinematics.v.y = 0;
+                        transform.position.y = tile.transform.position.y + tile.height;
+                    } else if(kinematics.v.y < 0) {
+                        // Floor
+                        kinematics.v.y = 0;
+                        transform.position.y = tile.transform.position.y;
+                    }
+                    if(kinematics.v.x > 0) {
+                        // Wall on the right of player
+                        kinematics.v.x = 0;
+                        transform.position.x = tile.transform.position.x;
+                    } else if(kinematics.v.x < 0) {
+                        // Wall on the left of player
+                        kinematics.v.x = 0;
+                        transform.position.x = tile.transform.position.x + tile.width;
+                    }
+                }
+
             });
             keybindManager = new KeybindManager();
             addBindings();
