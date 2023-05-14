@@ -2,6 +2,7 @@ package com.waffle.dredes.level;
 
 
 import com.waffle.ecs.GameObject;
+import com.waffle.struct.Vec2f;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -24,6 +25,11 @@ public class Room {
         SPECIAL_B
     }
 
+    /**
+     * 0 1 2
+     * 3 _ 4
+     * 5 6 7
+     */
     public enum Direction {
         UP_LEFT,
         UP,
@@ -33,6 +39,42 @@ public class Room {
         DOWN,
         DOWN_LEFT,
         LEFT
+    }
+    public static Direction getDirection(Vec2f vector)
+    {
+        if(vector.x > 0)
+        {
+            if(vector.y > 0)
+            {
+                return Direction.DOWN_RIGHT;
+            }
+            if(vector.y < 0)
+            {
+                return Direction.UP_RIGHT;
+            }
+            return Direction.RIGHT;
+        }
+        if(vector.x < 0)
+        {
+            if(vector.y > 0)
+            {
+                return Direction.DOWN_LEFT;
+            }
+            if(vector.y < 0)
+            {
+                return Direction.UP_LEFT;
+            }
+            return Direction.LEFT;
+        }
+        if(vector.y > 0)
+        {
+            return Direction.DOWN;
+        }
+        if(vector.y < 0)
+        {
+            return Direction.UP;
+        }
+        return null;
     }
 
     public Room() {
@@ -59,6 +101,17 @@ public class Room {
         strongNeighbors[d.ordinal()].add(room);
         weakNeighbors[d.ordinal()].add(room);
         important = true;
+    }
+
+    public void addNeighbor(Direction d , Room room, boolean strong) {
+        if(strong)
+        {
+            strongNeighbors[d.ordinal()].add(room);
+        }
+        else
+        {
+            weakNeighbors[d.ordinal()].add(room);
+        }
     }
 
     public Room getNeighbor(Direction d) {

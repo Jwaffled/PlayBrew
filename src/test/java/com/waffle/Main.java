@@ -7,10 +7,7 @@ public class Main {
 
     public static void main(String[] args) {
         System.setProperty("sun.java2d.opengl", "true");
-        //new MainGame();
+        new MainGame();
 
-        LevelGen gen = new LevelGen();
-        gen.generate(LevelGen.Biome.Redland, 10, 10, true);
-        gen.addAllNeighbors();
     }
 }

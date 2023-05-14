@@ -51,7 +51,7 @@ public class DebugMenu extends GameObject {
                 Input.getInstance().getMousePosition().x, Input.getInstance().getMousePosition().y,
                 MainGame.INSTANCE.renderTime,
                 k.v, k.a, k.force, GameplayScene.INSTANCE.player.transform.position,
-                GameplayScene.INSTANCE.collisionObject.totalCollisions, GameplayScene.INSTANCE.player.onGround,
+                GameplayScene.INSTANCE.collisionObject.totalCollisions, GameplayScene.INSTANCE.player.groundCheck,
                 GameplayScene.INSTANCE.player.current.getClass(), GameplayScene.INSTANCE.player.current.counter,
                 GameplayScene.INSTANCE.player.gc.position
         );

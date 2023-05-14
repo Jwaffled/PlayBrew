@@ -6,7 +6,6 @@ import com.waffle.components.SpriteRenderComponent;
 import com.waffle.components.TransformComponent;
 import com.waffle.core.SpriteRenderer;
 import com.waffle.dredes.scenes.GameplayScene;
-import com.waffle.dredes.scenes.PhysicsScene;
 import com.waffle.ecs.GameObject;
 import com.waffle.struct.Vec2f;
 
@@ -26,7 +25,7 @@ public class CollisionObject extends GameObject {
                 new Vec2f(0, 0), new Vec2f(100, 100),
                 e -> {
                     //System.out.println(e.getCollidedObject());
-                    GameplayScene.INSTANCE.player.onGround = true;
+                    GameplayScene.INSTANCE.player.groundCheck = true;
                     totalCollisions++;
                 });
         kinematics = new KinematicComponent(new Vec2f(), new Vec2f());
