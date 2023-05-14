@@ -7,6 +7,7 @@ import com.waffle.dredes.MainGame;
 import com.waffle.dredes.gameobject.CollisionObject;
 import com.waffle.dredes.gameobject.DebugMenu;
 import com.waffle.dredes.gameobject.player.Player;
+import com.waffle.dredes.level.LevelGen;
 import com.waffle.dredes.level.Room;
 import com.waffle.dredes.level.RoomLoader;
 import com.waffle.dredes.level.Tile;
@@ -44,24 +45,18 @@ public class GameplayScene extends DefaultScene {
     @Override
     public void start() {
         world.createLayers(3);
+        LevelGen l = LevelGen.INSTANCE;
+        Tile[][] arr = l.generate(LevelGen.Biome.Grassland, 0, 0, false);
 
-        roomLoader = new RoomLoader();
-        roomLoader.addDirectory("DreDes/Rooms/Cave");
-        room = roomLoader.getRoom("CaveEntrance");
-
-        BufferedImage[] arr = new BufferedImage[5];
-        arr[0] = Utils.loadImageFromPath("DreDes/Tiles/TileGrass.png");
-        arr[1] = Utils.loadImageFromPath("DreDes/Tiles/TileIce.png");
-        arr[2] = Utils.loadImageFromPath("DreDes/Tiles/TileRock.png");
-        arr[3] = Utils.loadImageFromPath("DreDes/Tiles/TileSand.png");
-        arr[4] = Utils.loadImageFromPath("DreDes/Tiles/TileWater.png");
-
-        for(int i = 0; i < room.configuration.length; i++) {
-            for(int j = 0; j < room.configuration[i].length; j++) {
-                Tile t = new Tile(arr[room.configuration[i][j]], i + 3, j + 3, false, false);
-                world.createGameObject(t);
+        for(Tile[] a : arr) {
+            for(Tile tile : a) {
+                if(tile != null)
+                {
+                    world.createGameObject(tile);
+                }
             }
         }
+
 
 
         player = new Player();
@@ -73,7 +68,7 @@ public class GameplayScene extends DefaultScene {
         keybindManager = new KeybindManager();
         addBindings();
 
-        world.createGameObject(collisionObject);
+        //world.createGameObject(collisionObject);
         world.createGameObject(debug);
         world.createGameObject(player);
     }
