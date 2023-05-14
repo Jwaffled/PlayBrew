@@ -4,13 +4,18 @@ import com.waffle.core.Constants;
 import com.waffle.core.Utils;
 import com.waffle.struct.Vec2f;
 
+import java.awt.image.BufferedImage;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashSet;
 import static com.waffle.dredes.level.Room.Direction.*;
-
+import static com.waffle.dredes.level.Room.TileType.*;
 public class LevelGen {
     public static LevelGen INSTANCE;
     private RoomLoader roomLoader;
 
-    public enum Biome {
+    public enum Biome
+    {
         Grassland,
         Redland,
         Sandland,
@@ -18,105 +23,210 @@ public class LevelGen {
         Stoneland
     }
 
-    public LevelGen() {
+    public LevelGen()
+    {
         INSTANCE = this;
     }
 
-    public Tile[][] generate(Biome biome, int x, int y, boolean river) {
+    public Tile[][] generate(Biome biome, int x, int y, boolean river)
+    {
         Tile[] tiles = new Tile[7];
-        roomLoader = new RoomLoader();
-        Tile[][] level = new Tile[6][10];
-        loadBiome(roomLoader, biome, tiles);
+        RoomLoader rl = new RoomLoader();
+        Room[][] level = new Room[6][10];
+        loadBiome(rl, biome, tiles);
         if(river) {
-            roomLoader.addDirectory("DreDes/Rooms/River");
+            rl.addDirectory("DreDes/Rooms/River");
         }
+        int height = 3;
+        int direction = -1;
+        for(int i = 0; i < level[0].length/2; i++)
+        {
+            for(int j = height; j < level.length && j > 0; j+= direction)
+            {
+                level[j][i] = pickRoom(level, j, i);
+                level[j][level[j].length - 1 - i] = pickRoom(level, j, level[j].length - 1 - i);
+                height = j;
+            }
+            direction *= -1;
+        }
+        for(int i = 0; i < level[0].length; i++)
+        {
+            for(int j = level.length - 1; j > 0; j--)
+            {
+                if(level[j][i] == null)
+                {
+                    level[j][i] = pickRoom(level, j, i);
+                }
+            }
+        }
+        Tile[][] ret = new Tile[36][80];
+        for(int i = 0; i < level.length; i++)
+        {
+            for(int j = 0; j < level.length; j++)
+            {
+                int[][] blueprint = level[i][j].configuration;
+                for(int k = 0; k < blueprint.length; k++)
+                {
+                    for(int l = 0; l < blueprint[k].length; l++)
+                    {
+                        ret[(i * 8)+ k][(j * 6) + l] = tiles[blueprint[k][l]].copy((i * 8) + k,(j * 6) + l);
+                    }
+                }
+            }
+        }
+        return ret;
 
-        roomLoader.addDirectory("DreDes/Rooms/Universal");
-        roomLoader.addDirectory("DreDes/Rooms/Special");
-
-        loadGrass();
-        loadRed();
-        loadSalt();
-        loadStone();
-        loadSand();
-
-        return null;
     }
 
 
-    public void loadBiome(RoomLoader rl, Biome b, Tile[] tiles) {
+    public void loadBiome(RoomLoader rl, Biome b, Tile[] tiles)
+    {
         tiles[0] = null;
-        tiles[3] = new Tile(Utils.loadImageFromPath("DreDes/Tiles/Water.png"), -1, -1, true, true, 1f, new Vec2f(1.5f, 2f));
-        if(b.equals(Biome.Grassland)) {
-            loadGrass();
-            tiles[1] = new Tile(Utils.loadImageFromPath("DreDes/Tiles/Grass.png"), -1, -1, false, false);
-            tiles[2] = new Tile(Utils.loadImageFromPath("DreDes/Tiles/Dirt.png"), -1, -1, false, false);
-            tiles[4] = new Tile(Utils.loadImageFromPath("DreDes/Tiles/Gravel.png"), -1, -1, false, false, 1.25f, new Vec2f(1.1f,1.5f));
-            tiles[5] = new Tile(Utils.loadImageFromPath("DreDes/Tiles/Bricks.png"), -1, -1, false, false);
-            tiles[6] = new Tile(Utils.loadImageFromPath("DreDes/Tiles/Tiles.png"), -1, -2, false, false);
-        } else if(b.equals(Biome.Redland)) {
-            loadRed();
-            tiles[1] = new Tile(Utils.loadImageFromPath("DreDes/Tiles/Clay.png"), -1, -1, false, false);
-            tiles[2] = new Tile(Utils.loadImageFromPath("DreDes/Tiles/Gravel.png"), -1, -1, false, false, 1.25f, new Vec2f(1.1f,1.5f));
-            tiles[4] = new Tile(Utils.loadImageFromPath("DreDes/Tiles/Sand.png"), -1, -1, false, false, 1.25f, new Vec2f(1.1f,1.1f));
-            tiles[5] = new Tile(Utils.loadImageFromPath("DreDes/Tiles/Bricks.png"), -1, -1, false, false);
-            tiles[6] = new Tile(Utils.loadImageFromPath("DreDes/Tiles/Tiles.png"), -1, -2, false, false);
-        } else if(b.equals(Biome.Sandland)) {
-            loadSand();
-            tiles[1] = new Tile(Utils.loadImageFromPath("DreDes/Tiles/Sand.png"), -1, -1, false, false, 1.25f, new Vec2f(1,1.1f));
-            tiles[2] = new Tile(Utils.loadImageFromPath("DreDes/Tiles/Clay.png"), -1, -1, false, false);
-            tiles[4] = new Tile(Utils.loadImageFromPath("DreDes/Tiles/Gravel.png"), -1, -1, false, false, 1.25f, new Vec2f(1.1f,1.5f));
-            tiles[5] = new Tile(Utils.loadImageFromPath("DreDes/Tiles/Bricks.png"), -1, -1, false, false);
-            tiles[6] = new Tile(Utils.loadImageFromPath("DreDes/Tiles/Tiles.png"), -1, -2, false, false);
-        } else if(b.equals(Biome.Saltland)) {
-            loadSalt();
-            tiles[1] = new Tile(Utils.loadImageFromPath("DreDes/Tiles/Salt.png"), -1, -1, false, false);
-            tiles[2] = new Tile(Utils.loadImageFromPath("DreDes/Tiles/Rock.png"), -1, -1, false, false);
-            tiles[4] = new Tile(Utils.loadImageFromPath("DreDes/Tiles/Salt.png"), -1, -1, false, false);
-            tiles[5] = new Tile(Utils.loadImageFromPath("DreDes/Tiles/Dirt.png"), -1, -1, false, false);
-            tiles[6] = new Tile(Utils.loadImageFromPath("DreDes/Tiles/Ice.png"), -1, -2, false, false, .5f, new Vec2f(1,1));
-        } else if(b.equals(Biome.Stoneland)) {
-            loadStone();
-            tiles[1] = new Tile(Utils.loadImageFromPath("DreDes/Tiles/Rock.png"), -1, -1, false, false);
-            tiles[2] = new Tile(Utils.loadImageFromPath("DreDes/Tiles/Rock.png"), -1, -1, false, false);
-            tiles[4] = new Tile(Utils.loadImageFromPath("DreDes/Tiles/Salt.png"), -1, -1, false, false);
-            tiles[5] = new Tile(Utils.loadImageFromPath("DreDes/Tiles/Snow.png"), -1, -1, false, false, 1.25f, new Vec2f(1.1f,1.5f));
-            tiles[6] = new Tile(Utils.loadImageFromPath("DreDes/Tiles/Ice.png"), -1, -2, false, false, .5f, new Vec2f(1,1));
+        tiles[3] = new Tile(Utils.loadImageFromPath("DreDes/Tiles/Water"), -1, -1, true, true, 1f, new Vec2f(1.5f, 2f));
+        if(b.equals(Biome.Grassland))
+        {
+            loadGrass(rl);
+            tiles[1] = new Tile(Utils.loadImageFromPath("DreDes/Tiles/Grass"), -1, -1, false, false);
+            tiles[2] = new Tile(Utils.loadImageFromPath("DreDes/Tiles/Dirt"), -1, -1, false, false);
+            tiles[4] = new Tile(Utils.loadImageFromPath("DreDes/Tiles/Gravel"), -1, -1, false, false, 1.25f, new Vec2f(1.1f,1.5f));
+            tiles[5] = new Tile(Utils.loadImageFromPath("DreDes/Tiles/Bricks"), -1, -1, false, false);
+            tiles[6] = new Tile(Utils.loadImageFromPath("DreDes/Tiles/Tiles"), -1, -2, false, false);
+        }
+        else if(b.equals(Biome.Redland))
+        {
+            loadRed(rl);
+            tiles[1] = new Tile(Utils.loadImageFromPath("DreDes/Tiles/Clay"), -1, -1, false, false);
+            tiles[2] = new Tile(Utils.loadImageFromPath("DreDes/Tiles/Gravel"), -1, -1, false, false, 1.25f, new Vec2f(1.1f,1.5f));
+            tiles[4] = new Tile(Utils.loadImageFromPath("DreDes/Tiles/Sand"), -1, -1, false, false, 1.25f, new Vec2f(1.1f,1.1f));
+            tiles[5] = new Tile(Utils.loadImageFromPath("DreDes/Tiles/Bricks"), -1, -1, false, false);
+            tiles[6] = new Tile(Utils.loadImageFromPath("DreDes/Tiles/Tiles"), -1, -2, false, false);
+        }
+        else if(b.equals(Biome.Sandland))
+        {
+            loadSand(rl);
+            tiles[1] = new Tile(Utils.loadImageFromPath("DreDes/Tiles/Sand"), -1, -1, false, false, 1.25f, new Vec2f(1,1.1f));
+            tiles[2] = new Tile(Utils.loadImageFromPath("DreDes/Tiles/Clay"), -1, -1, false, false);
+            tiles[4] = new Tile(Utils.loadImageFromPath("DreDes/Tiles/Gravel"), -1, -1, false, false, 1.25f, new Vec2f(1.1f,1.5f));
+            tiles[5] = new Tile(Utils.loadImageFromPath("DreDes/Tiles/Bricks"), -1, -1, false, false);
+            tiles[6] = new Tile(Utils.loadImageFromPath("DreDes/Tiles/Tiles"), -1, -2, false, false);
+        }
+        else if(b.equals(Biome.Saltland))
+        {
+            loadSalt(rl);
+            tiles[1] = new Tile(Utils.loadImageFromPath("DreDes/Tiles/Salt"), -1, -1, false, false);
+            tiles[2] = new Tile(Utils.loadImageFromPath("DreDes/Tiles/Rock"), -1, -1, false, false);
+            tiles[4] = new Tile(Utils.loadImageFromPath("DreDes/Tiles/Salt"), -1, -1, false, false);
+            tiles[5] = new Tile(Utils.loadImageFromPath("DreDes/Tiles/Dirt"), -1, -1, false, false);
+            tiles[6] = new Tile(Utils.loadImageFromPath("DreDes/Tiles/Ice"), -1, -2, false, false, .5f, new Vec2f(1,1));
+        }
+        else if(b.equals(Biome.Stoneland))
+        {
+            loadStone(rl);
+            tiles[1] = new Tile(Utils.loadImageFromPath("DreDes/Tiles/Rock"), -1, -1, false, false);
+            tiles[2] = new Tile(Utils.loadImageFromPath("DreDes/Tiles/Rock"), -1, -1, false, false);
+            tiles[4] = new Tile(Utils.loadImageFromPath("DreDes/Tiles/Salt"), -1, -1, false, false);
+            tiles[5] = new Tile(Utils.loadImageFromPath("DreDes/Tiles/Snow"), -1, -1, false, false, 1.25f, new Vec2f(1.1f,1.5f));
+            tiles[6] = new Tile(Utils.loadImageFromPath("DreDes/Tiles/Ice"), -1, -2, false, false, .5f, new Vec2f(1,1));
         }
     }
-    public void loadGrass() {
+    public void loadGrass(RoomLoader roomLoader)
+    {
         roomLoader.addDirectory("DreDes/Rooms/Hills");
-        roomLoader.addDirectory("DreDes/Rooms/Cave");
+        roomLoader.addDirectory("DreDes/Rooms/Caves");
         roomLoader.addDirectory("DreDes/Rooms/Pond");
     }
 
-    public void loadRed() {
+    public void loadRed(RoomLoader roomLoader)
+    {
         roomLoader.addDirectory("DreDes/Rooms/Hills");
         roomLoader.addDirectory("DreDes/Rooms/Cliff");
-        roomLoader.addDirectory("DreDes/Rooms/Cave");
+        roomLoader.addDirectory("DreDes/Rooms/Caves");
         roomLoader.addDirectory("DreDes/Rooms/Pond");
     }
 
-    public void loadSand() {
+    public void loadSand(RoomLoader roomLoader)
+    {
         roomLoader.addDirectory("DreDes/Rooms/Hills");
-        roomLoader.addDirectory("DreDes/Rooms/Cave");
+        roomLoader.addDirectory("DreDes/Rooms/Caves");
         roomLoader.addDirectory("DreDes/Rooms/Pit");
         roomLoader.addDirectory("DreDes/Rooms/Temple");
     }
 
-    public void loadSalt() {
+    public void loadSalt(RoomLoader roomLoader)
+    {
         roomLoader.addDirectory("DreDes/Rooms/Cliff");
-        roomLoader.addDirectory("DreDes/Rooms/Cave");
+        roomLoader.addDirectory("DreDes/Rooms/Caves");
         roomLoader.addDirectory("DreDes/Rooms/Pit");
         roomLoader.addDirectory("DreDes/Rooms/SaltFlats");
         roomLoader.addDirectory("DreDes/Rooms/Temple");
     }
 
-    public void loadStone() {
-        roomLoader.addDirectory("DreDes/Rooms/Cave");
+    public void loadStone(RoomLoader roomLoader)
+    {
+        roomLoader.addDirectory("DreDes/Rooms/Caves");
         roomLoader.addDirectory("DreDes/Rooms/Mountain");
         roomLoader.addDirectory("DreDes/Rooms/FrozenPond");
         roomLoader.addDirectory("DreDes/Rooms/Temple");
+    }
+
+    public Room pickRoom(Room[][] rooms, int row, int col)
+    {
+        HashSet<Room> pool = new HashSet<Room>();
+        try {
+            pool.addAll(Arrays.asList(rooms[row - 1][col - 1].getRoomPool(DOWN_RIGHT, true)));
+        }catch (Exception e){};
+        try {
+            pool.addAll(Arrays.asList(rooms[row][col - 1].getRoomPool(RIGHT, true)));
+        }catch (Exception e){};
+        try {
+            pool.addAll(Arrays.asList(rooms[row + 1][col - 1].getRoomPool(UP_RIGHT, true)));
+        }catch (Exception e){};
+        try {
+            pool.addAll(Arrays.asList(rooms[row - 1][col].getRoomPool(UP, true)));
+        }catch (Exception e){};
+        try {
+            pool.addAll(Arrays.asList(rooms[row + 1][col].getRoomPool(DOWN, true)));
+        }catch (Exception e){};
+        try {
+            pool.addAll(Arrays.asList(rooms[row - 1][col + 1].getRoomPool(DOWN_LEFT, true)));
+        }catch (Exception e){};
+        try {
+            pool.addAll(Arrays.asList(rooms[row][col + 1].getRoomPool(LEFT, true)));
+        }catch (Exception e){};
+        try {
+            pool.addAll(Arrays.asList(rooms[row][col + 1].getRoomPool(UP_LEFT, true)));
+        }catch (Exception e){};
+        if (!pool.isEmpty())
+        {
+            return (Room)pool.toArray()[(int)(Math.random() * pool.size())];
+        }
+        pool.clear();
+        try {
+            pool.addAll(Arrays.asList(rooms[row - 1][col - 1].getRoomPool(DOWN_RIGHT, false)));
+        }catch (Exception e){};
+        try {
+            pool.addAll(Arrays.asList(rooms[row][col - 1].getRoomPool(RIGHT, false)));
+        }catch (Exception e){};
+        try {
+            pool.addAll(Arrays.asList(rooms[row + 1][col - 1].getRoomPool(UP_RIGHT, false)));
+        }catch (Exception e){};
+        try {
+            pool.addAll(Arrays.asList(rooms[row - 1][col].getRoomPool(UP, false)));
+        }catch (Exception e){};
+        try {
+            pool.addAll(Arrays.asList(rooms[row + 1][col].getRoomPool(DOWN, false)));
+        }catch (Exception e){};
+        try {
+            pool.addAll(Arrays.asList(rooms[row - 1][col + 1].getRoomPool(DOWN_LEFT, false)));
+        }catch (Exception e){};
+        try {
+            pool.addAll(Arrays.asList(rooms[row][col + 1].getRoomPool(LEFT, false)));
+        }catch (Exception e){};
+        try {
+            pool.addAll(Arrays.asList(rooms[row][col + 1].getRoomPool(UP_LEFT, false)));
+        }catch (Exception e){};
+
+        return (Room)pool.toArray()[(int)(Math.random() * pool.size())];
     }
     public void tryAdd(String center, Room.Direction direction, String neighbor) {
         Room c = roomLoader.getRoom(center);
