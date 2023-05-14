@@ -63,57 +63,46 @@ public class Player extends GameObject {
             gc = new ColliderComponent(new Vec2f(0, 0), new Vec2f(b.getWidth(), b.getHeight()) , e -> {
                 if(e.getCollidedObject() instanceof Tile tile) {
                     groundCheck = true;
-                    if(!tile.fluid)
-                    {
+                    if(!tile.fluid) {
+                        Vec2f playerMidpoint = new Vec2f(transform.position.x + b.getWidth() / 2f, transform.position.y + b.getHeight() / 2f);
+                        Vec2f tileMidpoint = new Vec2f(tile.transform.position.x + tile.width / 2f, tile.transform.position.y + tile.height / 2f);
+                        // Calculate collision normal
+                        Vec2f collisionNormal = new Vec2f(tileMidpoint).sub(playerMidpoint);
+                        collisionNormal.normalize();
+                        float absX = Math.abs(collisionNormal.x);
+                        float absY = Math.abs(collisionNormal.y);
 
-                        float slope = ((transform.position.y +((float)b.getHeight()/2))-(tile.transform.position.y + 16))/((transform.position.x - ((float)b.getWidth()/2))-(tile.transform.position.x + 16));
-                        if(Math.abs(slope) < (float)b.getHeight()/b.getWidth())
-                        {
-                            if(transform.position.x > tile.transform.position.x)
-                            {
-                                wallCheckL = true;
-                            }
-                            else{
+                        if (absX > absY) {
+                            // Hitting wall
+                            if (collisionNormal.x > 0) {
+                                // Right wall
                                 wallCheckR = true;
+                                kinematics.v.x = 0;
+                                transform.position.x = tile.transform.position.x - b.getWidth();
+                            } else {
+                                // Left wall
+                                wallCheckL = true;
+                                kinematics.v.x = 0;
+                                transform.position.x = tile.transform.position.x + tile.width + 1;
+                            }
+                        } else {
+                            // Hitting floor or ceiling
+                            if (collisionNormal.y > 0) {
+                                // On ground
+                                groundCheck = true;
+                                kinematics.v.y = 0;
+                                transform.position.y = tile.transform.position.y - b.getHeight();
+                            } else {
+                                // Hitting ceiling
+                                ceilingCheck = true;
+                                kinematics.v.y = 0;
+                                transform.position.y = tile.transform.position.y + tile.height + 1;
                             }
                         }
-                        else if(transform.position.y > tile.transform.position.y)
-                        {
-                            ceilingCheck = true;
-                            System.out.println("Ceiling");
-                            if(current instanceof Jumping && current.active)
-                            {
-                                current.active = false;
-                            }
-                        }
-                        else
-                        {
-                            groundCheck = true;
-                        }
-
                     }
-//                    Vec2f mid = new Vec2f(transform.position.x + b.getWidth() / 2f, transform.position.y + b.getHeight() / 2f);
-//                    if(kinematics.v.y > 0) {
-//                        // Ceiling
-//                        kinematics.v.y = 0;
-//                        transform.position.y = tile.transform.position.y + tile.height;
-//                    } else if(kinematics.v.y < 0) {
-//                        // Floor
-//                        kinematics.v.y = 0;
-//                        transform.position.y = tile.transform.position.y;
-//                    }
-//                    if(kinematics.v.x > 0) {
-//                        // Wall on the right of player
-//                        kinematics.v.x = 0;
-//                        transform.position.x = tile.transform.position.x;
-//                    } else if(kinematics.v.x < 0) {
-//                        // Wall on the left of player
-//                        kinematics.v.x = 0;
-//                        transform.position.x = tile.transform.position.x + tile.width;
-//                    }
                 }
-
             });
+
             keybindManager = new KeybindManager();
             addBindings();
             setStates();
@@ -167,8 +156,7 @@ public class Player extends GameObject {
         }
         applyCoefficients();
         current.apply(this);
-        if(kinematics.v.x > 0 && wallCheckR ||kinematics.v.x < 0 && wallCheckL)
-        {
+        if(kinematics.v.x > 0 && wallCheckR || kinematics.v.x < 0 && wallCheckL) {
             kinematics.v.x = 0;
         }
         vCoEff.x = 1;

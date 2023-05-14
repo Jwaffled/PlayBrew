@@ -56,6 +56,13 @@ public class Vec2f {
         this.y = -this.y;
         return this;
     }
+
+    public Vec2f normalize() {
+        double magnitude = Math.sqrt(Math.pow(this.x, 2) + Math.pow(this.y, 2));
+        this.x /= magnitude;
+        this.y /= magnitude;
+        return this;
+    }
     @Override
     public String toString() {
         return "(x: " + x + ", y: " + y + ")";
