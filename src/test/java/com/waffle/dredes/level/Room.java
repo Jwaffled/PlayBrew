@@ -120,7 +120,7 @@ public class Room {
         ret.configuration = neoConfig;
         ret.strongNeighbors = neoStrongNeighbors;
         ret.weakNeighbors = neoWeakNeighbors;
-        flipped = !flipped;
+        ret.flipped = true;
         return ret;
     }
 

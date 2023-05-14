@@ -2,8 +2,7 @@ package com.waffle.dredes.gameobject.player;
 import com.waffle.ecs.GameObject;
 
 import java.awt.Color;
-public abstract class State
-{
+public abstract class State extends Player {
     private Color color;
     public int counter;
     protected int record;
