@@ -50,7 +50,6 @@ public class RoomLoader {
      * @param dir the path to the folder to add
      */
     public void addDirectory(String dir) {
-        System.out.println(Arrays.toString(Utils.getFilesInDirectory(dir)));
         for(String path : Utils.getFilesInDirectory(dir)) {
             addRoomPath(dir + "/" + path);
         }

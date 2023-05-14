@@ -1,4 +1,4 @@
-UndergroundPondMiddle.txt
+UndergroundPondMiddle
 0 0 0 0 0 0 0 0
 0 0 0 0 0 0 0 0
 0 0 0 0 0 0 0 0

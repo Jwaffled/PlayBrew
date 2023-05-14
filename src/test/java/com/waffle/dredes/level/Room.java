@@ -39,6 +39,10 @@ public class Room {
         configuration = new int[6][8];
         weakNeighbors = new ArrayList[8];
         strongNeighbors = new ArrayList[8];
+        for(int i = 0; i < strongNeighbors.length; i++) {
+            strongNeighbors[i] = new ArrayList<>();
+            weakNeighbors[i] = new ArrayList<>();
+        }
         important = false;
         flipped = false;
     }
