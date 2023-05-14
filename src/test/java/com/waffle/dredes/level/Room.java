@@ -103,6 +103,17 @@ public class Room {
         important = true;
     }
 
+    public void addNeighbor(Direction d , Room room, boolean strong) {
+        if(strong)
+        {
+            strongNeighbors[d.ordinal()].add(room);
+        }
+        else
+        {
+            weakNeighbors[d.ordinal()].add(room);
+        }
+    }
+
     public Room getNeighbor(Direction d) {
         if(strongNeighbors[d.ordinal()].size() == 0)
         {

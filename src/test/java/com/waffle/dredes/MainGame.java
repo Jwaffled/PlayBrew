@@ -33,6 +33,7 @@ public class MainGame extends Game {
         INSTANCE = this;
         // Change this to make it so that each scene has its own ECS
         // And gameobjects
+        gameCamera.setZoomScale(5);
         keybindManager = new KeybindManager();
 
 

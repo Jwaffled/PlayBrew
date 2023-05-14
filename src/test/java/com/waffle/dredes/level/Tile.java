@@ -45,7 +45,7 @@ public class Tile extends GameObject {
         friction = frictionCoefficient;
         velocity = velocityCoefficient;
         collider = new ColliderComponent(new Vec2f(), new Vec2f(sprite.getWidth(), sprite.getHeight()), e -> {
-            System.out.println("Colliding");
+            //System.out.println("Colliding");
             if(e.getCollidedObject() instanceof Player) {
                 touchingPlayer = true;
                 ((Player)e.getCollidedObject()).frictionCoEff = frictionCoefficient;
@@ -65,6 +65,7 @@ public class Tile extends GameObject {
     public void update(float dt) {
 
     }
+
 
 
 }

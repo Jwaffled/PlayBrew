@@ -37,6 +37,8 @@ public class LevelGen {
         if(river) {
             roomLoader.addDirectory("DreDes/Rooms/River");
         }
+        roomLoader.addDirectory("DreDes/Rooms/Universal");
+        roomLoader.addDirectory("DreDes/Rooms/Special");
         int height = 3;
         int direction = -1;
         level[2][0] = roomLoader.getRoom("Camp");
@@ -45,8 +47,8 @@ public class LevelGen {
         {
             for(int j = height; j < level.length && j > 0; j+= direction)
             {
-                level[j][i] = pickRoom(level, j, i);
-                level[j][level[j].length - 1 - i] = pickRoom(level, j, level[j].length - 1 - i);
+                //level[j][i] = pickRoom(level, j, i);
+                //level[j][level[j].length - 1 - i] = pickRoom(level, j, level[j].length - 1 - i);
                 height = j;
             }
             direction *= -1;
@@ -62,6 +64,7 @@ public class LevelGen {
             }
         }
         Tile[][] ret = new Tile[36][80];
+        int[][] debug = new int[36][80];
         for(int i = 0; i < level.length; i++)
         {
             for(int j = 0; j < level[0].length; j++)
@@ -77,6 +80,7 @@ public class LevelGen {
                             {
                                 System.out.printf("%d %d %d %d%n", i, j, k, l);
                                 ret[(i * 6)+ k][(j * 8) + l] = tiles[blueprint[k][l]].copy((i * 6) + k,(j * 8) + l);
+                                debug[(i * 6)+ k][(j * 8) + l] = blueprint[k][l];
                             }
                         }
                     }
@@ -84,6 +88,23 @@ public class LevelGen {
 
             }
         }
+        for(int[] iArr : debug)
+        {
+            for(int i : iArr)
+            {
+                switch (i) {
+                    case 1 -> System.out.print("Su ");
+                    case 2 -> System.out.print("St ");
+                    case 3 -> System.out.print("Wa ");
+                    case 4 -> System.out.print("WB ");
+                    case 5 -> System.out.print("SA ");
+                    case 6 -> System.out.print("SB ");
+                    default ->System.out.print("   ");
+                }
+            }
+            System.out.println();
+        }
+
         return ret;
 
     }
@@ -182,6 +203,8 @@ public class LevelGen {
     public Room pickRoom(Room[][] rooms, int row, int col)
     {
         Collection<Room> pool = roomLoader.getRooms().values();
+        pool.remove(roomLoader.getRoom("Source"));
+        pool.remove(roomLoader.getRoom("Camp"));
         for(int i = -1; i < 2; i++)
         {
             for(int j = -1; j < 2; j++)
@@ -204,6 +227,8 @@ public class LevelGen {
             return (Room)pool.toArray()[(int)(Math.random() * pool.size())];
         }
         pool = roomLoader.getRooms().values();
+        pool.remove(roomLoader.getRoom("Source"));
+        pool.remove(roomLoader.getRoom("Camp"));
         for(int i = -1; i < 2; i++)
         {
             for(int j = -1; j < 2; j++)
@@ -295,10 +320,39 @@ public class LevelGen {
         }
 
         if(c != null && n != null) {
-            c.addNeighbor(direction, n);
+            c.addNeighbor(direction, n, true);
         }
     }
 
+    public void tryAdd(String center, Room.Direction direction, String neighbor, boolean flipped) {
+        Room c = roomLoader.getRoom(center);
+        Room n = roomLoader.getRoom(neighbor);
+
+        if(c == null) {
+            Constants.LOGGER.logSevere("Room '" + center + "' was not found!");
+        }
+
+        if(n == null) {
+            Constants.LOGGER.logSevere("Room '" + neighbor + "' was not found!");
+        }
+
+        if(c != null && n != null) {
+            if(flipped)
+            {
+                c.addNeighbor(direction, n.flip(), true);
+
+            }
+            else
+            {
+                c.addNeighbor(direction, n, false);
+            }
+
+        }
+    }
+
+    /**
+     * Checks for every single room combination
+     */
     public void addAllNeighbors() {
         //tryAdd(room, direction, neighbor) for all the rooms and their possible neighbors
         //region Universal Tiles
@@ -339,33 +393,28 @@ public class LevelGen {
         tryAdd("SmallHill", UP_LEFT, "OpenAir");
         tryAdd("SmallHill", UP, "OpenAir");
         tryAdd("SmallHill", UP_RIGHT, "OpenAir");
-        tryAdd("SmallHill", UP_RIGHT, "Hilltop");
 
-        tryAdd("SmallHill", RIGHT, "SmallHill");
-        tryAdd("SmallHill", RIGHT, "BigHill");
         tryAdd("SmallHill", RIGHT, "Drop");
         tryAdd("SmallHill", RIGHT, "CliffRoof");
-        tryAdd("SmallHill", RIGHT, "SmallPit");
+
         tryAdd("SmallHill", RIGHT, "PitStart");
         tryAdd("SmallHill", RIGHT, "SmallPond");
         tryAdd("SmallHill", RIGHT, "PondStart");
-        tryAdd("SmallHill", RIGHT, "SolidGround");
+        tryAdd("SmallHill", RIGHT, "SolidGround", false);
 
-        tryAdd("SmallHill", DOWN_RIGHT, "SolidGround");
-        tryAdd("SmallHill", DOWN, "SolidGround");
-        tryAdd("SmallHill", DOWN_LEFT, "SolidGround");
+        tryAdd("SmallHill", DOWN_RIGHT, "SolidGround", false);
+        tryAdd("SmallHill", DOWN, "SolidGround", false);
+        tryAdd("SmallHill", DOWN_LEFT, "SolidGround", false);
 
-        tryAdd("SmallHill", LEFT, "SmallHill");
-        tryAdd("SmallHill", LEFT, "BigHill");
+
         tryAdd("SmallHill", LEFT, "Hilltop");
-        tryAdd("SmallHill", LEFT, "UndergroundEntrance");
+
         tryAdd("SmallHill", LEFT, "SmallPond");
-        tryAdd("SmallHill", LEFT, "PondStart");
-        tryAdd("SmallHill", LEFT, "TempleEntrance");
 
 
-        tryAdd("BigHill", UP_LEFT, "OpenAir");
-        tryAdd("BigHill", UP, "OpenAir");
+
+        tryAdd("BigHill", UP_LEFT, "OpenAir", false);
+        tryAdd("BigHill", UP, "OpenAir", false);
 
         tryAdd("BigHill", UP_RIGHT, "OpenAir");
         tryAdd("BigHill", UP_RIGHT, "SmallHill");
@@ -373,35 +422,33 @@ public class LevelGen {
         tryAdd("BigHill", UP_RIGHT, "Hilltop");
         tryAdd("BigHill", UP_RIGHT, "UndergroundEntrance");
 
-        tryAdd("BigHill", RIGHT, "SmallHill");
+
         tryAdd("BigHill", RIGHT, "BigHill");
         tryAdd("BigHill", RIGHT, "Drop");
         tryAdd("BigHill", RIGHT, "CliffRoof");
         tryAdd("BigHill", RIGHT, "SmallPit");
         tryAdd("BigHill", RIGHT, "PitStart");
-        tryAdd("BigHill", RIGHT, "SolidGround");
+        tryAdd("BigHill", RIGHT, "SolidGround", false);
 
-        tryAdd("BigHill", DOWN_RIGHT, "SolidGround");
-        tryAdd("BigHill", DOWN, "SolidGround");
-        tryAdd("BigHill", DOWN_LEFT, "SolidGround");
+        tryAdd("BigHill", DOWN_RIGHT, "SolidGround", false);
+        tryAdd("BigHill", DOWN, "SolidGround", false);
+        tryAdd("BigHill", DOWN_LEFT, "SolidGround", false);
 
-        tryAdd("BigHill", LEFT, "BigHill");
-        tryAdd("BigHill", LEFT, "SmallHill");
+
         tryAdd("BigHill", LEFT, "Hilltop");
-        tryAdd("BigHill", LEFT, "UndergroundEntrance");
+
         tryAdd("BigHill", LEFT, "SmallPond");
-        tryAdd("BigHill", LEFT, "PondStart");
-        tryAdd("BigHill", LEFT, "TempleEntrance");
 
 
-        tryAdd("Hilltop", UP_LEFT, "OpenAir");
-        tryAdd("Hilltop", UP, "OpenAir");
-        tryAdd("Hilltop", UP_RIGHT, "OpenAir");
+
+        tryAdd("Hilltop", UP_LEFT, "OpenAir", false);
+        tryAdd("Hilltop", UP, "OpenAir", false);
+        tryAdd("Hilltop", UP_RIGHT, "OpenAir", false);
 
         tryAdd("Hilltop", RIGHT, "SmallHill");
         tryAdd("Hilltop", RIGHT, "BigHill");
         tryAdd("Hilltop", RIGHT, "Drop");
-        tryAdd("Hilltop", RIGHT, "CliffRoof");
+
         tryAdd("Hilltop", RIGHT, "UndergroundEntrance");
         tryAdd("Hilltop", RIGHT, "SmallPit");
         tryAdd("Hilltop", RIGHT, "PitStart");
@@ -409,23 +456,20 @@ public class LevelGen {
         tryAdd("Hilltop", RIGHT, "PondStart");
         tryAdd("Hilltop", RIGHT, "TempleEntrance");
 
-        tryAdd("Hilltop", DOWN_RIGHT, "BigHill");
-        tryAdd("Hilltop", DOWN_RIGHT, "SolidGround");
+
+        tryAdd("Hilltop", DOWN_RIGHT, "SolidGround", false);
         tryAdd("Hilltop", DOWN, "CliffWall");
         tryAdd("Hilltop", DOWN, "SolidGround");
-        tryAdd("Hilltop", DOWN_LEFT, "SolidGround");
+        tryAdd("Hilltop", DOWN_LEFT, "SolidGround", false);
 
         tryAdd("Hilltop", LEFT, "OpenAir");
-        tryAdd("Hilltop", LEFT, "SmallHill");
-        tryAdd("Hilltop", LEFT, "BigHill");
-        tryAdd("Hilltop", LEFT, "UndergroundEntrance");
-        tryAdd("Hilltop", LEFT, "TempleEntrance");
+
         //endregion
 
         //region Cliffs
-        tryAdd("Drop", UP_LEFT, "OpenAir");
+        tryAdd("Drop", UP_LEFT, "OpenAir", false);
         tryAdd("Drop", UP, "OpenAir");
-        tryAdd("Drop", UP_RIGHT, "OpenAir");
+        tryAdd("Drop", UP_RIGHT, "OpenAir", false);
 
         tryAdd("Drop", RIGHT, "SmallHill");
         tryAdd("Drop", RIGHT, "UndergroundEntrance");
@@ -433,243 +477,234 @@ public class LevelGen {
         tryAdd("Drop", RIGHT, "RockColumns");
         tryAdd("Drop", RIGHT, "TempleEntrance");
 
-        tryAdd("Drop", DOWN_RIGHT, "SolidGround");
-        tryAdd("Drop", DOWN, "CliffWall");
+        tryAdd("Drop", DOWN_RIGHT, "SolidGround", false);
+
         tryAdd("Drop", DOWN, "SolidGround");
-        tryAdd("Drop", DOWN_LEFT, "SolidGround");
+        tryAdd("Drop", DOWN_LEFT, "SolidGround", false);
 
         tryAdd("Drop", LEFT, "SmallHill");
         tryAdd("Drop", LEFT, "CliffRoof");
-        tryAdd("Drop", LEFT, "UndergroundEntrance");
+
         tryAdd("Drop", LEFT, "SmallPit");
         tryAdd("Drop", LEFT, "PitStart");
         tryAdd("Drop", LEFT, "SmallPond");
-        tryAdd("Drop", LEFT, "PondStart");
+
         tryAdd("Drop", LEFT, "Pool");
         tryAdd("Drop", LEFT, "Pool");
         tryAdd("Drop", LEFT, "RockColumns");
-        tryAdd("Drop", LEFT, "TempleEntrance");
 
 
-        tryAdd("CliffWall", UP_LEFT, "OpenAir");
-        tryAdd("CliffWall", UP_LEFT, "PitStart");
+
+        tryAdd("CliffWall", UP_LEFT, "OpenAir", false);
+
         tryAdd("CliffWall", UP, "Hilltop");
-        tryAdd("CliffWall", UP, "Drop");
-        tryAdd("CliffWall", UP, "PitStart");
+
         tryAdd("CliffWall", UP, "TempleEntrance");
         tryAdd("CliffWall", UP_RIGHT, "OpenAir");
-        tryAdd("CliffWall", RIGHT, "SolidGround");
-        tryAdd("CliffWall", DOWN_RIGHT, "SolidGround");
+        tryAdd("CliffWall", RIGHT, "SolidGround", false);
+        tryAdd("CliffWall", DOWN_RIGHT, "SolidGround", false);
         tryAdd("CliffWall", DOWN_RIGHT, "CliffWall");
         tryAdd("CliffWall", DOWN, "OpenAir");
-        tryAdd("CliffWall", DOWN_LEFT, "SolidGround");
-        tryAdd("CliffWall", LEFT, "CliffWall");
+        tryAdd("CliffWall", DOWN_LEFT, "SolidGround", false);
+
         tryAdd("CliffWall", LEFT, "PitMiddle");
 
 
-        tryAdd("CliffRoof", UP_LEFT, "OpenAir");
-        tryAdd("CliffRoof", UP, "OpenAir");
-        tryAdd("CliffRoof", UP_RIGHT, "OpenAir");
+        tryAdd("CliffRoof", UP_LEFT, "OpenAir", false);
+        tryAdd("CliffRoof", UP, "OpenAir", false);
+        tryAdd("CliffRoof", UP_RIGHT, "OpenAir", false);
 
-        tryAdd("CliffRoof", RIGHT, "SmallHill");
-        tryAdd("CliffRoof", RIGHT, "BigHill");
+
         tryAdd("CliffRoof", RIGHT, "CliffRoof");
         tryAdd("CliffRoof", RIGHT, "Drop");
-        tryAdd("CliffRoof", RIGHT, "SmallPit");
+
         tryAdd("CliffRoof", RIGHT, "PitStart");
         tryAdd("CliffRoof", RIGHT, "SmallPond");
         tryAdd("CliffRoof", RIGHT, "PondStart");
         tryAdd("CliffRoof", RIGHT, "Pool");
-        tryAdd("CliffRoof", RIGHT, "Pool");
         tryAdd("CliffRoof", RIGHT, "RockColumns");
 
-        tryAdd("CliffRoof", DOWN_RIGHT, "SolidGround");
+        tryAdd("CliffRoof", DOWN_RIGHT, "SolidGround", false);
         tryAdd("CliffRoof", DOWN, "SolidGround");
-        tryAdd("CliffRoof", DOWN_LEFT, "SolidGround");
+        tryAdd("CliffRoof", DOWN_LEFT, "SolidGround", false);
 
         tryAdd("CliffRoof", LEFT, "SmallHill");
         tryAdd("CliffRoof", LEFT, "BigHill");
-        tryAdd("CliffRoof", LEFT, "Drop");
+
         tryAdd("CliffRoof", LEFT, "CliffRoof");
-        tryAdd("CliffRoof", LEFT, "UndergroundEntrance");
+
         tryAdd("CliffRoof", LEFT, "SmallPit");
-        tryAdd("CliffRoof", LEFT, "PitStart");
+
         tryAdd("CliffRoof", LEFT, "SmallPond");
-        tryAdd("CliffRoof", LEFT, "PondStart");
+
         tryAdd("CliffRoof", LEFT, "Flat");
         tryAdd("CliffRoof", LEFT, "Pool");
         tryAdd("CliffRoof", LEFT, "RockColumns");
-        tryAdd("CliffRoof", LEFT, "TempleEntrance");
+
 
         //endregion
 
         //region Caves
-        tryAdd("UndergroundEntrance", UP_LEFT, "OpenAir");
-        tryAdd("UndergroundEntrance", UP_LEFT, "CaveWall");
+        tryAdd("UndergroundEntrance", UP_LEFT, "OpenAir", false);
+        tryAdd("UndergroundEntrance", UP_LEFT, "CaveWall", false);
         tryAdd("UndergroundEntrance", UP, "CaveWall");
         tryAdd("UndergroundEntrance", UP, "MountainSideB");
-        tryAdd("UndergroundEntrance", UP_RIGHT, "OpenAir");
-        tryAdd("UndergroundEntrance", UP_RIGHT, "CaveWall");
-        tryAdd("UndergroundEntrance", UP_RIGHT, "SolidGround");
+        tryAdd("UndergroundEntrance", UP_RIGHT, "OpenAir", false);
+        tryAdd("UndergroundEntrance", UP_RIGHT, "CaveWall", false);
+        tryAdd("UndergroundEntrance", UP_RIGHT, "SolidGround", false);
 
         tryAdd("UndergroundEntrance", RIGHT, "Hollow");
         tryAdd("UndergroundEntrance", RIGHT, "CaveHallway");
         tryAdd("UndergroundEntrance", RIGHT, "Platform");
         tryAdd("UndergroundEntrance", RIGHT, "UndergroundPondStart");
 
-        tryAdd("UndergroundEntrance", DOWN_RIGHT, "SolidGround");
-        tryAdd("UndergroundEntrance", DOWN_RIGHT, "Platform");
-        tryAdd("UndergroundEntrance", DOWN, "SolidGround");
+        tryAdd("UndergroundEntrance", DOWN_RIGHT, "SolidGround", false);
+
+        tryAdd("UndergroundEntrance", DOWN, "SolidGround", false);
         tryAdd("UndergroundEntrance", DOWN, "CliffWall");
         tryAdd("UndergroundEntrance", DOWN_LEFT, "MountainSideC");
         tryAdd("UndergroundEntrance", DOWN_LEFT, "Staircase");
 
-        tryAdd("UndergroundEntrance", LEFT, "SmallHill");
-        tryAdd("UndergroundEntrance", LEFT, "BigHill");
+
         tryAdd("UndergroundEntrance", LEFT, "Hilltop");
-        tryAdd("UndergroundEntrance", LEFT, "Drop");
-        tryAdd("UndergroundEntrance", LEFT, "UndergroundEntrance");
+
         tryAdd("UndergroundEntrance", LEFT, "PitMiddle");
-        tryAdd("UndergroundEntrance", LEFT, "MountainSideA");
+
         tryAdd("UndergroundEntrance", LEFT, "MountainTop");
         tryAdd("UndergroundEntrance", LEFT, "SmallPond");
-        tryAdd("UndergroundEntrance", LEFT, "PondStart");
-        tryAdd("UndergroundEntrance", LEFT, "FrozenPondStart");
-        tryAdd("UndergroundEntrance", LEFT, "Pool");
+
         tryAdd("UndergroundEntrance", LEFT, "Pool");
         tryAdd("UndergroundEntrance", LEFT, "RockColumns");
-        tryAdd("UndergroundEntrance", LEFT, "TempleEntrance");
 
 
-        tryAdd("Hollow", UP_LEFT, "CaveWall");
-        tryAdd("Hollow", UP_LEFT, "OpenAir");
-        tryAdd("Hollow", UP_LEFT, "SolidGround");
+
+        tryAdd("Hollow", UP_LEFT, "CaveWall", false);
+        tryAdd("Hollow", UP_LEFT, "OpenAir", false);
+        tryAdd("Hollow", UP_LEFT, "SolidGround", false);
         tryAdd("Hollow", UP, "CliffRoof");
         tryAdd("Hollow", UP, "OpenAir");
         tryAdd("Hollow", UP, "CaveWall");
         tryAdd("Hollow", UP, "MountainTop");
         tryAdd("Hollow", UP, "SolidGround");
-        tryAdd("Hollow", UP_RIGHT, "CaveWall");
-        tryAdd("Hollow", UP_RIGHT, "OpenAir");
-        tryAdd("Hollow", UP_RIGHT, "SolidGround");
+        tryAdd("Hollow", UP_RIGHT, "CaveWall", false);
+        tryAdd("Hollow", UP_RIGHT, "OpenAir", false);
+        tryAdd("Hollow", UP_RIGHT, "SolidGround", false);
 
-        tryAdd("Hollow", RIGHT, "UndergroundEntrance");
-        tryAdd("Hollow", RIGHT, "Hollow");
+
         tryAdd("Hollow", RIGHT, "CaveHallway");
         tryAdd("Hollow", RIGHT, "Platform");
         tryAdd("Hollow", RIGHT, "SmallUndergroundPond");
         tryAdd("Hollow", RIGHT, "UndergroundPondStart");
 
-        tryAdd("Hollow", DOWN_RIGHT, "SolidGround");
-        tryAdd("Hollow", DOWN_RIGHT, "Platform");
-        tryAdd("Hollow", DOWN, "SolidGround");
-        tryAdd("Hollow", DOWN_LEFT, "SolidGround");
+        tryAdd("Hollow", DOWN_RIGHT, "SolidGround", false);
+
+        tryAdd("Hollow", DOWN, "SolidGround", false);
+        tryAdd("Hollow", DOWN_LEFT, "SolidGround", false);
         tryAdd("Hollow", DOWN_LEFT, "Platform");
 
         tryAdd("Hollow", LEFT, "UndergroundEntrance");
         tryAdd("Hollow", LEFT, "Hollow");
         tryAdd("Hollow", LEFT, "CaveHallway");
         tryAdd("Hollow", LEFT, "Platform");
-        tryAdd("Hollow", LEFT, "SmallUndergroundPond");
-        tryAdd("Hollow", LEFT, "UndergroundPondStart");
 
 
-        tryAdd("CaveWall", UP_LEFT, "OpenAir");
-        tryAdd("CaveWall", UP, "CaveWall");
-        tryAdd("CaveWall", UP, "OpenAir");
-        tryAdd("CaveWall", UP, "SolidGround");
-        tryAdd("CaveWall", UP_RIGHT, "OpenAir");
-        tryAdd("CaveWall", RIGHT, "OpenAir");
-        tryAdd("CaveWall", DOWN_RIGHT, "OpenAir");
-        tryAdd("CaveWall", DOWN_RIGHT, "SolidGround");
-        tryAdd("CaveWall", DOWN, "UndergroundEntrance");
-        tryAdd("CaveWall", DOWN, "OpenAir");
-        tryAdd("CaveWall", DOWN_LEFT, "OpenAir");
-        tryAdd("CaveWall", DOWN_LEFT, "SolidGround");
-        tryAdd("CaveWall", LEFT, "OpenAir");
+
+        tryAdd("CaveWall", UP_LEFT, "OpenAir", false);
+        tryAdd("CaveWall", UP, "CaveWall", false);
+        tryAdd("CaveWall", UP, "OpenAir", false);
+        tryAdd("CaveWall", UP, "SolidGround", false);
+        tryAdd("CaveWall", UP_RIGHT, "OpenAir", false);
+        tryAdd("CaveWall", RIGHT, "OpenAir", false);
+        tryAdd("CaveWall", DOWN_RIGHT, "OpenAir", false);
+        tryAdd("CaveWall", DOWN_RIGHT, "SolidGround", false);
+        tryAdd("CaveWall", DOWN, "UndergroundEntrance", false);
+        tryAdd("CaveWall", DOWN, "OpenAir", false);
+        tryAdd("CaveWall", DOWN_LEFT, "OpenAir", false);
+        tryAdd("CaveWall", DOWN_LEFT, "SolidGround", false);
+        tryAdd("CaveWall", LEFT, "OpenAir", false);
 
 
-        tryAdd("CaveHallway", UP_LEFT, "OpenAir");
-        tryAdd("CaveHallway", UP_LEFT, "CaveWall");
-        tryAdd("CaveHallway", UP_LEFT, "SolidGround");
+        tryAdd("CaveHallway", UP_LEFT, "OpenAir", false);
+        tryAdd("CaveHallway", UP_LEFT, "CaveWall", false);
+        tryAdd("CaveHallway", UP_LEFT, "SolidGround", false);
         tryAdd("CaveHallway", UP, "CliffRoof");
         tryAdd("CaveHallway", UP, "CaveWall");
         tryAdd("CaveHallway", UP, "MountainTop");
         tryAdd("CaveHallway", UP, "SolidGround");
-        tryAdd("CaveHallway", UP_RIGHT, "OpenAir");
-        tryAdd("CaveHallway", UP_RIGHT, "CaveWall");
-        tryAdd("CaveHallway", UP_RIGHT, "SolidGround");
+        tryAdd("CaveHallway", UP_RIGHT, "OpenAir", false);
+        tryAdd("CaveHallway", UP_RIGHT, "CaveWall", false);
+        tryAdd("CaveHallway", UP_RIGHT, "SolidGround", false);
 
-        tryAdd("CaveHallway", RIGHT, "UndergroundEntrance");
+
         tryAdd("CaveHallway", RIGHT, "Hollow");
         tryAdd("CaveHallway", RIGHT, "CaveHallway");
         tryAdd("CaveHallway", RIGHT, "Platform");
         tryAdd("CaveHallway", RIGHT, "UndergroundPondStart");
 
-        tryAdd("CaveHallway", DOWN_RIGHT, "SolidGround");
-        tryAdd("CaveHallway", DOWN_RIGHT, "Platform");
-        tryAdd("CaveHallway", DOWN, "SolidGround");
-        tryAdd("CaveHallway", DOWN_LEFT, "SolidGround");
+        tryAdd("CaveHallway", DOWN_RIGHT, "SolidGround", false);
+
+        tryAdd("CaveHallway", DOWN, "SolidGround", false);
+        tryAdd("CaveHallway", DOWN_LEFT, "SolidGround", false);
 
         tryAdd("CaveHallway", LEFT, "UndergroundEntrance");
         tryAdd("CaveHallway", LEFT, "Hollow");
         tryAdd("CaveHallway", LEFT, "CaveHallway");
         tryAdd("CaveHallway", LEFT, "Platform");
-        tryAdd("CaveHallway", LEFT, "UndergroundPondStart");
 
 
-        tryAdd("Platform", UP_LEFT, "OpenAir");
-        tryAdd("Platform", UP_LEFT, "CaveWall");
-        tryAdd("Platform", UP_LEFT, "SolidGround");
+
+        tryAdd("Platform", UP_LEFT, "OpenAir", false);
+        tryAdd("Platform", UP_LEFT, "CaveWall", false);
+        tryAdd("Platform", UP_LEFT, "SolidGround", false);
         tryAdd("Platform", UP, "OpenAir");
 
-        tryAdd("Platform", UP_RIGHT, "UndergroundEntrance");
+
         tryAdd("Platform", UP_RIGHT, "Hollow");
         tryAdd("Platform", UP_RIGHT, "CaveHallway");
         tryAdd("Platform", UP_RIGHT, "Platform");
-        tryAdd("Platform", UP_RIGHT, "OpenAir");
-        tryAdd("Platform", UP_RIGHT, "CaveWall");
-        tryAdd("Platform", UP_RIGHT, "SolidGround");
+        tryAdd("Platform", UP_RIGHT, "OpenAir", false);
+        tryAdd("Platform", UP_RIGHT, "CaveWall", false);
+        tryAdd("Platform", UP_RIGHT, "SolidGround", false);
 
-        tryAdd("Platform", RIGHT, "UndergroundEntrance");
+
         tryAdd("Platform", RIGHT, "Hollow");
         tryAdd("Platform", RIGHT, "CaveHallway");
         tryAdd("Platform", RIGHT, "Platform");
         tryAdd("Platform", RIGHT, "SmallUndergroundPond");
         tryAdd("Platform", RIGHT, "UndergroundPondStart");
 
-        tryAdd("Platform", DOWN_RIGHT, "SolidGround");
-        tryAdd("Platform", DOWN_RIGHT, "Platform");
-        tryAdd("Platform", DOWN, "SolidGround");
-        tryAdd("Platform", DOWN_LEFT, "SolidGround");
+        tryAdd("Platform", DOWN_RIGHT, "SolidGround", false);
+
+        tryAdd("Platform", DOWN, "SolidGround", false);
+        tryAdd("Platform", DOWN_LEFT, "SolidGround", false);
 
         tryAdd("Platform", LEFT, "UndergroundEntrance");
         tryAdd("Platform", LEFT, "Hollow");
         tryAdd("Platform", LEFT, "CaveHallway");
         tryAdd("Platform", LEFT, "Platform");
         tryAdd("Platform", LEFT, "SmallUndergroundPond");
-        tryAdd("Platform", LEFT, "UndergroundPondStart");
 
 
-        tryAdd("SmallUndergroundPond", UP_LEFT, "OpenAir");
-        tryAdd("SmallUndergroundPond", UP_LEFT, "CaveWall");
-        tryAdd("SmallUndergroundPond", UP_LEFT, "SolidGround");
+
+        tryAdd("SmallUndergroundPond", UP_LEFT, "OpenAir", false);
+        tryAdd("SmallUndergroundPond", UP_LEFT, "CaveWall", false);
+        tryAdd("SmallUndergroundPond", UP_LEFT, "SolidGround", false);
         tryAdd("SmallUndergroundPond", UP, "OpenAir");
 
-        tryAdd("SmallUndergroundPond", UP_RIGHT, "UndergroundEntrance");
+
         tryAdd("SmallUndergroundPond", UP_RIGHT, "Hollow");
         tryAdd("SmallUndergroundPond", UP_RIGHT, "CaveHallway");
-        tryAdd("SmallUndergroundPond", UP_RIGHT, "Platform");
-        tryAdd("SmallUndergroundPond", UP_RIGHT, "OpenAir");
+
+        tryAdd("SmallUndergroundPond", UP_RIGHT, "OpenAir", false);
 
         tryAdd("SmallUndergroundPond", RIGHT, "Platform");
         tryAdd("SmallUndergroundPond", RIGHT, "SmallUndergroundPond");
         tryAdd("SmallUndergroundPond", RIGHT, "UndergroundPondStart");
         tryAdd("SmallUndergroundPond", RIGHT, "UndergroundPondMiddle");
 
-        tryAdd("SmallUndergroundPond", DOWN_RIGHT, "SolidGround");
-        tryAdd("SmallUndergroundPond", DOWN, "SolidGround");
-        tryAdd("SmallUndergroundPond", DOWN_LEFT, "SolidGround");
+        tryAdd("SmallUndergroundPond", DOWN_RIGHT, "SolidGround", false);
+        tryAdd("SmallUndergroundPond", DOWN, "SolidGround", false);
+        tryAdd("SmallUndergroundPond", DOWN_LEFT, "SolidGround", false);
 
         tryAdd("SmallUndergroundPond", LEFT, "UndergroundEntrance");
         tryAdd("SmallUndergroundPond", LEFT, "Platform");
@@ -678,59 +713,57 @@ public class LevelGen {
         tryAdd("SmallUndergroundPond", LEFT, "UndergroundPondMiddle");
 
 
-        tryAdd("UndergroundPondStart", UP_LEFT, "OpenAir");
-        tryAdd("UndergroundPondStart", UP_LEFT, "CaveWall");
-        tryAdd("UndergroundPondStart", UP_LEFT, "SolidGround");
-        tryAdd("UndergroundPondStart", UP, "OpenAir");
-        tryAdd("UndergroundPondStart", UP, "CaveWall");
-        tryAdd("UndergroundPondStart", UP, "SolidGround");
-        tryAdd("UndergroundPondStart", UP_RIGHT, "OpenAir");
-        tryAdd("UndergroundPondStart", UP_RIGHT, "CaveWall");
-        tryAdd("UndergroundPondStart", UP_RIGHT, "SolidGround");
+        tryAdd("UndergroundPondStart", UP_LEFT, "OpenAir", false);
+
+        tryAdd("UndergroundPondStart", UP_LEFT, "SolidGround", false);
+        tryAdd("UndergroundPondStart", UP, "OpenAir", false);
+
+        tryAdd("UndergroundPondStart", UP, "SolidGround", false);
+        tryAdd("UndergroundPondStart", UP_RIGHT, "OpenAir", false);
+
+        tryAdd("UndergroundPondStart", UP_RIGHT, "SolidGround", false);
         tryAdd("UndergroundPondStart", RIGHT, "SmallUndergroundPond");
-        tryAdd("UndergroundPondStart", RIGHT, "UndergroundPondStart");
+
         tryAdd("UndergroundPondStart", RIGHT, "UndergroundPondMiddle");
-        tryAdd("UndergroundPondStart", DOWN_RIGHT, "SolidGround");
-        tryAdd("UndergroundPondStart", DOWN, "SolidGround");
-        tryAdd("UndergroundPondStart", DOWN_LEFT, "SolidGround");
+        tryAdd("UndergroundPondStart", DOWN_RIGHT, "SolidGround", false);
+        tryAdd("UndergroundPondStart", DOWN, "SolidGround", false);
+        tryAdd("UndergroundPondStart", DOWN_LEFT, "SolidGround", false);
 
         tryAdd("UndergroundPondStart", LEFT, "UndergroundEntrance");
         tryAdd("UndergroundPondStart", LEFT, "Hollow");
         tryAdd("UndergroundPondStart", LEFT, "CaveHallway");
         tryAdd("UndergroundPondStart", LEFT, "Platform");
         tryAdd("UndergroundPondStart", LEFT, "SmallUndergroundPond");
-        tryAdd("UndergroundPondStart", LEFT, "UndergroundPondStart");
+
         tryAdd("UndergroundPondStart", LEFT, "UndergroundPondMiddle");
 
 
-        tryAdd("UndergroundPondMiddle", UP_LEFT, "OpenAir");
-        tryAdd("UndergroundPondMiddle", UP_LEFT, "CaveWall");
-        tryAdd("UndergroundPondMiddle", UP_LEFT, "SolidGround");
-        tryAdd("UndergroundPondMiddle", UP, "OpenAir");
-        tryAdd("UndergroundPondMiddle", UP, "CaveWall");
-        tryAdd("UndergroundPondMiddle", UP, "SolidGround");
-        tryAdd("UndergroundPondMiddle", UP_RIGHT, "OpenAir");
-        tryAdd("UndergroundPondMiddle", UP_RIGHT, "CaveWall");
-        tryAdd("UndergroundPondMiddle", UP_RIGHT, "SolidGround");
+        tryAdd("UndergroundPondMiddle", UP_LEFT, "OpenAir", false);
+
+        tryAdd("UndergroundPondMiddle", UP_LEFT, "SolidGround", false);
+        tryAdd("UndergroundPondMiddle", UP, "OpenAir", false);
+
+        tryAdd("UndergroundPondMiddle", UP, "SolidGround", false);
+        tryAdd("UndergroundPondMiddle", UP_RIGHT, "OpenAir", false);
+
+        tryAdd("UndergroundPondMiddle", UP_RIGHT, "SolidGround", false);
         tryAdd("UndergroundPondMiddle", RIGHT, "SmallUndergroundPond");
-        tryAdd("UndergroundPondMiddle", RIGHT, "UndergroundPondStart");
+
         tryAdd("UndergroundPondMiddle", RIGHT, "UndergroundPondMiddle");
-        tryAdd("UndergroundPondMiddle", DOWN_RIGHT, "SolidGround");
-        tryAdd("UndergroundPondMiddle", DOWN, "SolidGround");
-        tryAdd("UndergroundPondMiddle", DOWN_LEFT, "SolidGround");
+        tryAdd("UndergroundPondMiddle", DOWN_RIGHT, "SolidGround", false);
+        tryAdd("UndergroundPondMiddle", DOWN, "SolidGround", false);
+        tryAdd("UndergroundPondMiddle", DOWN_LEFT, "SolidGround", false);
         tryAdd("UndergroundPondMiddle", LEFT, "SmallUndergroundPond");
         tryAdd("UndergroundPondMiddle", LEFT, "UndergroundPondStart");
         tryAdd("UndergroundPondMiddle", LEFT, "UndergroundPondMiddle");
         //endregion
 
         //region Pits
-        tryAdd("SmallPit", UP_LEFT, "OpenAir");
-        tryAdd("SmallPit", UP, "OpenAir");
-        tryAdd("SmallPit", UP_RIGHT, "OpenAir");
+        tryAdd("SmallPit", UP_LEFT, "OpenAir", false);
+        tryAdd("SmallPit", UP, "OpenAir", false);
+        tryAdd("SmallPit", UP_RIGHT, "OpenAir", false);
 
-        tryAdd("SmallPit", RIGHT, "SmallHill");
-        tryAdd("SmallPit", RIGHT, "BigHill");
-        tryAdd("SmallPit", RIGHT, "Hilltop");
+
         tryAdd("SmallPit", RIGHT, "Drop");
         tryAdd("SmallPit", RIGHT, "CliffRoof");
         tryAdd("SmallPit", RIGHT, "SmallPit");
@@ -743,11 +776,11 @@ public class LevelGen {
         tryAdd("SmallPit", DOWN_RIGHT, "CliffWall");
         tryAdd("SmallPit", DOWN, "OpenAir");
         tryAdd("SmallPit", DOWN_LEFT, "SolidGround");
-        tryAdd("SmallPit", DOWN_LEFT, "CliffWall");
+
 
         tryAdd("SmallPit", LEFT, "SmallHill");
         tryAdd("SmallPit", LEFT, "BigHill");
-        tryAdd("SmallPit", LEFT, "Drop");
+
         tryAdd("SmallPit", LEFT, "CliffRoof");
         tryAdd("SmallPit", LEFT, "SmallPit");
         tryAdd("SmallPit", LEFT, "PitStart");
@@ -755,40 +788,37 @@ public class LevelGen {
         tryAdd("SmallPit", LEFT, "RockColumns");
 
 
-        tryAdd("PitStart", UP_LEFT, "OpenAir");
-        tryAdd("PitStart", UP, "OpenAir");
-        tryAdd("PitStart", UP_RIGHT, "OpenAir");
-        tryAdd("PitStart", RIGHT, "SmallHill");
-        tryAdd("PitStart", RIGHT, "BigHill");
-        tryAdd("PitStart", RIGHT, "PitStart");
+        tryAdd("PitStart", UP_LEFT, "OpenAir", false);
+        tryAdd("PitStart", UP, "OpenAir", false);
+        tryAdd("PitStart", UP_RIGHT, "OpenAir", false);
+
         tryAdd("PitStart", RIGHT, "PitMiddle");
-        tryAdd("PitStart", DOWN_RIGHT, "OpenAir");
+        tryAdd("PitStart", DOWN_RIGHT, "OpenAir", false);
         tryAdd("PitStart", DOWN, "CliffWall");
         tryAdd("PitStart", DOWN, "OpenAir");
 
-        tryAdd("PitStart", DOWN_RIGHT, "SolidGround");
-        tryAdd("PitStart", DOWN_RIGHT, "CliffWall");
+        tryAdd("PitStart", DOWN_LEFT, "SolidGround");
+
 
         tryAdd("PitStart", LEFT, "SmallHill");
         tryAdd("PitStart", LEFT, "BigHill");
         tryAdd("PitStart", LEFT, "Hilltop");
-        tryAdd("PitStart", LEFT, "Drop");
+
         tryAdd("PitStart", LEFT, "CliffRoof");
         tryAdd("PitStart", LEFT, "SmallPit");
         tryAdd("PitStart", LEFT, "PitStart");
         tryAdd("PitStart", LEFT, "PitMiddle");
         tryAdd("PitStart", LEFT, "RockColumns");
 
+        tryAdd("PitMiddle", UP_LEFT, "OpenAir", false);
+        tryAdd("PitMiddle", UP, "OpenAir", false);
+        tryAdd("PitMiddle", UP_RIGHT, "OpenAir", false);
 
-        tryAdd("PitMiddle", UP_LEFT, "OpenAir");
-        tryAdd("PitMiddle", UP, "OpenAir");
-        tryAdd("PitMiddle", UP_RIGHT, "OpenAir");
-        tryAdd("PitMiddle", RIGHT, "PitStart");
         tryAdd("PitMiddle", RIGHT, "PitMiddle");
-        tryAdd("PitMiddle", RIGHT, "Drop");
-        tryAdd("PitMiddle", DOWN_RIGHT, "OpenAir");
+
+        tryAdd("PitMiddle", DOWN_RIGHT, "OpenAir", false);
         tryAdd("PitMiddle", DOWN, "OpenAir");
-        tryAdd("PitMiddle", DOWN_LEFT, "OpenAir");
+        tryAdd("PitMiddle", DOWN_LEFT, "OpenAir", false);
 
         tryAdd("PitMiddle", LEFT, "Drop");
         tryAdd("PitMiddle", LEFT, "PitStart");
@@ -796,219 +826,210 @@ public class LevelGen {
         //endregion
 
         //region Mountains
-        tryAdd("MountainSideA", UP_LEFT, "OpenAir");
+        tryAdd("MountainSideA", UP_LEFT, "OpenAir", false);
         tryAdd("MountainSideA", UP, "MountainSideB");
-        tryAdd("MountainSideA", UP_RIGHT, "SolidGround");
-        tryAdd("MountainSideA", RIGHT, "SolidGround");
-        tryAdd("MountainSideA", DOWN_RIGHT, "SolidGround");
-        tryAdd("MountainSideA", DOWN, "SolidGround");
-        tryAdd("MountainSideA", DOWN_LEFT, "SolidGround");
+        tryAdd("MountainSideA", UP_RIGHT, "SolidGround", false);
+        tryAdd("MountainSideA", RIGHT, "SolidGround", false);
+        tryAdd("MountainSideA", DOWN_RIGHT, "SolidGround", false);
+        tryAdd("MountainSideA", DOWN, "SolidGround", false);
+        tryAdd("MountainSideA", DOWN_LEFT, "SolidGround", false);
 
-        tryAdd("MountainSideA", LEFT, "UndergroundEntrance");
-        tryAdd("MountainSideA", LEFT, "FrozenPondStart");
+
         tryAdd("MountainSideA", LEFT, "MountainSideC");
         tryAdd("MountainSideA", LEFT, "MountainTop");
-        tryAdd("MountainSideA", LEFT, "TempleEntrance");
 
 
-        tryAdd("MountainSideB", UP_LEFT, "OpenAir");
+
+        tryAdd("MountainSideB", UP_LEFT, "OpenAir", false);
         tryAdd("MountainSideB", UP, "MountainSideC");
-        tryAdd("MountainSideB", UP_RIGHT, "SolidGround");
-        tryAdd("MountainSideB", RIGHT, "SolidGround");
-        tryAdd("MountainSideB", DOWN_RIGHT, "SolidGround");
+        tryAdd("MountainSideB", UP_RIGHT, "SolidGround", false);
+        tryAdd("MountainSideB", RIGHT, "SolidGround", false);
+        tryAdd("MountainSideB", DOWN_RIGHT, "SolidGround", false);
         tryAdd("MountainSideB", DOWN, "MountainSideA");
-        tryAdd("MountainSideB", DOWN_LEFT, "SolidGround");
-        tryAdd("MountainSideB", LEFT, "OpenAir");
+        tryAdd("MountainSideB", DOWN_LEFT, "SolidGround", false);
+        tryAdd("MountainSideB", LEFT, "OpenAir", false);
 
 
-        tryAdd("MountainSideC", UP_LEFT, "OpenAir");
+        tryAdd("MountainSideC", UP_LEFT, "OpenAir", false);
         tryAdd("MountainSideC", UP, "OpenAir");
-        tryAdd("MountainSideC", UP_RIGHT, "OpenAir");
+        tryAdd("MountainSideC", UP_RIGHT, "OpenAir", false);
         tryAdd("MountainSideC", RIGHT, "FrozenPondStart");
         tryAdd("MountainSideC", RIGHT, "MountainTop");
         tryAdd("MountainSideC", RIGHT, "MountainSideA");
-        tryAdd("MountainSideC", DOWN_RIGHT, "SolidGround");
+        tryAdd("MountainSideC", DOWN_RIGHT, "SolidGround", false);
         tryAdd("MountainSideC", DOWN, "MountainSideB");
-        tryAdd("MountainSideC", DOWN_LEFT, "OpenAir");
-        tryAdd("MountainSideC", LEFT, "OpenAir");
+        tryAdd("MountainSideC", DOWN_LEFT, "OpenAir", false);
+        tryAdd("MountainSideC", LEFT, "OpenAir", false);
 
 
-        tryAdd("MountainTop", UP_LEFT, "OpenAir");
+        tryAdd("MountainTop", UP_LEFT, "OpenAir", false);
         tryAdd("MountainTop", UP, "OpenAir");
-        tryAdd("MountainTop", UP_RIGHT, "OpenAir");
+        tryAdd("MountainTop", UP_RIGHT, "OpenAir", false);
         tryAdd("MountainTop", RIGHT, "FrozenPondStart");
         tryAdd("MountainTop", RIGHT, "MountainTop");
         tryAdd("MountainTop", RIGHT, "MountainSideA");
         tryAdd("MountainTop", RIGHT, "TempleEntrance");
-        tryAdd("MountainTop", DOWN_RIGHT, "SolidGround");
-        tryAdd("MountainTop", DOWN, "SolidGround");
-        tryAdd("MountainTop", DOWN_LEFT, "OpenAir");
-        tryAdd("MountainTop", DOWN_LEFT, "SolidGround");
+        tryAdd("MountainTop", DOWN_RIGHT, "SolidGround", false);
+        tryAdd("MountainTop", DOWN, "SolidGround", false);
+        tryAdd("MountainTop", DOWN_LEFT, "OpenAir", false);
+        tryAdd("MountainTop", DOWN_LEFT, "SolidGround", false);
         tryAdd("MountainTop", LEFT, "MountainTop");
-        tryAdd("MountainTop", LEFT, "MountainSideA");
-        tryAdd("MountainTop", LEFT, "TempleEntrance");
+
         //endregion
 
         //region Ponds
-        tryAdd("SmallPond", UP_LEFT, "OpenAir");
-        tryAdd("SmallPond", UP, "OpenAir");
-        tryAdd("SmallPond", UP_RIGHT, "OpenAir");
+        tryAdd("SmallPond", UP_LEFT, "OpenAir", false);
+        tryAdd("SmallPond", UP, "OpenAir", false);
+        tryAdd("SmallPond", UP_RIGHT, "OpenAir", false);
 
         tryAdd("SmallPond", RIGHT, "SmallHill");
         tryAdd("SmallPond", RIGHT, "BigHill");
-        tryAdd("SmallPond", RIGHT, "Hilltop");
+
         tryAdd("SmallPond", RIGHT, "Drop");
         tryAdd("SmallPond", RIGHT, "CliffRoof");
         tryAdd("SmallPond", RIGHT, "UndergroundEntrance");
         tryAdd("SmallPond", RIGHT, "SmallPond");
 
-        tryAdd("SmallPond", DOWN_RIGHT, "SolidGround");
-        tryAdd("SmallPond", DOWN, "SolidGround");
-        tryAdd("SmallPond", DOWN_LEFT, "SolidGround");
+        tryAdd("SmallPond", DOWN_RIGHT, "SolidGround", false);
+        tryAdd("SmallPond", DOWN, "SolidGround", false);
+        tryAdd("SmallPond", DOWN_LEFT, "SolidGround", false);
 
         tryAdd("SmallPond", LEFT, "SmallHill");
         tryAdd("SmallPond", LEFT, "BigHill");
         tryAdd("SmallPond", LEFT, "Hilltop");
-        tryAdd("SmallPond", LEFT, "Drop");
+
         tryAdd("SmallPond", LEFT, "CliffRoof");
-        tryAdd("SmallPond", LEFT, "UndergroundEntrance");
-        tryAdd("SmallPond", LEFT, "SmallPond");
-        tryAdd("SmallPond", LEFT, "PondStart");
 
 
-        tryAdd("PondStart", UP_LEFT, "OpenAir");
-        tryAdd("PondStart", UP, "OpenAir");
-        tryAdd("PondStart", UP_RIGHT, "OpenAir");
-        tryAdd("PondStart", RIGHT, "SmallPond");
-        tryAdd("PondStart", RIGHT, "PondStart");
+
+        tryAdd("PondStart", UP_LEFT, "OpenAir", false);
+        tryAdd("PondStart", UP, "OpenAir", false);
+        tryAdd("PondStart", UP_RIGHT, "OpenAir", false);
+
         tryAdd("PondStart", RIGHT, "PondMiddle");
-        tryAdd("PondStart", DOWN_RIGHT, "SolidGround");
-        tryAdd("PondStart", DOWN, "SolidGround");
-        tryAdd("PondStart", DOWN_LEFT, "SolidGround");
+        tryAdd("PondStart", DOWN_RIGHT, "SolidGround", false);
+        tryAdd("PondStart", DOWN, "SolidGround", false);
+        tryAdd("PondStart", DOWN_LEFT, "SolidGround", false);
 
         tryAdd("PondStart", LEFT, "SmallHill");
-        tryAdd("PondStart", LEFT, "BigHill");
+
         tryAdd("PondStart", LEFT, "Hilltop");
-        tryAdd("PondStart", LEFT, "Drop");
+
         tryAdd("PondStart", LEFT, "CliffRoof");
-        tryAdd("PondStart", LEFT, "UndergroundEntrance");
+
         tryAdd("PondStart", LEFT, "SmallPond");
-        tryAdd("PondStart", LEFT, "PondStart");
 
 
-        tryAdd("PondMiddle", UP_LEFT, "OpenAir");
-        tryAdd("PondMiddle", UP, "OpenAir");
-        tryAdd("PondMiddle", UP_RIGHT, "OpenAir");
-        tryAdd("PondMiddle", RIGHT, "PondStart");
+
+        tryAdd("PondMiddle", UP_LEFT, "OpenAir", false);
+        tryAdd("PondMiddle", UP, "OpenAir", false);
+        tryAdd("PondMiddle", UP_RIGHT, "OpenAir", false);
+
         tryAdd("PondMiddle", RIGHT, "PondMiddle");
-        tryAdd("PondMiddle", DOWN_RIGHT, "SolidGround");
+        tryAdd("PondMiddle", DOWN_RIGHT, "SolidGround", false);
         tryAdd("PondMiddle", DOWN, "DeepPond");
         tryAdd("PondMiddle", DOWN, "SolidGround");
-        tryAdd("PondMiddle", DOWN_LEFT, "SolidGround");
+        tryAdd("PondMiddle", DOWN_LEFT, "SolidGround", false);
         tryAdd("PondMiddle", LEFT, "PondStart");
-        tryAdd("PondMiddle", LEFT, "PondMiddle");
 
 
-        tryAdd("DeepPond", UP_LEFT, "PondMiddle");
+
+        tryAdd("DeepPond", UP_LEFT, "PondMiddle", false);
         tryAdd("DeepPond", UP, "PondMiddle");
-        tryAdd("DeepPond", UP_RIGHT, "PondMiddle");
-        tryAdd("DeepPond", RIGHT, "SolidGround");
-        tryAdd("DeepPond", DOWN_RIGHT, "SolidGround");
+        tryAdd("DeepPond", UP_RIGHT, "PondMiddle", false);
+        tryAdd("DeepPond", RIGHT, "SolidGround", false);
+        tryAdd("DeepPond", DOWN_RIGHT, "SolidGround", false);
         tryAdd("DeepPond", DOWN, "SolidGround");
-        tryAdd("DeepPond", DOWN_LEFT, "SolidGround");
-        tryAdd("DeepPond", LEFT, "SolidGround");
+        tryAdd("DeepPond", DOWN_LEFT, "SolidGround", false);
+        tryAdd("DeepPond", LEFT, "SolidGround", false);
 
         //endregion
 
         //region Frozen Ponds
-        tryAdd("FrozenPondStart", UP_LEFT, "OpenAir");
-        tryAdd("FrozenPondStart", UP, "OpenAir");
-        tryAdd("FrozenPondStart", UP_RIGHT, "OpenAir");
-        tryAdd("FrozenPondStart", RIGHT, "FrozenPondStart");
+        tryAdd("FrozenPondStart", UP_LEFT, "OpenAir", false);
+        tryAdd("FrozenPondStart", UP, "OpenAir", false);
+        tryAdd("FrozenPondStart", UP_RIGHT, "OpenAir", false);
+        tryAdd("FrozenPondStart", RIGHT, "FrozenPondStart", true);
         tryAdd("FrozenPondStart", RIGHT, "FrozenPondMiddle");
-        tryAdd("FrozenPondStart", DOWN_RIGHT, "SolidGround");
-        tryAdd("FrozenPondStart", DOWN, "SolidGround");
-        tryAdd("FrozenPondStart", DOWN_LEFT, "SolidGround");
-        tryAdd("FrozenPondStart", LEFT, "MountainSideA");
+        tryAdd("FrozenPondStart", DOWN_RIGHT, "SolidGround", false);
+        tryAdd("FrozenPondStart", DOWN, "SolidGround", false);
+        tryAdd("FrozenPondStart", DOWN_LEFT, "SolidGround", false);
+
         tryAdd("FrozenPondStart", LEFT, "MountainSideC");
         tryAdd("FrozenPondStart", LEFT, "MountainTop");
 
 
-        tryAdd("FrozenPondMiddle", UP_LEFT, "OpenAir");
-        tryAdd("FrozenPondMiddle", UP, "OpenAir");
-        tryAdd("FrozenPondMiddle", UP_RIGHT, "OpenAir");
-        tryAdd("FrozenPondMiddle", RIGHT, "FrozenPondStart");
-        tryAdd("FrozenPondMiddle", RIGHT, "FrozenPondMiddle");
-        tryAdd("FrozenPondMiddle", DOWN_RIGHT, "SolidGround");
-        tryAdd("FrozenPondMiddle", DOWN, "SolidGround");
-        tryAdd("FrozenPondMiddle", DOWN_LEFT, "SolidGround");
+        tryAdd("FrozenPondMiddle", UP_LEFT, "OpenAir", false);
+        tryAdd("FrozenPondMiddle", UP, "OpenAir", false);
+        tryAdd("FrozenPondMiddle", UP_RIGHT, "OpenAir", false);
+
+        tryAdd("FrozenPondMiddle", DOWN_RIGHT, "SolidGround", false);
+        tryAdd("FrozenPondMiddle", DOWN, "SolidGround", false);
+        tryAdd("FrozenPondMiddle", DOWN_LEFT, "SolidGround", false);
         tryAdd("FrozenPondMiddle", LEFT, "FrozenPondStart");
-        tryAdd("FrozenPondMiddle", LEFT, "FrozenPondMiddle");
+        tryAdd("FrozenPondMiddle", LEFT, "FrozenPondMiddle", true);
 
         //endregion
 
         //region Rivers
-        tryAdd("OpenRiver", UP_LEFT, "OpenAir");
-        tryAdd("OpenRiver", UP, "OpenAir");
-        tryAdd("OpenRiver", UP_RIGHT, "OpenAir");
-        tryAdd("OpenRiver", RIGHT, "OpenRiver");
-        tryAdd("OpenRiver", RIGHT, "RiverStart");
-        tryAdd("OpenRiver", DOWN_RIGHT, "RiverBase");
-        tryAdd("OpenRiver", DOWN_RIGHT, "RiverWall");
+        tryAdd("OpenRiver", UP_LEFT, "OpenAir", false);
+        tryAdd("OpenRiver", UP, "OpenAir", false);
+        tryAdd("OpenRiver", UP_RIGHT, "OpenAir", false);
+
+        tryAdd("OpenRiver", DOWN_RIGHT, "RiverBase", false);
+        tryAdd("OpenRiver", DOWN_RIGHT, "RiverWall", false);
         tryAdd("OpenRiver", DOWN, "RiverBase");
-        tryAdd("OpenRiver", DOWN_LEFT, "RiverBase");
-        tryAdd("OpenRiver", DOWN_LEFT, "RiverWall");
+        tryAdd("OpenRiver", DOWN_LEFT, "RiverBase", false);
+        tryAdd("OpenRiver", DOWN_LEFT, "RiverWall", false);
         tryAdd("OpenRiver", LEFT, "OpenRiver");
-        tryAdd("OpenRiver", LEFT, "RiverStart");
 
 
-        tryAdd("RiverStart", UP_LEFT, "OpenAir");
-        tryAdd("OpenRiver", UP, "OpenAir");
-        tryAdd("OpenRiver", UP_RIGHT, "OpenAir");
-        tryAdd("OpenRiver", RIGHT, "OpenRiver");
-        tryAdd("OpenRiver", RIGHT, "RiverStart");
-        tryAdd("OpenRiver", DOWN_RIGHT, "RiverBase");
-        tryAdd("OpenRiver", DOWN_RIGHT, "RiverWall");
-        tryAdd("OpenRiver", DOWN, "RiverBase");
-        tryAdd("OpenRiver", DOWN, "RiverWall");
-        tryAdd("OpenRiver", DOWN_LEFT, "RiverBase");
-        tryAdd("OpenRiver", DOWN_LEFT, "RiverWall");
-        tryAdd("OpenRiver", LEFT, "OpenRiver");
-        tryAdd("OpenRiver", LEFT, "RiverStart");
+
+        tryAdd("RiverStart", UP_LEFT, "OpenAir", false);
+        tryAdd("RiverStart", UP, "OpenAir", false);
+        tryAdd("RiverStart", UP_RIGHT, "OpenAir", false);
+        tryAdd("RiverStart", RIGHT, "OpenRiver");
+
+        tryAdd("RiverStart", DOWN_RIGHT, "RiverBase", false);
+        tryAdd("RiverStart", DOWN_RIGHT, "RiverWall", false);
+        tryAdd("RiverStart", DOWN, "RiverBase");
+        tryAdd("RiverStart", DOWN_LEFT, "RiverBase", false);
+        tryAdd("RiverStart", DOWN_LEFT, "RiverWall", false);
+        tryAdd("RiverStart", LEFT, "OpenRiver");
 
 
-        tryAdd("RiverBase", UP_LEFT, "OpenRiver");
-        tryAdd("RiverBase", UP_LEFT, "RiverStart");
-        tryAdd("RiverBase", UP, "OpenRiver");
-        tryAdd("RiverBase", UP_RIGHT, "OpenRiver");
-        tryAdd("RiverBase", UP_RIGHT, "RiverStart");
-        tryAdd("RiverBase", RIGHT, "RiverBase");
-        tryAdd("RiverBase", RIGHT, "RiverWall");
-        tryAdd("RiverBase", DOWN_RIGHT, "SolidGround");
-        tryAdd("RiverBase", DOWN, "SolidGround");
-        tryAdd("RiverBase", DOWN_LEFT, "SolidGround");
-        tryAdd("RiverBase", LEFT, "RiverBase");
-        tryAdd("RiverBase", LEFT, "RiverWall");
+        tryAdd("RiverBase", UP_LEFT, "OpenRiver", false);
+        tryAdd("RiverBase", UP_LEFT, "RiverStart", false);
+        tryAdd("RiverBase", UP, "OpenRiver", false);
+        tryAdd("RiverBase", UP_RIGHT, "OpenRiver", false);
+        tryAdd("RiverBase", UP_RIGHT, "RiverStart", false);
+        tryAdd("RiverBase", RIGHT, "RiverBase", false);
+        tryAdd("RiverBase", RIGHT, "RiverWall", false);
+        tryAdd("RiverBase", DOWN_RIGHT, "SolidGround", false);
+        tryAdd("RiverBase", DOWN, "SolidGround", false);
+        tryAdd("RiverBase", DOWN_LEFT, "SolidGround", false);
+        tryAdd("RiverBase", LEFT, "RiverBase", false);
+        tryAdd("RiverBase", LEFT, "RiverWall", false);
 
 
-        tryAdd("RiverWall", UP_LEFT, "SolidGround");
-        tryAdd("RiverWall", UP, "RiverStart");
-        tryAdd("RiverWall", UP_RIGHT, "OpenRiver");
-        tryAdd("RiverWall", RIGHT, "RiverBase");
-        tryAdd("RiverWall", DOWN_RIGHT, "SolidGround");
-        tryAdd("RiverWall", DOWN, "SolidGround");
-        tryAdd("RiverWall", DOWN_LEFT, "SolidGround");
-        tryAdd("RiverWall", LEFT, "SolidGround");
+        tryAdd("RiverWall", UP_LEFT, "SolidGround", false);
+        tryAdd("RiverWall", UP, "RiverStart", false);
+        tryAdd("RiverWall", UP_RIGHT, "OpenRiver", false);
+        tryAdd("RiverWall", RIGHT, "RiverBase", false);
+        tryAdd("RiverWall", DOWN_RIGHT, "SolidGround", false);
+        tryAdd("RiverWall", DOWN, "SolidGround", false);
+        tryAdd("RiverWall", DOWN_LEFT, "SolidGround", false);
+        tryAdd("RiverWall", LEFT, "SolidGround", false);
 
         //endregion
 
         //region Salt Flats
-        tryAdd("Flat", UP_LEFT, "OpenAir");
-        tryAdd("Flat", UP, "OpenAir");
-        tryAdd("Flat", UP_RIGHT, "OpenAir");
+        tryAdd("Flat", UP_LEFT, "OpenAir", false);
+        tryAdd("Flat", UP, "OpenAir", false);
+        tryAdd("Flat", UP_RIGHT, "OpenAir", false);
 
         tryAdd("Flat", RIGHT, "Drop");
-        tryAdd("Flat", RIGHT, "CliffRoof");
+
         tryAdd("Flat", RIGHT, "UndergroundEntrance");
         tryAdd("Flat", RIGHT, "SmallPit");
         tryAdd("Flat", RIGHT, "PitStart");
@@ -1017,19 +1038,19 @@ public class LevelGen {
         tryAdd("Flat", RIGHT, "RockColumns");
         tryAdd("Flat", RIGHT, "TempleEntrance");
 
-        tryAdd("Flat", DOWN_RIGHT, "SolidGround");
-        tryAdd("Flat", DOWN, "SolidGround");
-        tryAdd("Flat", DOWN_LEFT, "SolidGround");
+        tryAdd("Flat", DOWN_RIGHT, "SolidGround", false);
+        tryAdd("Flat", DOWN, "SolidGround", false);
+        tryAdd("Flat", DOWN_LEFT, "SolidGround", false);
 
-        tryAdd("Flat", LEFT, "Drop");
+
         tryAdd("Flat", LEFT, "CliffRoof");
-        tryAdd("Flat", LEFT, "UndergroundEntrance");
+
         tryAdd("Flat", LEFT, "SmallPit");
-        tryAdd("Flat", LEFT, "PitStart");
+
         tryAdd("Flat", LEFT, "Flat");
         tryAdd("Flat", LEFT, "Pool");
         tryAdd("Flat", LEFT, "RockColumns");
-        tryAdd("Flat", LEFT, "TempleEntrance");
+
 
 
         tryAdd("Pool", UP_LEFT, "OpenAir");
@@ -1037,31 +1058,31 @@ public class LevelGen {
         tryAdd("Pool", UP_RIGHT, "OpenAir");
 
         tryAdd("Pool", RIGHT, "Drop");
-        tryAdd("Pool", RIGHT, "CliffRoof");
+
         tryAdd("Pool", RIGHT, "UndergroundEntrance");
-        tryAdd("Pool", RIGHT, "SmallPit");
+
         tryAdd("Pool", RIGHT, "PitStart");
         tryAdd("Pool", RIGHT, "Pool");
         tryAdd("Pool", RIGHT, "RockColumns");
         tryAdd("Pool", RIGHT, "TempleEntrance");
 
-        tryAdd("Pool", DOWN_RIGHT, "SolidGround");
-        tryAdd("Pool", DOWN, "SolidGround");
-        tryAdd("Pool", DOWN_LEFT, "SolidGround");
+        tryAdd("Pool", DOWN_RIGHT, "SolidGround", false);
+        tryAdd("Pool", DOWN, "SolidGround", false);
+        tryAdd("Pool", DOWN_LEFT, "SolidGround", false);
 
-        tryAdd("Pool", LEFT, "Drop");
+
         tryAdd("Pool", LEFT, "CliffRoof");
-        tryAdd("Pool", LEFT, "UndergroundEntrance");
+
         tryAdd("Pool", LEFT, "SmallPit");
-        tryAdd("Pool", LEFT, "PitStart");
+
         tryAdd("Pool", LEFT, "Pool");
         tryAdd("Pool", LEFT, "RockColumns");
-        tryAdd("Pool", LEFT, "TempleEntrance");
 
 
-        tryAdd("RockColumns", UP_LEFT, "OpenAir");
-        tryAdd("RockColumns", UP, "OpenAir");
-        tryAdd("RockColumns", UP_RIGHT, "OpenAir");
+
+        tryAdd("RockColumns", UP_LEFT, "OpenAir", false);
+        tryAdd("RockColumns", UP, "OpenAir", false);
+        tryAdd("RockColumns", UP_RIGHT, "OpenAir", false);
 
         tryAdd("RockColumns", RIGHT, "Drop");
         tryAdd("RockColumns", RIGHT, "CliffRoof");
@@ -1073,97 +1094,93 @@ public class LevelGen {
         tryAdd("RockColumns", RIGHT, "RockColumns");
         tryAdd("RockColumns", RIGHT, "TempleEntrance");
 
-        tryAdd("RockColumns", DOWN_RIGHT, "SolidGround");
-        tryAdd("RockColumns", DOWN, "SolidGround");
-        tryAdd("RockColumns", DOWN_LEFT, "SolidGround");
+        tryAdd("RockColumns", DOWN_RIGHT, "SolidGround", false);
+        tryAdd("RockColumns", DOWN, "SolidGround", false);
+        tryAdd("RockColumns", DOWN_LEFT, "SolidGround", false);
 
-        tryAdd("RockColumns", LEFT, "Drop");
+
         tryAdd("RockColumns", LEFT, "CliffRoof");
-        tryAdd("RockColumns", LEFT, "UndergroundEntrance");
+
         tryAdd("RockColumns", LEFT, "SmallPit");
-        tryAdd("RockColumns", LEFT, "PitStart");
+
         tryAdd("RockColumns", LEFT, "Flat");
         tryAdd("RockColumns", LEFT, "Pool");
         tryAdd("RockColumns", LEFT, "RockColumns");
-        tryAdd("RockColumns", LEFT, "TempleEntrance");
+
 
         //endregion
 
         //region Temples
-        tryAdd("TempleEntrance", UP_LEFT, "OpenAir");
-        tryAdd("TempleEntrance", UP, "OpenAir");
+        tryAdd("TempleEntrance", UP_LEFT, "OpenAir", false);
+        tryAdd("TempleEntrance", UP, "OpenAir", false);
         tryAdd("TempleEntrance", UP, "TempleWall");
-        tryAdd("TempleEntrance", UP_RIGHT, "OpenAir");
+        tryAdd("TempleEntrance", UP_RIGHT, "OpenAir", false);
         tryAdd("TempleEntrance", RIGHT, "TempleHallway");
         tryAdd("TempleEntrance", RIGHT, "Staircase");
         tryAdd("TempleEntrance", RIGHT, "Altar");
-        tryAdd("TempleEntrance", RIGHT, "OpenAir");
-        tryAdd("TempleEntrance", DOWN_RIGHT, "Staircase");
-        tryAdd("TempleEntrance", DOWN_RIGHT, "SolidGround");
-        tryAdd("TempleEntrance", DOWN, "SolidGround");
-        tryAdd("TempleEntrance", DOWN, "CliffWall");
-        tryAdd("TempleEntrance", DOWN_LEFT, "SolidGround");
-        tryAdd("TempleEntrance", DOWN_LEFT, "CliffRoof");
+        tryAdd("TempleEntrance", RIGHT, "OpenAir", false);
+        tryAdd("TempleEntrance", DOWN_RIGHT, "Staircase", true);
+        tryAdd("TempleEntrance", DOWN_RIGHT, "SolidGround", false);
+        tryAdd("TempleEntrance", DOWN, "SolidGround", false);
+        tryAdd("TempleEntrance", DOWN_LEFT, "SolidGround", false);
 
-        tryAdd("TempleEntrance", LEFT, "SmallHill");
-        tryAdd("TempleEntrance", LEFT, "BigHill");
         tryAdd("TempleEntrance", LEFT, "Hilltop");
         tryAdd("TempleEntrance", LEFT, "Drop");
-        tryAdd("TempleEntrance", LEFT, "UndergroundEntrance");
+
         tryAdd("TempleEntrance", LEFT, "MountainTop");
         tryAdd("TempleEntrance", LEFT, "Flat");
         tryAdd("TempleEntrance", LEFT, "Pool");
         tryAdd("TempleEntrance", LEFT, "RockColumns");
-        tryAdd("TempleEntrance", LEFT, "TempleEntrance");
 
-        tryAdd("TempleHallway", UP_LEFT, "OpenAir");
-        tryAdd("TempleHallway", UP_LEFT, "TempleWall");
-        tryAdd("TempleHallway", UP, "OpenAir");
+
+        tryAdd("TempleHallway", UP_LEFT, "OpenAir", false);
+        tryAdd("TempleHallway", UP_LEFT, "TempleWall", false);
+        tryAdd("TempleHallway", UP, "OpenAir", false);
         tryAdd("TempleHallway", UP, "TempleWall");
         tryAdd("TempleHallway", UP, "TempleRoof");
         tryAdd("TempleHallway", UP, "Trial");
-        tryAdd("TempleHallway", UP_RIGHT, "OpenAir");
+        tryAdd("TempleHallway", UP_RIGHT, "OpenAir", false);
 
-        tryAdd("TempleHallway", RIGHT, "TempleEntrance");
+
         tryAdd("TempleHallway", RIGHT, "TempleHallway");
         tryAdd("TempleHallway", RIGHT, "Staircase");
         tryAdd("TempleHallway", RIGHT, "Altar");
-        tryAdd("TempleHallway", RIGHT, "OpenAir");
-        tryAdd("TempleHallway", RIGHT, "TempleWall");
+        tryAdd("TempleHallway", RIGHT, "OpenAir", false);
+        tryAdd("TempleHallway", RIGHT, "TempleWall", false);
 
-        tryAdd("TempleHallway", DOWN_RIGHT, "Staircase");
-        tryAdd("TempleHallway", DOWN_RIGHT, "SolidGround");
-        tryAdd("TempleHallway", DOWN, "SolidGround");
-        tryAdd("TempleHallway", DOWN_LEFT, "SolidGround");
-        tryAdd("TempleHallway", DOWN_LEFT, "CliffRoof");
+
+        tryAdd("TempleHallway", DOWN_RIGHT, "SolidGround", false);
+        tryAdd("TempleHallway", DOWN, "SolidGround", false);
+        tryAdd("TempleHallway", DOWN_LEFT, "SolidGround", false);
+
 
         tryAdd("TempleHallway", LEFT, "TempleEntrance");
         tryAdd("TempleHallway", LEFT, "TempleHallway");
-        tryAdd("TempleHallway", LEFT, "Staircase");
+
         tryAdd("TempleHallway", LEFT, "Altar");
         tryAdd("TempleHallway", LEFT, "Trial");
-        tryAdd("TempleHallway", LEFT, "OpenAir");
-        tryAdd("TempleHallway", LEFT, "TempleWall");
+        tryAdd("TempleHallway", LEFT, "OpenAir", false);
+        tryAdd("TempleHallway", LEFT, "TempleWall", false);
 
 
-        tryAdd("Staircase", UP_LEFT, "OpenAir");
-        tryAdd("Staircase", UP_LEFT, "TempleWall");
-        tryAdd("Staircase", UP, "OpenAir");
+        tryAdd("Staircase", UP_LEFT, "OpenAir", false);
+        tryAdd("Staircase", UP_LEFT, "TempleWall", false);
+        tryAdd("Staircase", UP, "OpenAir", false);
         tryAdd("Staircase", UP, "TempleWall");
         tryAdd("Staircase", UP, "TempleRoof");
         tryAdd("Staircase", UP, "Trial");
 
-        tryAdd("Staircase", UP_RIGHT, "OpenAir");
-        tryAdd("Staircase", UP_RIGHT, "TempleEntrance");
+        tryAdd("Staircase", UP_RIGHT, "OpenAir", false);
+        tryAdd("Staircase", UP_RIGHT, "TempleEntrance", true);
         tryAdd("Staircase", UP_RIGHT, "TempleHallway");
         tryAdd("Staircase", UP_RIGHT, "Staircase");
         tryAdd("Staircase", UP_RIGHT, "Altar");
 
         tryAdd("Staircase", RIGHT, "TempleHallway");
-        tryAdd("Staircase", RIGHT, "Staircase");
+
         tryAdd("Staircase", RIGHT, "Trial");
-        tryAdd("Staircase", RIGHT, "OpenAir");
-        tryAdd("Staircase", RIGHT, "TempleWall");
+        tryAdd("Staircase", RIGHT, "OpenAir", false);
+        tryAdd("Staircase", RIGHT, "TempleWall", false);
 
         tryAdd("Staircase", DOWN_RIGHT, "Staircase");
         tryAdd("Staircase", DOWN_RIGHT, "SolidGround");
@@ -1263,9 +1280,9 @@ public class LevelGen {
 
         tryAdd("Camp", RIGHT, "SmallHill");
         tryAdd("Camp", RIGHT, "BigHill");
-        tryAdd("Camp", RIGHT, "Hilltop");
+        tryAdd("Camp", RIGHT, "Hilltop", true);
         tryAdd("Camp", RIGHT, "UndergroundEntrance");
-        tryAdd("Camp", RIGHT, "Hollow");
+        tryAdd("Camp", RIGHT, "Hollow", true);
         tryAdd("Camp", RIGHT, "CaveHallway");
         tryAdd("Camp", RIGHT, "Platform");
         tryAdd("Camp", RIGHT, "UndergroundPondStart");
@@ -1280,13 +1297,13 @@ public class LevelGen {
         tryAdd("Camp", RIGHT, "TempleHallway");
         tryAdd("Camp", RIGHT, "Staircase");
 
-        tryAdd("Camp", DOWN_RIGHT, "BigHill");
+        tryAdd("Camp", DOWN_RIGHT, "BigHill", true);
         tryAdd("Camp", DOWN_RIGHT, "CliffRoof");
-        tryAdd("Camp", DOWN_RIGHT, "Platform");
-        tryAdd("Camp", DOWN_RIGHT, "SmallUndergroundPond");
+        tryAdd("Camp", DOWN_RIGHT, "Platform", true);
+        tryAdd("Camp", DOWN_RIGHT, "SmallUndergroundPond", true);
         tryAdd("Camp", DOWN_RIGHT, "SmallPit");
         tryAdd("Camp", DOWN_RIGHT, "RockColumns");
-        tryAdd("Camp", DOWN_RIGHT, "Staircase");
+        tryAdd("Camp", DOWN_RIGHT, "Staircase", true);
 
         tryAdd("Camp", DOWN_LEFT, "SolidGround");
         tryAdd("Camp", LEFT, "SolidGround");
@@ -1297,31 +1314,114 @@ public class LevelGen {
         tryAdd("Source", DOWN_RIGHT, "SolidGround");
 
         tryAdd("Source", DOWN_LEFT, "BigHill");
-        tryAdd("Source", DOWN_LEFT, "CliffRoof");
+        tryAdd("Source", DOWN_LEFT, "CliffRoof", true);
         tryAdd("Source", DOWN_LEFT, "Platform");
         tryAdd("Source", DOWN_LEFT, "SmallUndergroundPond");
-        tryAdd("Source", DOWN_LEFT, "SmallPit");
-        tryAdd("Source", DOWN_LEFT, "RockColumns");
+        tryAdd("Source", DOWN_LEFT, "SmallPit", true);
+        tryAdd("Source", DOWN_LEFT, "RockColumns", true);
         tryAdd("Source", DOWN_LEFT, "Staircase");
 
-        tryAdd("Source", LEFT, "SmallHill");
-        tryAdd("Source", LEFT, "BigHill");
+        tryAdd("Source", LEFT, "SmallHill", true);
+        tryAdd("Source", LEFT, "BigHill", true);
         tryAdd("Source", LEFT, "Hilltop");
-        tryAdd("Source", LEFT, "UndergroundEntrance");
+        tryAdd("Source", LEFT, "UndergroundEntrance", true);
         tryAdd("Source", LEFT, "Hollow");
         tryAdd("Source", LEFT, "CaveHallway");
         tryAdd("Source", LEFT, "Platform");
-        tryAdd("Source", LEFT, "UndergroundPondStart");
-        tryAdd("Source", LEFT, "MountainSideA");
+        tryAdd("Source", LEFT, "UndergroundPondStart", true);
+        tryAdd("Source", LEFT, "MountainSideA", true);
         tryAdd("Source", LEFT, "MountainTop");
         tryAdd("Source", LEFT, "SmallPond");
-        tryAdd("Source", LEFT, "PondStart");
-        tryAdd("Source", LEFT, "Flat");
+        tryAdd("Source", LEFT, "PondStart", true);
+        tryAdd("Source", LEFT, "Flat", true);
         tryAdd("Source", LEFT, "Pool");
         tryAdd("Source", LEFT, "RockColumns");
         tryAdd("Source", LEFT, "TempleEntrance");
         tryAdd("Source", LEFT, "TempleHallway");
-        tryAdd("Source", LEFT, "Staircase");
+        tryAdd("Source", LEFT, "Staircase", true);
         //endregion
+        tryAdd("Hollow", LEFT, "SmallUndergroundPond", true);
+        tryAdd("Hollow", LEFT, "UndergroundPondStart", true);
+        tryAdd("CaveHallway", RIGHT, "UndergroundEntrance", true);
+        tryAdd("CaveHallway", DOWN_RIGHT, "Platform", true);
+        tryAdd("CaveHallway", LEFT, "UndergroundPondStart", true);
+        tryAdd("Platform", UP_RIGHT, "UndergroundEntrance", true);
+        tryAdd("Platform", RIGHT, "UndergroundEntrance", true);
+        tryAdd("Platform", DOWN_RIGHT, "Platform", true);
+        tryAdd("Platform", LEFT, "UndergroundPondStart", true);
+        tryAdd("SmallUndergroundPond", UP_RIGHT, "UndergroundEntrance", true);
+        tryAdd("SmallUndergroundPond", UP_RIGHT, "Platform", true);
+        tryAdd("UndergroundPondStart", UP_LEFT, "CaveWall", true);
+        tryAdd("UndergroundPondStart", UP, "CaveWall", true);
+        tryAdd("UndergroundPondStart", UP_RIGHT, "CaveWall", true);
+        tryAdd("UndergroundPondStart", RIGHT, "UndergroundPondStart", true);
+        tryAdd("UndergroundPondStart", LEFT, "UndergroundPondStart", true);
+        tryAdd("UndergroundPondMiddle", UP_LEFT, "CaveWall", true);
+        tryAdd("UndergroundPondMiddle", UP, "CaveWall", true);
+        tryAdd("UndergroundPondMiddle", UP_RIGHT, "CaveWall", true);
+        tryAdd("UndergroundPondMiddle", RIGHT, "UndergroundPondStart", true);
+        tryAdd("SmallPit", RIGHT, "SmallHill", true);
+        tryAdd("SmallPit", RIGHT, "BigHill", true);
+        tryAdd("SmallPit", RIGHT, "Hilltop",true);
+        tryAdd("SmallPit", DOWN_LEFT, "CliffWall", true);
+        tryAdd("SmallPit", LEFT, "Drop", true);
+        tryAdd("PitStart", RIGHT, "SmallHill", true);
+        tryAdd("PitStart", RIGHT, "BigHill", true);
+        tryAdd("PitStart", RIGHT, "PitStart", true);
+        tryAdd("PitStart", LEFT, "Drop", true);
+        tryAdd("PitStart", DOWN_LEFT, "CliffWall", true);
+        tryAdd("PitMiddle", RIGHT, "Drop", true);
+        tryAdd("PitMiddle", RIGHT, "PitStart", true);
+        tryAdd("MountainSideA", LEFT, "UndergroundEntrance", true);
+        tryAdd("MountainSideA", LEFT, "FrozenPondStart", true);
+        tryAdd("MountainSideA", LEFT, "TempleEntrance", true);
+        tryAdd("MountainTop", LEFT, "MountainSideA", true);
+        tryAdd("MountainTop", LEFT, "TempleEntrance", true);
+        tryAdd("SmallPond", RIGHT, "Hilltop", true);
+        tryAdd("SmallPond", LEFT, "UndergroundEntrance", true);
+        tryAdd("SmallPond", LEFT, "SmallPond", true);
+        tryAdd("SmallPond", LEFT, "PondStart", true);
+        tryAdd("SmallPond", LEFT, "Drop", true);
+        tryAdd("PondStart", RIGHT, "SmallPond" ,true);
+        tryAdd("PondStart", RIGHT, "PondStart", true);
+        tryAdd("PondStart", LEFT, "BigHill", true);
+        tryAdd("PondStart", LEFT, "Drop", true);
+        tryAdd("PondStart", LEFT, "UndergroundEntrance", true);
+        tryAdd("PondStart", LEFT, "PondStart", true);
+        tryAdd("PondMiddle", RIGHT, "PondStart", true);
+        tryAdd("PondMiddle", LEFT, "PondMiddle", true);
+        tryAdd("FrozenPondStart", LEFT, "MountainSideA", true);
+        tryAdd("FrozenPondMiddle", RIGHT, "FrozenPondStart", true);
+        tryAdd("FrozenPondMiddle", RIGHT, "FrozenPondMiddle", true);
+        tryAdd("OpenRiver", RIGHT, "OpenRiver", true);
+        tryAdd("OpenRiver", RIGHT, "RiverStart", true);
+        tryAdd("OpenRiver", LEFT, "RiverStart", true);
+        tryAdd("RiverStart", RIGHT, "RiverStart", true);
+        tryAdd("Flat", RIGHT, "CliffRoof", true);
+        tryAdd("Flat", LEFT, "Drop", true);
+        tryAdd("Flat", LEFT, "UndergroundEntrance", true);
+        tryAdd("Flat", LEFT, "PitStart", true);
+        tryAdd("Flat", LEFT, "TempleEntrance", true);
+        tryAdd("Pool", RIGHT, "CliffRoof", true);
+        tryAdd("Pool", RIGHT, "SmallPit", true);
+        tryAdd("Pool", LEFT, "Drop", true);
+        tryAdd("Pool", LEFT, "UndergroundEntrance", true);
+        tryAdd("Pool", LEFT, "PitStart", true);
+        tryAdd("Pool", LEFT, "TempleEntrance", true);
+        tryAdd("RockColumns", LEFT, "Drop", true);
+        tryAdd("RockColumns", LEFT, "UndergroundEntrance", true);
+        tryAdd("RockColumns", LEFT, "PitStart", true);
+        tryAdd("RockColumns", LEFT, "TempleEntrance", true);
+        tryAdd("TempleEntrance", DOWN_LEFT, "CliffRoof", true);
+
+        tryAdd("TempleEntrance", LEFT, "SmallHill", true);
+        tryAdd("TempleEntrance", LEFT, "BigHill", true);
+        tryAdd("TempleEntrance", LEFT, "UndergroundEntrance", true);
+        tryAdd("TempleEntrance", LEFT, "TempleEntrance", true);
+        tryAdd("TempleHallway", RIGHT, "TempleEntrance", true);
+        tryAdd("TempleHallway", DOWN_RIGHT, "Staircase", true);
+        tryAdd("TempleHallway", DOWN_LEFT, "CliffRoof", true);
+        tryAdd("TempleHallway", LEFT, "Staircase", true);
+        tryAdd("Staircase", RIGHT, "Staircase", true);
     }
 }

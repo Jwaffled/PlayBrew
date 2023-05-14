@@ -27,7 +27,10 @@ public class Player extends GameObject {
     public KinematicComponent kinematics;
     private KeybindManager keybindManager;
     public ColliderComponent gc;
-    public Boolean onGround;
+    public Boolean groundCheck;
+    public Boolean wallCheckR;
+    public Boolean wallCheckL;
+    public Boolean ceilingCheck;
     public Vec2f inputD;
     //STATES
     public boolean faceLeft;
@@ -57,27 +60,57 @@ public class Player extends GameObject {
             sprites.sprites.add(new SpriteRenderer(new Vec2f(), b, b.getWidth(), b.getHeight()));
             transform = new TransformComponent(400, 0);
             kinematics = new KinematicComponent(new Vec2f(), new Vec2f(), 0, 1);
-            gc = new ColliderComponent(new Vec2f(0, b.getHeight()), new Vec2f(b.getWidth(), 1) , e -> {
+            gc = new ColliderComponent(new Vec2f(0, 0), new Vec2f(b.getWidth(), b.getHeight()) , e -> {
                 if(e.getCollidedObject() instanceof Tile tile) {
-                    Vec2f mid = new Vec2f(transform.position.x + b.getWidth() / 2f, transform.position.y + b.getHeight() / 2f);
-                    if(kinematics.v.y > 0) {
-                        // Ceiling
-                        kinematics.v.y = 0;
-                        transform.position.y = tile.transform.position.y + tile.height;
-                    } else if(kinematics.v.y < 0) {
-                        // Floor
-                        kinematics.v.y = 0;
-                        transform.position.y = tile.transform.position.y;
+                    groundCheck = true;
+                    if(!tile.fluid)
+                    {
+
+                        float slope = ((transform.position.y +((float)b.getHeight()/2))-(tile.transform.position.y + 16))/((transform.position.x - ((float)b.getWidth()/2))-(tile.transform.position.x + 16));
+                        if(Math.abs(slope) < (float)b.getHeight()/b.getWidth())
+                        {
+                            if(transform.position.x > tile.transform.position.x)
+                            {
+                                wallCheckL = true;
+                            }
+                            else{
+                                wallCheckR = true;
+                            }
+                        }
+                        else if(transform.position.y > tile.transform.position.y)
+                        {
+                            ceilingCheck = true;
+                            System.out.println("Ceiling");
+                            if(current instanceof Jumping && current.active)
+                            {
+                                current.active = false;
+                            }
+                        }
+                        else
+                        {
+                            groundCheck = true;
+                        }
+
                     }
-                    if(kinematics.v.x > 0) {
-                        // Wall on the right of player
-                        kinematics.v.x = 0;
-                        transform.position.x = tile.transform.position.x;
-                    } else if(kinematics.v.x < 0) {
-                        // Wall on the left of player
-                        kinematics.v.x = 0;
-                        transform.position.x = tile.transform.position.x + tile.width;
-                    }
+//                    Vec2f mid = new Vec2f(transform.position.x + b.getWidth() / 2f, transform.position.y + b.getHeight() / 2f);
+//                    if(kinematics.v.y > 0) {
+//                        // Ceiling
+//                        kinematics.v.y = 0;
+//                        transform.position.y = tile.transform.position.y + tile.height;
+//                    } else if(kinematics.v.y < 0) {
+//                        // Floor
+//                        kinematics.v.y = 0;
+//                        transform.position.y = tile.transform.position.y;
+//                    }
+//                    if(kinematics.v.x > 0) {
+//                        // Wall on the right of player
+//                        kinematics.v.x = 0;
+//                        transform.position.x = tile.transform.position.x;
+//                    } else if(kinematics.v.x < 0) {
+//                        // Wall on the left of player
+//                        kinematics.v.x = 0;
+//                        transform.position.x = tile.transform.position.x + tile.width;
+//                    }
                 }
 
             });
@@ -85,7 +118,7 @@ public class Player extends GameObject {
             addBindings();
             setStates();
             inputD = new Vec2f();
-            onGround = false;
+            groundCheck = false;
             vCoEff = new Vec2f(1,1);
             frictionCoEff = 1;
         } catch(Exception e) {
@@ -105,9 +138,9 @@ public class Player extends GameObject {
     public void update(float dt)
     {
         applyDirection();
-        onGround = onGround || keybindManager.triggered("Levitate");
-        if(!onGround) {
-            if(!(current instanceof Jumping) || (!current.active)) {
+        groundCheck = groundCheck || keybindManager.triggered("Levitate");
+        if(!groundCheck) {
+            if(!(current instanceof Jumping) || (!current.active) || ceilingCheck) {
                 current = fallState.activate();
             }
         } else {
@@ -134,10 +167,17 @@ public class Player extends GameObject {
         }
         applyCoefficients();
         current.apply(this);
+        if(kinematics.v.x > 0 && wallCheckR ||kinematics.v.x < 0 && wallCheckL)
+        {
+            kinematics.v.x = 0;
+        }
         vCoEff.x = 1;
         vCoEff.y = 1;
         frictionCoEff = 1;
-        onGround = false;
+        groundCheck = false;
+        ceilingCheck = false;
+        wallCheckR = false;
+        wallCheckL = false;
     }
 
     /**
