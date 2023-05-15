@@ -7,15 +7,14 @@ import com.waffle.struct.Vec2f;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.PrintWriter;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashSet;
+import java.util.*;
+
 import static com.waffle.dredes.level.Room.Direction.*;
 import static com.waffle.dredes.level.Room.TileType.*;
 public class LevelGen {
     public static LevelGen INSTANCE = new LevelGen();
     private RoomLoader roomLoader;
+    private Random rng;
 
     public enum Biome
     {
@@ -32,38 +31,110 @@ public class LevelGen {
     {
         Tile[] tiles = new Tile[7];
         roomLoader = new RoomLoader();
+        rng = new Random(69);
         Room[][] level = new Room[6][10];
-        loadBiome(roomLoader, biome, tiles);
+        loadBiome(biome, tiles);
+
         if(river) {
             roomLoader.addDirectory("DreDes/Rooms/River");
         }
         roomLoader.addDirectory("DreDes/Rooms/Universal");
         roomLoader.addDirectory("DreDes/Rooms/Special");
-        int height = 3;
-        int direction = -1;
+        addAllNeighbors();
+
+
+
+        level[2][0] = roomLoader.getRoom("Camp"); //loading Camp
+        level[2][9] = roomLoader.getRoom("Source"); //loading Source
+
+//        pickNeighbors(level, pickRoom(level, 2, 1), 2, 1);
+//        debugLevelGen(level, tiles);
+
+
+
+        int height = 2; //decides starting height for initial snaking
+        int direction = 1; //decides initail vertical traversal direction
+        //level[2][0] = roomLoader.getRoom("Camp"); //loading Camp
+        //level[2][9] = roomLoader.getRoom("Source"); //loading Source
+
         level[2][0] = roomLoader.getRoom("Camp");
         level[2][9] = roomLoader.getRoom("Source");
-        for(int i = 0; i < level[0].length/2; i++)
-        {
-            for(int j = height; j < level.length && j > 0; j+= direction)
-            {
-                //level[j][i] = pickRoom(level, j, i);
-                //level[j][level[j].length - 1 - i] = pickRoom(level, j, level[j].length - 1 - i);
-                height = j;
+
+        for(int i = 2; i < level.length; i++) {
+            for(int j = 1; j < level[i].length - 1; j++) {
+                Room r = pickRoom(level, i, j);
+                level[i][j] = r;
             }
-            direction *= -1;
         }
-        for(int i = 0; i < level[0].length; i++)
+        for(int i = 1; i > 0; i--) {
+            for(int j = 1; j < level[i].length - 1; j++) {
+                Room r = pickRoom(level, i, j);
+                level[i][j] = r;
+            }
+        }
+
+
+//        for(int j = height; j < level.length; j++) //Goes inward a column at a time until at the center
+//        {
+//            for(int i = 1; i < level[0].length - 1; i++) //goes until a vertical bound in reached
+//            {
+//                Room room = pickRoom(level, i, j);
+//                if(room != null) {
+//                    Constants.LOGGER.logWarning("Room picked: " + room.name + " i: " + i + " j: " + j);
+//                }
+//                level[j][i] = room; //picks a room on the left side
+//                //level[j][level[j].length - 1 - i] = pickRoom(level, j, level[j].length - 1 - i); //picks a room on the right side, opposite to the one on the left
+//            }
+//        }
+//        for(int j = 1; j > 0; j--) //Goes inward a column at a time until at the center
+//        {
+//            for(int i = 1; i < level[0].length - 1; i++) //goes until a vertical bound in reached
+//            {
+//                level[j][i] = pickRoom(level, i, j); //picks a room on the left side
+//                //level[j][level[j].length - 1 - i] = pickRoom(level, j, level[j].length - 1 - i); //picks a room on the right side, opposite to the one on the left
+//            }
+//        }
+//        for(int i = 0; i < level[0].length; i++) //goes right to left
+//        {
+//            for(int j = level.length - 1; j > 0; j--) //bottom to top
+//            {
+//                if(level[j][i] == null) //checks if a room has been generated yet
+//                {
+//                    //level[j][i] = pickRoom(level, j, i); //if not, then pick a room given the adjacent tiles
+//                }
+//            }
+//        }
+        Tile[][] ret = new Tile[36][80]; //creates the return object
+        for(int i = 0; i < level.length; i++) //traverses the newly-filled Room[][]
         {
-            for(int j = level.length - 1; j > 0; j--)
+            for(int j = 0; j < level[0].length; j++)
             {
-                if(level[j][i] == null)
+                if(level[i][j] != null) //makes sure the room isnt null
                 {
-                    level[j][i] = pickRoom(level, j, i);
+                    int[][] blueprint = level[i][j].configuration; //gets the tile configuration from the room
+                    for(int k = 0; k < blueprint.length; k++) //traverses the tile configuration
+                    {
+                        for(int l = 0; l < blueprint[k].length; l++)
+                        {
+                            if(tiles[blueprint[k][l]] != null) //basically an aircheck
+                            {
+                                ret[(i * 6)+ k][(j * 8) + l] = tiles[blueprint[k][l]].copy((i * 6) + k,(j * 8) + l); //multiplies room cell by the dimensions of the room to calculate the tile's cell. The 2 inner forloop's control variables then act as an offset from that
+                            }
+                        }
+                    }
                 }
+
             }
         }
-        Tile[][] ret = new Tile[36][80];
+        debugLevelGen(level, tiles); //prints the room in an ascii format
+
+
+        return ret; //returns the 2D tile array to create into a ton of serparate game objects
+
+    }
+
+    public void debugLevelGen(Room[][] level, Tile[] tiles)
+    {
         int[][] debug = new int[36][80];
         for(int i = 0; i < level.length; i++)
         {
@@ -78,8 +149,6 @@ public class LevelGen {
                         {
                             if(tiles[blueprint[k][l]] != null)
                             {
-                                System.out.printf("%d %d %d %d%n", i, j, k, l);
-                                ret[(i * 6)+ k][(j * 8) + l] = tiles[blueprint[k][l]].copy((i * 6) + k,(j * 8) + l);
                                 debug[(i * 6)+ k][(j * 8) + l] = blueprint[k][l];
                             }
                         }
@@ -88,6 +157,8 @@ public class LevelGen {
 
             }
         }
+        int count = 0;
+        int countRow = 0;
         for(int[] iArr : debug)
         {
             for(int i : iArr)
@@ -99,24 +170,37 @@ public class LevelGen {
                     case 4 -> System.out.print("WB ");
                     case 5 -> System.out.print("SA ");
                     case 6 -> System.out.print("SB ");
-                    default ->System.out.print("   ");
+                    default ->System.out.print(".  ");
+                }
+                count++;
+                if(count % 8 == 0)
+                {
+                    System.out.print("|");
                 }
             }
+            countRow++;
             System.out.println();
+            if(countRow % 6 == 0)
+            {
+                for(int j = 0; j < 80; j++)
+                {
+                    System.out.print("---");
+                }
+                System.out.println();
+            }
         }
-
-        return ret;
-
+        System.out.print("\n\n\n");
     }
 
 
-    public void loadBiome(RoomLoader rl, Biome b, Tile[] tiles)
+
+    public void loadBiome(Biome b, Tile[] tiles)
     {
         tiles[0] = null;
         tiles[3] = new Tile(Utils.loadImageFromPath("DreDes/Tiles/Water.png"), -1, -1, true, true, 1f, new Vec2f(1.5f, 2f));
         if(b.equals(Biome.Grassland))
         {
-            loadGrass(rl);
+            loadGrass();
             tiles[1] = new Tile(Utils.loadImageFromPath("DreDes/Tiles/Grass.png"), -1, -1, false, false);
             tiles[2] = new Tile(Utils.loadImageFromPath("DreDes/Tiles/Dirt.png"), -1, -1, false, false);
             tiles[4] = new Tile(Utils.loadImageFromPath("DreDes/Tiles/Gravel.png"), -1, -1, false, false, 1.25f, new Vec2f(1.1f,1.5f));
@@ -125,7 +209,7 @@ public class LevelGen {
         }
         else if(b.equals(Biome.Redland))
         {
-            loadRed(rl);
+            loadRed();
             tiles[1] = new Tile(Utils.loadImageFromPath("DreDes/Tiles/Clay.png"), -1, -1, false, false);
             tiles[2] = new Tile(Utils.loadImageFromPath("DreDes/Tiles/Gravel.png"), -1, -1, false, false, 1.25f, new Vec2f(1.1f,1.5f));
             tiles[4] = new Tile(Utils.loadImageFromPath("DreDes/Tiles/Sand.png"), -1, -1, false, false, 1.25f, new Vec2f(1.1f,1.1f));
@@ -134,7 +218,7 @@ public class LevelGen {
         }
         else if(b.equals(Biome.Sandland))
         {
-            loadSand(rl);
+            loadSand();
             tiles[1] = new Tile(Utils.loadImageFromPath("DreDes/Tiles/Sand.png"), -1, -1, false, false, 1.25f, new Vec2f(1,1.1f));
             tiles[2] = new Tile(Utils.loadImageFromPath("DreDes/Tiles/Clay.png"), -1, -1, false, false);
             tiles[4] = new Tile(Utils.loadImageFromPath("DreDes/Tiles/Gravel.png"), -1, -1, false, false, 1.25f, new Vec2f(1.1f,1.5f));
@@ -143,7 +227,7 @@ public class LevelGen {
         }
         else if(b.equals(Biome.Saltland))
         {
-            loadSalt(rl);
+            loadSalt();
             tiles[1] = new Tile(Utils.loadImageFromPath("DreDes/Tiles/Salt.png"), -1, -1, false, false);
             tiles[2] = new Tile(Utils.loadImageFromPath("DreDes/Tiles/Rock.png"), -1, -1, false, false);
             tiles[4] = new Tile(Utils.loadImageFromPath("DreDes/Tiles/Salt.png"), -1, -1, false, false);
@@ -152,7 +236,7 @@ public class LevelGen {
         }
         else if(b.equals(Biome.Stoneland))
         {
-            loadStone(rl);
+            loadStone();
             tiles[1] = new Tile(Utils.loadImageFromPath("DreDes/Tiles/Rock.png"), -1, -1, false, false);
             tiles[2] = new Tile(Utils.loadImageFromPath("DreDes/Tiles/Rock.png"), -1, -1, false, false);
             tiles[4] = new Tile(Utils.loadImageFromPath("DreDes/Tiles/Salt.png"), -1, -1, false, false);
@@ -160,14 +244,14 @@ public class LevelGen {
             tiles[6] = new Tile(Utils.loadImageFromPath("DreDes/Tiles/Ice.png"), -1, -2, false, false, .5f, new Vec2f(1,1));
         }
     }
-    public void loadGrass(RoomLoader roomLoader)
+    public void loadGrass()
     {
         roomLoader.addDirectory("DreDes/Rooms/Hills");
         roomLoader.addDirectory("DreDes/Rooms/Cave");
         roomLoader.addDirectory("DreDes/Rooms/Pond");
     }
 
-    public void loadRed(RoomLoader roomLoader)
+    public void loadRed()
     {
         roomLoader.addDirectory("DreDes/Rooms/Hills");
         roomLoader.addDirectory("DreDes/Rooms/Cliff");
@@ -175,7 +259,7 @@ public class LevelGen {
         roomLoader.addDirectory("DreDes/Rooms/Pond");
     }
 
-    public void loadSand(RoomLoader roomLoader)
+    public void loadSand()
     {
         roomLoader.addDirectory("DreDes/Rooms/Hills");
         roomLoader.addDirectory("DreDes/Rooms/Cave");
@@ -183,7 +267,7 @@ public class LevelGen {
         roomLoader.addDirectory("DreDes/Rooms/Temple");
     }
 
-    public void loadSalt(RoomLoader roomLoader)
+    public void loadSalt()
     {
         roomLoader.addDirectory("DreDes/Rooms/Cliff");
         roomLoader.addDirectory("DreDes/Rooms/Cave");
@@ -192,7 +276,7 @@ public class LevelGen {
         roomLoader.addDirectory("DreDes/Rooms/Temple");
     }
 
-    public void loadStone(RoomLoader roomLoader)
+    public void loadStone()
     {
         roomLoader.addDirectory("DreDes/Rooms/Cave");
         roomLoader.addDirectory("DreDes/Rooms/Mountain");
@@ -202,110 +286,176 @@ public class LevelGen {
 
     public Room pickRoom(Room[][] rooms, int row, int col)
     {
-        Collection<Room> pool = roomLoader.getRooms().values();
-        pool.remove(roomLoader.getRoom("Source"));
-        pool.remove(roomLoader.getRoom("Camp"));
-        for(int i = -1; i < 2; i++)
-        {
-            for(int j = -1; j < 2; j++)
-            {
-                if(row + i > 0 && row + 1 < rooms.length && col + j > 0 && col + j < rooms[0].length && i != 0 && j != 0)
-                {
-                    if(rooms[row + i][col + j] != null)
-                    {
-                        if(!Arrays.asList(rooms[row + i][col + j].getRoomPool(Room.getDirection(new Vec2f(-j, -i)), true)).isEmpty())
-                        {
-                            pool.retainAll(Arrays.asList(rooms[row + i][col + j].getRoomPool(Room.getDirection(new Vec2f(-j, -i)), true)));
-                        }
+        //Collection<Room> pool = roomLoader.getRooms().values();
+//        pool.remove(roomLoader.getRoom("Source"));
+//        pool.remove(roomLoader.getRoom("SourceFlipped"));
+//        pool.remove(roomLoader.getRoom("Camp"));
+//        pool.remove(roomLoader.getRoom("CampFlipped"));
+        /*
 
-                    }
-                }
-            }
+        Picking room rooms[row][col]
+        The following tiles' rules need to be satisfied
+        - rooms[row - 1][col] UP
+        - rooms[row - 1][col - 1] UP LEFT
+        - rooms[row - 1][col + 1] UP RIGHT
+        - rooms[row][col - 1] LEFT
+        - rooms[row][col + 1] RIGHT
+        - rooms[row + 1][col + 1] DOWN RIGHT
+        - rooms[row + 1][col] DOWN
+        - rooms[row + 1][col - 1] DOWN LEFT
+         */
+
+        ArrayList<Room> test= new ArrayList<Room>();
+        try {
+            Collection<Room> temp = Arrays.asList(rooms[row - 1][col].getRoomPool(DOWN, true));
+            if(!temp.isEmpty())
+            test.addAll(temp);
         }
-        if(!pool.isEmpty())
-        {
-            return (Room)pool.toArray()[(int)(Math.random() * pool.size())];
-        }
-        pool = roomLoader.getRooms().values();
-        pool.remove(roomLoader.getRoom("Source"));
-        pool.remove(roomLoader.getRoom("Camp"));
-        for(int i = -1; i < 2; i++)
-        {
-            for(int j = -1; j < 2; j++)
+        catch (Exception ignored){}
+        try {
+            Collection<Room> temp = Arrays.asList(rooms[row + 1][col].getRoomPool(UP, true));
+            if(!temp.isEmpty())
             {
-                if(row + i > 0 && row + 1 < rooms.length && col + j > 0 && col + j < rooms[0].length && i != 0 && j != 0)
+                if(test.isEmpty())
                 {
-                    if(rooms[row + i][col + j] != null)
-                    {
-                        if(!Arrays.asList(rooms[row + i][col + j].getRoomPool(Room.getDirection(new Vec2f(-j, -i)), false)).isEmpty())
-                        {
-                            pool.retainAll(Arrays.asList(rooms[row + i][col + j].getRoomPool(Room.getDirection(new Vec2f(-j, -i)), false)));
-                        }
-                    }
+                    test.addAll(temp);
                 }
+                else 
+                    test.retainAll(temp);
             }
+                
         }
-        if(!pool.isEmpty())
+        catch (Exception ignored){}
+        try {
+            Collection<Room> temp = Arrays.asList(rooms[row][col + 1].getRoomPool(LEFT, true));
+            if(!temp.isEmpty())
+            {
+                if(test.isEmpty())
+                {
+                    test.addAll(temp);
+                }
+                else
+                    test.retainAll(temp);
+            }
+
+        }
+        catch (Exception ignored){}
+        try {
+            Collection<Room> temp = Arrays.asList(rooms[row][col - 1].getRoomPool(RIGHT, true));
+            if(!temp.isEmpty())
+            {
+                if(test.isEmpty())
+                {
+                    test.addAll(temp);
+                }
+                else
+                    test.retainAll(temp);
+            }
+
+        }
+        catch (Exception ignored){}
+        System.out.println("Strong " + test);
+        if(test.size() > 0)
         {
-            return (Room)pool.toArray()[(int)(Math.random() * pool.size())];
+            test.remove(roomLoader.getRoom("HilltopFlipped"));
+            return test.get(rng.nextInt(0, test.size()));
         }
+        try {
+            Collection<Room> temp = Arrays.asList(rooms[row - 1][col].getRoomPool(DOWN, false));
+            if(!temp.isEmpty())
+                test.addAll(temp);
+        }
+        catch (Exception ignored){}
+        try {
+            Collection<Room> temp = Arrays.asList(rooms[row + 1][col].getRoomPool(UP, false));
+            if(!temp.isEmpty())
+            {
+                if(test.isEmpty())
+                {
+                    test.addAll(temp);
+                }
+                else
+                    test.retainAll(temp);
+            }
+
+        }
+        catch (Exception ignored){}
+        try {
+            Collection<Room> temp = Arrays.asList(rooms[row][col + 1].getRoomPool(LEFT, false));
+            if(!temp.isEmpty())
+            {
+                if(test.isEmpty())
+                {
+                    test.addAll(temp);
+                }
+                else
+                    test.retainAll(temp);
+            }
+
+        }
+        catch (Exception ignored){}
+        try {
+            Collection<Room> temp = Arrays.asList(rooms[row][col - 1].getRoomPool(RIGHT, false));
+            if(!temp.isEmpty())
+            {
+                if(test.isEmpty())
+                {
+                    test.addAll(temp);
+                }
+                else
+                    test.retainAll(temp);
+            }
+
+        }
+        catch (Exception ignored){}
+        System.out.println("Weak " + test);
+        if(test.size() > 0)
+        {
+            return test.get(rng.nextInt(0, test.size()));
+        }
+        System.out.printf("[%02d][%02d] cannot be decided%n", row, col);
         return roomLoader.getRoom("OpenAir");
-//        HashSet<Room> pool = new HashSet<Room>();
-//        try {
-//            pool.addAll(Arrays.asList(rooms[row - 1][col - 1].getRoomPool(DOWN_RIGHT, true)));
-//        }catch (Exception e){};
-//        try {
-//            pool.addAll(Arrays.asList(rooms[row][col - 1].getRoomPool(RIGHT, true)));
-//        }catch (Exception e){};
-//        try {
-//            pool.addAll(Arrays.asList(rooms[row + 1][col - 1].getRoomPool(UP_RIGHT, true)));
-//        }catch (Exception e){};
-//        try {
-//            pool.addAll(Arrays.asList(rooms[row - 1][col].getRoomPool(UP, true)));
-//        }catch (Exception e){};
-//        try {
-//            pool.addAll(Arrays.asList(rooms[row + 1][col].getRoomPool(DOWN, true)));
-//        }catch (Exception e){};
-//        try {
-//            pool.addAll(Arrays.asList(rooms[row - 1][col + 1].getRoomPool(DOWN_LEFT, true)));
-//        }catch (Exception e){};
-//        try {
-//            pool.addAll(Arrays.asList(rooms[row][col + 1].getRoomPool(LEFT, true)));
-//        }catch (Exception e){};
-//        try {
-//            pool.addAll(Arrays.asList(rooms[row][col + 1].getRoomPool(UP_LEFT, true)));
-//        }catch (Exception e){};
-//        if (!pool.isEmpty())
-//        {
-//            return (Room)pool.toArray()[(int)(Math.random() * pool.size())];
+//        if(row == 1 && col == 0) {
+//            Constants.LOGGER.logDebug("Pool:" + pool);
 //        }
-//        pool.clear();
-//        try {
-//            pool.addAll(Arrays.asList(rooms[row - 1][col - 1].getRoomPool(DOWN_RIGHT, false)));
-//        }catch (Exception e){};
-//        try {
-//            pool.addAll(Arrays.asList(rooms[row][col - 1].getRoomPool(RIGHT, false)));
-//        }catch (Exception e){};
-//        try {
-//            pool.addAll(Arrays.asList(rooms[row + 1][col - 1].getRoomPool(UP_RIGHT, false)));
-//        }catch (Exception e){};
-//        try {
-//            pool.addAll(Arrays.asList(rooms[row - 1][col].getRoomPool(UP, false)));
-//        }catch (Exception e){};
-//        try {
-//            pool.addAll(Arrays.asList(rooms[row + 1][col].getRoomPool(DOWN, false)));
-//        }catch (Exception e){};
-//        try {
-//            pool.addAll(Arrays.asList(rooms[row - 1][col + 1].getRoomPool(DOWN_LEFT, false)));
-//        }catch (Exception e){};
-//        try {
-//            pool.addAll(Arrays.asList(rooms[row][col + 1].getRoomPool(LEFT, false)));
-//        }catch (Exception e){};
-//        try {
-//            pool.addAll(Arrays.asList(rooms[row][col + 1].getRoomPool(UP_LEFT, false)));
-//        }catch (Exception e){};
-//
-//        return (Room)pool.toArray()[(int)(Math.random() * pool.size())];
+//        if(!pool.isEmpty())
+//        {
+//            System.out.println();
+//            Constants.LOGGER.logWarning(Arrays.toString(pool.toArray()));
+//            int index = rng.nextInt(0, pool.size());
+//            Constants.LOGGER.logInfo("Index chosen: " + index);
+//            return (Room)pool.toArray()[index];
+//        }
+//        System.out.println();
+//        pool = roomLoader.getRooms().values();
+//        pool.remove(roomLoader.getRoom("Source"));
+//        pool.remove(roomLoader.getRoom("Camp"));
+//        for(int i = -1; i < 2; i++)
+//        {
+//            for(int j = -1; j < 2; j++)
+//            {
+////                System.out.print(pool.size() + " ");
+//                if(row + i > 0 && row + 1 < rooms.length && col + j > 0 && col + j < rooms[0].length && i != 0 && j != 0)
+//                {
+//                    if(rooms[row + i][col + j] != null)
+//                    {
+//                        if(!Arrays.asList(rooms[row + i][col + j].getRoomPool(Room.getDirection(new Vec2f(-j, -i)), false)).isEmpty())
+//                        {
+//                            pool.retainAll(Arrays.asList(rooms[row + i][col + j].getRoomPool(Room.getDirection(new Vec2f(-j, -i)), false)));
+//                        }
+//                    }
+//                }
+//            }
+//        }
+//        if(!pool.isEmpty())
+//        {
+//            System.out.println();
+//            Constants.LOGGER.logWarning(Arrays.toString(pool.toArray()));
+//            int index = rng.nextInt(0, pool.size());
+//            Constants.LOGGER.logInfo("Index chosen: " + index);
+//            return (Room)pool.toArray()[index];
+//        }
+//        return roomLoader.getRoom("SolidGround");
     }
     public void tryAdd(String center, Room.Direction direction, String neighbor) {
         Room c = roomLoader.getRoom(center);
@@ -339,7 +489,7 @@ public class LevelGen {
         if(c != null && n != null) {
             if(flipped)
             {
-                c.addNeighbor(direction, n.flip(), true);
+                c.addNeighbor(direction, roomLoader.getRoom(neighbor+"Flipped"), true);
 
             }
             else
@@ -551,7 +701,7 @@ public class LevelGen {
         tryAdd("UndergroundEntrance", UP, "MountainSideB");
         tryAdd("UndergroundEntrance", UP_RIGHT, "OpenAir", false);
         tryAdd("UndergroundEntrance", UP_RIGHT, "CaveWall", false);
-        tryAdd("UndergroundEntrance", UP_RIGHT, "SolidGround", false);
+        //tryAdd("UndergroundEntrance", UP_RIGHT, "SolidGround", false);
 
         tryAdd("UndergroundEntrance", RIGHT, "Hollow");
         tryAdd("UndergroundEntrance", RIGHT, "CaveHallway");
@@ -580,15 +730,15 @@ public class LevelGen {
 
         tryAdd("Hollow", UP_LEFT, "CaveWall", false);
         tryAdd("Hollow", UP_LEFT, "OpenAir", false);
-        tryAdd("Hollow", UP_LEFT, "SolidGround", false);
+        //tryAdd("Hollow", UP_LEFT, "SolidGround", false);
         tryAdd("Hollow", UP, "CliffRoof");
         tryAdd("Hollow", UP, "OpenAir");
         tryAdd("Hollow", UP, "CaveWall");
         tryAdd("Hollow", UP, "MountainTop");
-        tryAdd("Hollow", UP, "SolidGround");
+        //tryAdd("Hollow", UP, "SolidGround");
         tryAdd("Hollow", UP_RIGHT, "CaveWall", false);
         tryAdd("Hollow", UP_RIGHT, "OpenAir", false);
-        tryAdd("Hollow", UP_RIGHT, "SolidGround", false);
+        //tryAdd("Hollow", UP_RIGHT, "SolidGround", false);
 
 
         tryAdd("Hollow", RIGHT, "CaveHallway");
@@ -1278,32 +1428,33 @@ public class LevelGen {
         //region Special Rooms
         tryAdd("Camp", UP_LEFT, "SolidGround");
 
-        tryAdd("Camp", RIGHT, "SmallHill");
-        tryAdd("Camp", RIGHT, "BigHill");
+        tryAdd("Camp", RIGHT, "SmallHill", false);
+        tryAdd("Camp", RIGHT, "BigHill", false);
         tryAdd("Camp", RIGHT, "Hilltop", true);
-        tryAdd("Camp", RIGHT, "UndergroundEntrance");
+        tryAdd("Camp", RIGHT, "UndergroundEntrance", false);
         tryAdd("Camp", RIGHT, "Hollow", true);
-        tryAdd("Camp", RIGHT, "CaveHallway");
-        tryAdd("Camp", RIGHT, "Platform");
-        tryAdd("Camp", RIGHT, "UndergroundPondStart");
-        tryAdd("Camp", RIGHT, "MountainSideA");
-        tryAdd("Camp", RIGHT, "MountainTop");
-        tryAdd("Camp", RIGHT, "SmallPond");
-        tryAdd("Camp", RIGHT, "PondStart");
-        tryAdd("Camp", RIGHT, "Flat");
-        tryAdd("Camp", RIGHT, "Pool");
-        tryAdd("Camp", RIGHT, "RockColumns");
-        tryAdd("Camp", RIGHT, "TempleEntrance");
-        tryAdd("Camp", RIGHT, "TempleHallway");
-        tryAdd("Camp", RIGHT, "Staircase");
+        tryAdd("Camp", RIGHT, "CaveHallway", false);
+        tryAdd("Camp", RIGHT, "Platform", false);
+        tryAdd("Camp", RIGHT, "UndergroundPondStart", false);
+        tryAdd("Camp", RIGHT, "MountainSideA", false);
+        tryAdd("Camp", RIGHT, "MountainTop", false);
+        tryAdd("Camp", RIGHT, "SmallPond", false);
+        tryAdd("Camp", RIGHT, "PondStart", false);
+        tryAdd("Camp", RIGHT, "Flat", false);
+        tryAdd("Camp", RIGHT, "Pool", false);
+        tryAdd("Camp", RIGHT, "RockColumns", false);
+        tryAdd("Camp", RIGHT, "TempleEntrance", false);
+        tryAdd("Camp", RIGHT, "TempleHallway", false);
+        tryAdd("Camp", RIGHT, "Staircase", false);
 
         tryAdd("Camp", DOWN_RIGHT, "BigHill", true);
-        tryAdd("Camp", DOWN_RIGHT, "CliffRoof");
+        tryAdd("Camp", DOWN_RIGHT, "CliffRoof" ,false);
         tryAdd("Camp", DOWN_RIGHT, "Platform", true);
         tryAdd("Camp", DOWN_RIGHT, "SmallUndergroundPond", true);
-        tryAdd("Camp", DOWN_RIGHT, "SmallPit");
-        tryAdd("Camp", DOWN_RIGHT, "RockColumns");
+        tryAdd("Camp", DOWN_RIGHT, "SmallPit", false);
+        tryAdd("Camp", DOWN_RIGHT, "RockColumns", false);
         tryAdd("Camp", DOWN_RIGHT, "Staircase", true);
+        tryAdd("Camp", DOWN_RIGHT, "SolidGround", false);
 
         tryAdd("Camp", DOWN_LEFT, "SolidGround");
         tryAdd("Camp", LEFT, "SolidGround");
@@ -1320,6 +1471,7 @@ public class LevelGen {
         tryAdd("Source", DOWN_LEFT, "SmallPit", true);
         tryAdd("Source", DOWN_LEFT, "RockColumns", true);
         tryAdd("Source", DOWN_LEFT, "Staircase");
+        tryAdd("Source", DOWN_LEFT, "SolidGround", false);
 
         tryAdd("Source", LEFT, "SmallHill", true);
         tryAdd("Source", LEFT, "BigHill", true);
@@ -1423,5 +1575,16 @@ public class LevelGen {
         tryAdd("TempleHallway", DOWN_LEFT, "CliffRoof", true);
         tryAdd("TempleHallway", LEFT, "Staircase", true);
         tryAdd("Staircase", RIGHT, "Staircase", true);
+        for(String key: roomLoader.getRooms().keySet())
+        {
+            if(key.contains("Flipped"))
+            {
+                Room temp = roomLoader.getRoom(key.replace("Flipped", "")).flip();
+                Room fix = roomLoader.getRoom(key);
+                fix.weakNeighbors = temp.weakNeighbors;
+                fix.strongNeighbors = temp.strongNeighbors;
+                fix.flipped = true;
+            }
+        }
     }
 }

@@ -185,10 +185,10 @@ public class Player extends GameObject {
      */
     public void setStates() {
         jumpState = new Jumping(100,20, 200, 30);
-        walkState = new Walking(50);
+        walkState = new Walking(175);
         idleState = new Idling(50);
         turnState = new Turning(5, 75);
-        fallState = new Falling(100,135, 9.8f, 45);
+        fallState = new Falling(250,135, 9.8f, 45);
     }
 
     private void applyDirection() {

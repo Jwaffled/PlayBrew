@@ -46,7 +46,7 @@ public class GameplayScene extends DefaultScene {
     public void start() {
         world.createLayers(3);
         LevelGen l = LevelGen.INSTANCE;
-        Tile[][] arr = l.generate(LevelGen.Biome.Grassland, 0, 0, false);
+        Tile[][] arr = l.generate(LevelGen.Biome.Stoneland, 0, 0, false);
 
         for(Tile[] a : arr) {
             for(Tile tile : a) {
