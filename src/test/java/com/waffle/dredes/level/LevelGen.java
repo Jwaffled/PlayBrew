@@ -25,6 +25,87 @@ public class LevelGen {
         Stoneland
     }
 
+    private String[] caveFolder = {
+            "CaveEntrance.txt",
+            "CaveHallway.txt",
+            "CaveHollow.txt",
+            "CavePlatform.txt",
+            "CaveWall.txt",
+            "SmallUndergroundPond.txt",
+            "UndergroundPondMiddle.txt",
+            "UndergroundPondStart.txt"
+    };
+
+    private String[] cliffFolder = {
+            "CliffDrop.txt",
+            "CliffRoof.txt",
+            "CliffWall.txt"
+    };
+
+    private String[] frozenPondFolder = {
+            "FrozenPondMiddle.txt",
+            "FrozenPondStart.txt"
+    };
+
+    private String[] hillsFolder = {
+            "BigHill.txt",
+            "SmallHill.txt"
+    };
+
+    private String[] mountainFolder = {
+            "MountainSideA.txt",
+            "MountainSideB.txt",
+            "MountainSideC.txt",
+            "MountainTop.txt"
+    };
+
+    private String[] pitFolder = {
+            "PitMiddle.txt",
+            "PitStart.txt",
+            "SmallPit.txt"
+    };
+
+    private String[] pondFolder = {
+            "DeepPond.txt",
+            "PondMiddle.txt",
+            "PondStart.txt",
+            "SmallPond.txt"
+    };
+
+    private String[] riverFolder = {
+            "OpenRiver.txt",
+            "RiverBase.txt",
+            "RiverStart.txt",
+            "RiverWall.txt"
+    };
+
+    private String[] saltFlatsFolder = {
+            "Flat.txt",
+            "Pool.txt",
+            "RockColumns.txt"
+    };
+
+    private String[] specialFolder = {
+            "Camp.txt",
+            "Source.txt"
+    };
+
+    private String[] templeFolder = {
+            "Altar.txt",
+            "Hallway.txt",
+            "Staircase.txt",
+            "TempleEntrance.txt",
+            "TempleRoof.txt",
+            "TempleWall.txt",
+            "Trial.txt"
+    };
+
+    private String[] universalFolder = {
+            "OpenAir.txt",
+            "OpenWater.txt",
+            "SolidGround.txt"
+    };
+
     private LevelGen() {}
 
     public Tile[][] generate(Biome biome, int x, int y, boolean river)
@@ -36,10 +117,10 @@ public class LevelGen {
         loadBiome(biome, tiles);
 
         if(river) {
-            roomLoader.addDirectory("DreDes/Rooms/River");
+            loadRiverFolder();
         }
-        roomLoader.addDirectory("DreDes/Rooms/Universal");
-        roomLoader.addDirectory("DreDes/Rooms/Special");
+        loadUniversalFolder();
+        loadSpecialFolder();
         addAllNeighbors();
 
 
@@ -256,42 +337,114 @@ public class LevelGen {
     }
     public void loadGrass()
     {
-        roomLoader.addDirectory("DreDes/Rooms/Hills");
-        roomLoader.addDirectory("DreDes/Rooms/Cave");
-        roomLoader.addDirectory("DreDes/Rooms/Pond");
+        loadHillsFolder();
+        loadCaveFolder();
+        loadPondFolder();
     }
 
     public void loadRed()
     {
-        roomLoader.addDirectory("DreDes/Rooms/Hills");
-        roomLoader.addDirectory("DreDes/Rooms/Cliff");
-        roomLoader.addDirectory("DreDes/Rooms/Cave");
-        roomLoader.addDirectory("DreDes/Rooms/Pond");
+        loadHillsFolder();
+        loadCliffFolder();
+        loadCaveFolder();
+        loadPondFolder();
     }
 
     public void loadSand()
     {
-        roomLoader.addDirectory("DreDes/Rooms/Hills");
-        roomLoader.addDirectory("DreDes/Rooms/Cave");
-        roomLoader.addDirectory("DreDes/Rooms/Pit");
-        roomLoader.addDirectory("DreDes/Rooms/Temple");
+        loadHillsFolder();
+        loadCaveFolder();
+        loadPitFolder();
+        loadTempleFolder();
     }
 
     public void loadSalt()
     {
-        roomLoader.addDirectory("DreDes/Rooms/Cliff");
-        roomLoader.addDirectory("DreDes/Rooms/Cave");
-        roomLoader.addDirectory("DreDes/Rooms/Pit");
-        roomLoader.addDirectory("DreDes/Rooms/SaltFlats");
-        roomLoader.addDirectory("DreDes/Rooms/Temple");
+        loadCliffFolder();
+        loadCaveFolder();
+        loadPitFolder();
+        loadSaltFlatsFolder();
+        loadTempleFolder();
     }
 
     public void loadStone()
     {
-        roomLoader.addDirectory("DreDes/Rooms/Cave");
-        roomLoader.addDirectory("DreDes/Rooms/Mountain");
-        roomLoader.addDirectory("DreDes/Rooms/FrozenPond");
-        roomLoader.addDirectory("DreDes/Rooms/Temple");
+        loadCaveFolder();
+        loadMountainFolder();
+        loadFrozenPondFolder();
+        loadTempleFolder();
+    }
+
+    private void loadCaveFolder() {
+        for(String s : caveFolder) {
+            roomLoader.addRoomPath("DreDes/Rooms/Cave/" + s);
+        }
+    }
+
+    private void loadCliffFolder() {
+        for(String s : cliffFolder) {
+            roomLoader.addRoomPath("DreDes/Rooms/Cliff/" + s);
+        }
+    }
+
+    private void loadFrozenPondFolder() {
+        for(String s : frozenPondFolder) {
+            roomLoader.addRoomPath("DreDes/Rooms/FrozenPond/" + s);
+        }
+    }
+
+    private void loadHillsFolder() {
+        for(String s : hillsFolder) {
+            roomLoader.addRoomPath("DreDes/Rooms/Hills/" + s);
+        }
+    }
+
+    private void loadMountainFolder() {
+        for(String s : mountainFolder) {
+            roomLoader.addRoomPath("DreDes/Rooms/Mountain/" + s);
+        }
+    }
+
+    private void loadPitFolder() {
+        for(String s : pitFolder) {
+            roomLoader.addRoomPath("DreDes/Rooms/Pit/" + s);
+        }
+    }
+
+    private void loadPondFolder() {
+        for(String s : pondFolder) {
+            roomLoader.addRoomPath("DreDes/Rooms/Pond/" + s);
+        }
+    }
+
+    private void loadRiverFolder() {
+        for(String s : riverFolder) {
+            roomLoader.addRoomPath("DreDes/Rooms/River/" + s);
+        }
+    }
+
+    private void loadSaltFlatsFolder() {
+        for(String s : saltFlatsFolder) {
+            roomLoader.addRoomPath("DreDes/Rooms/SaltFlats/" + s);
+        }
+    }
+
+    private void loadSpecialFolder() {
+        for(String s : specialFolder) {
+            roomLoader.addRoomPath("DreDes/Rooms/Special/" + s);
+        }
+    }
+
+    private void loadTempleFolder() {
+        for(String s : templeFolder) {
+            roomLoader.addRoomPath("DreDes/Rooms/Temple/" + s);
+        }
+    }
+
+    private void loadUniversalFolder() {
+        for(String s : universalFolder) {
+            roomLoader.addRoomPath("DreDes/Rooms/Universal/" + s);
+        }
     }
 
     public Room pickRoom(Room[][] rooms, int row, int col)
@@ -319,7 +472,7 @@ public class LevelGen {
         try {
             Collection<Room> temp = Arrays.asList(rooms[row - 1][col].getRoomPool(DOWN, true));
             if(!temp.isEmpty())
-            test.addAll(temp);
+                test.addAll(temp);
         }
         catch (Exception ignored){}
         try {
@@ -330,10 +483,10 @@ public class LevelGen {
                 {
                     test.addAll(temp);
                 }
-                else 
+                else
                     test.retainAll(temp);
             }
-                
+
         }
         catch (Exception ignored){}
         try {
@@ -368,7 +521,7 @@ public class LevelGen {
         if(test.size() > 0)
         {
             test.remove(roomLoader.getRoom("HilltopFlipped"));
-            return test.get(rng.nextInt(0, test.size()));
+            return test.get(rng.nextInt(test.size()));
         }
         try {
             Collection<Room> temp = Arrays.asList(rooms[row - 1][col].getRoomPool(DOWN, false));
@@ -421,7 +574,7 @@ public class LevelGen {
         System.out.println("Weak " + test);
         if(test.size() > 0)
         {
-            return test.get(rng.nextInt(0, test.size()));
+            return test.get(rng.nextInt(test.size()));
         }
         System.out.printf("[%02d][%02d] cannot be decided%n", row, col);
         return roomLoader.getRoom("OpenAir");

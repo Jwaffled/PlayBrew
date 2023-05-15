@@ -5,15 +5,17 @@ import java.awt.Graphics2D;
 import java.awt.AlphaComposite;
 import java.awt.Color;
 import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipInputStream;
 
 /**
  * A class containing static helper methods for miscellaneous operations
@@ -65,32 +67,46 @@ public final class Utils {
      * @return the file data as a String
      */
     public static String loadFileAsString(String path) {
-        URL f = Utils.class.getClassLoader().getResource(path);
-        try {
-            if(f != null) {
-                byte[] data = Files.readAllBytes(Paths.get(f.toURI()));
-                return new String(data, StandardCharsets.UTF_8);
-            } else {
-                throw new IllegalArgumentException("File '" + path + "' could not be found!");
-            }
-        } catch(URISyntaxException | IOException e) {
-            throw new IllegalStateException("Something went wrong while reading image file '" + path + "': " + e.getMessage());
-        }
-
-    }
-
-    public static String[] getFilesInDirectory(String path) {
-        URL f = Utils.class.getClassLoader().getResource(path);
-        if(f != null) {
+        InputStream inputStream = Utils.class.getClassLoader().getResourceAsStream(path);
+        if(inputStream != null) {
             try {
-                File file = new File(f.toURI().getPath());
-                return file.list();
-            } catch (URISyntaxException e) {
-                throw new IllegalStateException(e);
+                byte[] data = inputStream.readAllBytes();
+                return new String(data, StandardCharsets.UTF_8);
+            } catch(IOException e) {
+                throw new IllegalStateException("Something went wrong while reading file '" + path + "': " + e.getMessage());
+            } finally {
+                try {
+                    inputStream.close();
+                } catch (IOException e) {
+                    // ignore
+                }
             }
         } else {
             throw new IllegalArgumentException("File '" + path + "' could not be found!");
         }
+    }
+
+    public static String[] getFilesInDirectory(String path) {
+        try(InputStream in = Utils.class.getClassLoader().getResourceAsStream(path)) {
+            if(in != null) {
+                try (BufferedReader reader = new BufferedReader(new InputStreamReader(in, StandardCharsets.UTF_8))) {
+                    List<String> fileList = new ArrayList<>();
+                    String line;
+                    while ((line = reader.readLine()) != null) {
+                        System.out.println(line);
+                        fileList.add(line);
+                    }
+                    return fileList.toArray(new String[0]);
+                } catch (IOException e) {
+                    throw new IllegalStateException(e);
+                }
+            } else {
+                throw new IllegalStateException(path + " cannot be found");
+            }
+        } catch(IOException e) {
+            throw new IllegalStateException("Error while reading directory " + path + " in JAR file", e);
+        }
+
     }
 
     /**
