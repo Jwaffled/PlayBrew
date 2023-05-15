@@ -133,6 +133,16 @@ public class LevelGen {
 
     }
 
+    private void pickNeighbors(Room[][] level, Room center, int row, int col) {
+
+    }
+
+    private void collapseRoom(int row, int col, Room[][] level)
+    {
+        ArrayList<Room> pool = new ArrayList<Room>();
+
+    }
+
     public void debugLevelGen(Room[][] level, Tile[] tiles)
     {
         int[][] debug = new int[36][80];
@@ -514,6 +524,7 @@ public class LevelGen {
         tryAdd("OpenAir", DOWN, "OpenAir");
         tryAdd("OpenAir", DOWN_LEFT, "OpenAir");
         tryAdd("OpenAir", LEFT, "OpenAir");
+        tryAdd("OpenAir", RIGHT, "OpenAir");
 
 
         tryAdd("SolidGround", UP_LEFT, "SolidGround");
