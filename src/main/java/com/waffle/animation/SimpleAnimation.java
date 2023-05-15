@@ -15,13 +15,13 @@ public class SimpleAnimation extends Animation {
         super(anim);
     }
 
-    public SimpleAnimation(String dir) throws IOException {
-        super(dir);
-    }
-
-    public SimpleAnimation(String dir, int updateFrequency) throws IOException {
-        super(dir, updateFrequency);
-    }
+//    public SimpleAnimation(String dir) throws IOException {
+//        super(dir);
+//    }
+//
+//    public SimpleAnimation(String dir, int updateFrequency) throws IOException {
+//        super(dir, updateFrequency);
+//    }
 
     /**
      * Instantiates a SimpleAnimation given file path names

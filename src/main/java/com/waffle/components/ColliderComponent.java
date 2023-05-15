@@ -10,6 +10,7 @@ public class ColliderComponent implements IComponent {
     public float mass;
     public float elasticity;
     public Vec2f position;
+    public boolean isStatic;
 
     public ColliderComponent(Vec2f pos, Vec2f hb, CollisionEventListener cb) {
         listener = cb;

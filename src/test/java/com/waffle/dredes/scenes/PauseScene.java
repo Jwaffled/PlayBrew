@@ -12,15 +12,25 @@ import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.util.Timer;
 
+/**
+ * A pause menu scene
+ */
 public class PauseScene extends DefaultScene {
     private Button resume;
     private Button options;
     private Button exit;
     private KeybindManager keybindManager;
+
+    /**
+     * Creates a new pause scene with a maximum of 15 entities
+     */
     public PauseScene() {
         super(15);
     }
 
+    /**
+     * Called when the Scene is added to the world
+     */
     @Override
     public void start() {
         world.createLayers(1);
@@ -111,6 +121,10 @@ public class PauseScene extends DefaultScene {
         world.createGameObject(exit);
     }
 
+    /**
+     * Updates state associated with this scene, called every frame
+     * @param dt the time between frames
+     */
     @Override
     public void update(float dt) {
         incrementFramesActive();
@@ -119,6 +133,9 @@ public class PauseScene extends DefaultScene {
         }
     }
 
+    /**
+     * Called when the scene is set as the current displayed scene
+     */
     @Override
     public void focus() {
         super.focus();

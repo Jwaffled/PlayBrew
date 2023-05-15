@@ -52,6 +52,9 @@ public class Player extends GameObject {
     public Player() {}
 
 
+    /**
+     * Called when the GameObject is added to the world
+     */
     @Override
     public void start() {
         try {
@@ -116,16 +119,11 @@ public class Player extends GameObject {
     }
 
     /**
-     * Falling
-     * Jumping
-     * Running
-     * Walking
-     * Idle
+     * Updates the player state every frame
+     * @param dt the time elapsed from the last update call
      */
-
     @Override
-    public void update(float dt)
-    {
+    public void update(float dt) {
         applyDirection();
         groundCheck = groundCheck || keybindManager.triggered("Levitate");
         if(!groundCheck) {
@@ -171,7 +169,7 @@ public class Player extends GameObject {
     /**
      * Adds player keybindings
      */
-    public void addBindings() {
+    private void addBindings() {
         keybindManager.addKeybind("Jump", KeyEvent.VK_SPACE);
         keybindManager.addKeybind("Left", KeyEvent.VK_LEFT);
         keybindManager.addKeybind("Right", KeyEvent.VK_RIGHT);
@@ -183,7 +181,7 @@ public class Player extends GameObject {
     /**
      * Sets the states for the player
      */
-    public void setStates() {
+    private void setStates() {
         jumpState = new Jumping(100,20, 200, 30);
         walkState = new Walking(175);
         idleState = new Idling(50);
@@ -216,7 +214,7 @@ public class Player extends GameObject {
     /**
      * Apply extra physics information, such as friction
      */
-    public void applyCoefficients() {
+    private void applyCoefficients() {
         kinematics.v.div(vCoEff);
         idleState.traction = (int)(idleState.baseTraction * frictionCoEff);
         turnState.friction = (int)(turnState.baseFriction * frictionCoEff);

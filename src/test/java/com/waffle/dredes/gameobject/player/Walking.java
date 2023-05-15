@@ -2,18 +2,18 @@ package com.waffle.dredes.gameobject.player;
 
 import com.waffle.ecs.GameObject;
 
+/**
+ * A class representing the walking player state
+ */
 public class Walking extends State {
     public float walkSpeed;
-    public Walking(float walkSpeed)
-    {
+    public Walking(float walkSpeed) {
         super(50,50,200);
         this.walkSpeed = walkSpeed;
     }
 
-    public void apply(GameObject gamob)
-    {
-        if(gamob instanceof Player) {
-            Player p = (Player) gamob;
+    public void apply(GameObject gamob) {
+        if(gamob instanceof Player p) {
             p.kinematics.v.x = p.faceLeft ? -walkSpeed : walkSpeed;
             p.kinematics.v.y = 0;
         }

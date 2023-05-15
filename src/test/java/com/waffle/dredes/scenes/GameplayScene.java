@@ -18,6 +18,9 @@ import com.waffle.struct.Vec2f;
 import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
 
+/**
+ * The main gameplay scene
+ */
 public class GameplayScene extends DefaultScene {
 
     public static GameplayScene INSTANCE = null;
@@ -27,11 +30,19 @@ public class GameplayScene extends DefaultScene {
     private RoomLoader roomLoader;
     private Room room;
     private DebugMenu debug;
+
+    /**
+     * Creates a new gameplay scene with a maximum of 10000 entities
+     */
     public GameplayScene() {
         super(10000);
         INSTANCE = this;
     }
 
+    /**
+     * Called every frame, updates systems and state within this scene
+     * @param dt the time between frames
+     */
     @Override
     public void update(float dt) {
         super.update(dt);
@@ -42,6 +53,9 @@ public class GameplayScene extends DefaultScene {
         }
     }
 
+    /**
+     * Called when the Scene is added to the world
+     */
     @Override
     public void start() {
         world.createLayers(3);
@@ -73,6 +87,9 @@ public class GameplayScene extends DefaultScene {
         world.createGameObject(player);
     }
 
+    /**
+     * Called when the scene is set as the current displayed scene
+     */
     @Override
     public void focus() {
         super.focus();

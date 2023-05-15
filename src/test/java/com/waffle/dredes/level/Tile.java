@@ -52,12 +52,17 @@ public class Tile extends GameObject {
                 ((Player)e.getCollidedObject()).vCoEff = velocityCoefficient;
             }
         });
+        collider.isStatic = true;
     }
 
     public Tile copy(int newRow, int newCol)
     {
         return new Tile(render.sprites.get(0).getSprite(), newRow, newCol, fluid, water, friction, velocity);
     }
+
+    /**
+     * Called when the GameObject is added to the world
+     */
     @Override
     public void start(){}
 

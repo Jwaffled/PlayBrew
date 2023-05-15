@@ -11,13 +11,19 @@ import java.util.*;
 
 import static com.waffle.dredes.level.Room.Direction.*;
 import static com.waffle.dredes.level.Room.TileType.*;
+
+/**
+ * A class used for procedural generation of Rooms
+ */
 public class LevelGen {
     public static LevelGen INSTANCE = new LevelGen();
     private RoomLoader roomLoader;
     private Random rng;
 
-    public enum Biome
-    {
+    /**
+     * Represents a type of biome
+     */
+    public enum Biome {
         Grassland,
         Redland,
         Sandland,
@@ -108,11 +114,18 @@ public class LevelGen {
 
     private LevelGen() {}
 
-    public Tile[][] generate(Biome biome, int x, int y, boolean river)
-    {
+    /**
+     * Generates a level
+     * @param biome the biome type to generate
+     * @param x the x coordinate of where to start generation
+     * @param y the y coordinate of where to start generation
+     * @param river true if rivers should be generated
+     * @return a two dimensional tile array with the generated rooms
+     */
+    public Tile[][] generate(Biome biome, int x, int y, boolean river) {
         Tile[] tiles = new Tile[7];
         roomLoader = new RoomLoader();
-        rng = new Random(69);
+        rng = new Random(690);
         Room[][] level = new Room[6][10];
         loadBiome(biome, tiles);
 
@@ -220,11 +233,11 @@ public class LevelGen {
 
     private void collapseRoom(int row, int col, Room[][] level)
     {
-        ArrayList<Room> pool = new ArrayList<Room>();
+        ArrayList<Room> pool = new ArrayList<>();
 
     }
 
-    public void debugLevelGen(Room[][] level, Tile[] tiles)
+    private void debugLevelGen(Room[][] level, Tile[] tiles)
     {
         int[][] debug = new int[36][80];
         for(int i = 0; i < level.length; i++)
@@ -285,48 +298,38 @@ public class LevelGen {
 
 
 
-    public void loadBiome(Biome b, Tile[] tiles)
-    {
+    private void loadBiome(Biome b, Tile[] tiles) {
         tiles[0] = null;
         tiles[3] = new Tile(Utils.loadImageFromPath("DreDes/Tiles/Water.png"), -1, -1, true, true, 1f, new Vec2f(1.5f, 2f));
-        if(b.equals(Biome.Grassland))
-        {
+        if(b.equals(Biome.Grassland)) {
             loadGrass();
             tiles[1] = new Tile(Utils.loadImageFromPath("DreDes/Tiles/Grass.png"), -1, -1, false, false);
             tiles[2] = new Tile(Utils.loadImageFromPath("DreDes/Tiles/Dirt.png"), -1, -1, false, false);
             tiles[4] = new Tile(Utils.loadImageFromPath("DreDes/Tiles/Gravel.png"), -1, -1, false, false, 1.25f, new Vec2f(1.1f,1.5f));
             tiles[5] = new Tile(Utils.loadImageFromPath("DreDes/Tiles/Bricks.png"), -1, -1, false, false);
             tiles[6] = new Tile(Utils.loadImageFromPath("DreDes/Tiles/Tiles.png"), -1, -2, false, false);
-        }
-        else if(b.equals(Biome.Redland))
-        {
+        } else if(b.equals(Biome.Redland)) {
             loadRed();
             tiles[1] = new Tile(Utils.loadImageFromPath("DreDes/Tiles/Clay.png"), -1, -1, false, false);
             tiles[2] = new Tile(Utils.loadImageFromPath("DreDes/Tiles/Gravel.png"), -1, -1, false, false, 1.25f, new Vec2f(1.1f,1.5f));
             tiles[4] = new Tile(Utils.loadImageFromPath("DreDes/Tiles/Sand.png"), -1, -1, false, false, 1.25f, new Vec2f(1.1f,1.1f));
             tiles[5] = new Tile(Utils.loadImageFromPath("DreDes/Tiles/Bricks.png"), -1, -1, false, false);
             tiles[6] = new Tile(Utils.loadImageFromPath("DreDes/Tiles/Tiles.png"), -1, -2, false, false);
-        }
-        else if(b.equals(Biome.Sandland))
-        {
+        } else if(b.equals(Biome.Sandland)) {
             loadSand();
             tiles[1] = new Tile(Utils.loadImageFromPath("DreDes/Tiles/Sand.png"), -1, -1, false, false, 1.25f, new Vec2f(1,1.1f));
             tiles[2] = new Tile(Utils.loadImageFromPath("DreDes/Tiles/Clay.png"), -1, -1, false, false);
             tiles[4] = new Tile(Utils.loadImageFromPath("DreDes/Tiles/Gravel.png"), -1, -1, false, false, 1.25f, new Vec2f(1.1f,1.5f));
             tiles[5] = new Tile(Utils.loadImageFromPath("DreDes/Tiles/Bricks.png"), -1, -1, false, false);
             tiles[6] = new Tile(Utils.loadImageFromPath("DreDes/Tiles/Tiles.png"), -1, -2, false, false);
-        }
-        else if(b.equals(Biome.Saltland))
-        {
+        } else if(b.equals(Biome.Saltland)) {
             loadSalt();
             tiles[1] = new Tile(Utils.loadImageFromPath("DreDes/Tiles/Salt.png"), -1, -1, false, false);
             tiles[2] = new Tile(Utils.loadImageFromPath("DreDes/Tiles/Rock.png"), -1, -1, false, false);
             tiles[4] = new Tile(Utils.loadImageFromPath("DreDes/Tiles/Salt.png"), -1, -1, false, false);
             tiles[5] = new Tile(Utils.loadImageFromPath("DreDes/Tiles/Dirt.png"), -1, -1, false, false);
             tiles[6] = new Tile(Utils.loadImageFromPath("DreDes/Tiles/Ice.png"), -1, -2, false, false, .5f, new Vec2f(1,1));
-        }
-        else if(b.equals(Biome.Stoneland))
-        {
+        } else if(b.equals(Biome.Stoneland)) {
             loadStone();
             tiles[1] = new Tile(Utils.loadImageFromPath("DreDes/Tiles/Rock.png"), -1, -1, false, false);
             tiles[2] = new Tile(Utils.loadImageFromPath("DreDes/Tiles/Rock.png"), -1, -1, false, false);
@@ -335,31 +338,27 @@ public class LevelGen {
             tiles[6] = new Tile(Utils.loadImageFromPath("DreDes/Tiles/Ice.png"), -1, -2, false, false, .5f, new Vec2f(1,1));
         }
     }
-    public void loadGrass()
-    {
+    private void loadGrass() {
         loadHillsFolder();
         loadCaveFolder();
         loadPondFolder();
     }
 
-    public void loadRed()
-    {
+    private void loadRed() {
         loadHillsFolder();
         loadCliffFolder();
         loadCaveFolder();
         loadPondFolder();
     }
 
-    public void loadSand()
-    {
+    private void loadSand() {
         loadHillsFolder();
         loadCaveFolder();
         loadPitFolder();
         loadTempleFolder();
     }
 
-    public void loadSalt()
-    {
+    private void loadSalt() {
         loadCliffFolder();
         loadCaveFolder();
         loadPitFolder();
@@ -367,8 +366,7 @@ public class LevelGen {
         loadTempleFolder();
     }
 
-    public void loadStone()
-    {
+    private void loadStone() {
         loadCaveFolder();
         loadMountainFolder();
         loadFrozenPondFolder();
@@ -447,8 +445,7 @@ public class LevelGen {
         }
     }
 
-    public Room pickRoom(Room[][] rooms, int row, int col)
-    {
+    private Room pickRoom(Room[][] rooms, int row, int col) {
         //Collection<Room> pool = roomLoader.getRooms().values();
 //        pool.remove(roomLoader.getRoom("Source"));
 //        pool.remove(roomLoader.getRoom("SourceFlipped"));
@@ -620,7 +617,7 @@ public class LevelGen {
 //        }
 //        return roomLoader.getRoom("SolidGround");
     }
-    public void tryAdd(String center, Room.Direction direction, String neighbor) {
+    private void tryAdd(String center, Room.Direction direction, String neighbor) {
         Room c = roomLoader.getRoom(center);
         Room n = roomLoader.getRoom(neighbor);
 
@@ -637,7 +634,7 @@ public class LevelGen {
         }
     }
 
-    public void tryAdd(String center, Room.Direction direction, String neighbor, boolean flipped) {
+    private void tryAdd(String center, Room.Direction direction, String neighbor, boolean flipped) {
         Room c = roomLoader.getRoom(center);
         Room n = roomLoader.getRoom(neighbor);
 
@@ -666,7 +663,7 @@ public class LevelGen {
     /**
      * Checks for every single room combination
      */
-    public void addAllNeighbors() {
+    private void addAllNeighbors() {
         //tryAdd(room, direction, neighbor) for all the rooms and their possible neighbors
         //region Universal Tiles
         tryAdd("OpenAir", UP_LEFT, "OpenAir");

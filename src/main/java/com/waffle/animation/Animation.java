@@ -35,20 +35,20 @@ public abstract class Animation {
         counter = new UpdateCounter(1);
     }
 
-    public Animation(String directory) throws IOException {
-        final File f = new File(getClass().getClassLoader().getResource(directory).getPath());
-        final String[] files = f.list();
-        frames = new Sprite[files.length];
-        for(int i = 0; i < files.length; i++) {
-            frames[i] = new Sprite(directory + "/" + files[i]);
-        }
-        counter = new UpdateCounter(1);
-    }
+//    public Animation(String directory) throws IOException {
+//        final File f = new File(getClass().getClassLoader().getResource(directory).getPath());
+//        final String[] files = f.list();
+//        frames = new Sprite[files.length];
+//        for(int i = 0; i < files.length; i++) {
+//            frames[i] = new Sprite(directory + "/" + files[i]);
+//        }
+//        counter = new UpdateCounter(1);
+//    }
 
-    public Animation(String dir, int updateFrequency) throws IOException {
-        this(dir);
-        counter = new UpdateCounter(updateFrequency);
-    }
+//    public Animation(String dir, int updateFrequency) throws IOException {
+//        this(dir);
+//        counter = new UpdateCounter(updateFrequency);
+//    }
 
     public void setUpdateFrequency(int frequency) {
         counter = new UpdateCounter(frequency);

@@ -15,12 +15,18 @@ import java.awt.*;
 
 import static com.waffle.core.Constants.*;
 
+/**
+ * A debug menu for viewing information about specifics of the game
+ */
 public class DebugMenu extends GameObject {
     private GeometryComponent outline;
     private TransformComponent transform;
     private FontRenderComponent text;
     private static final int STRING_COUNT = 12;
 
+    /**
+     * Called when the GameObject is added to the world
+     */
     @Override
     public void start() {
         outline = new GeometryComponent();
@@ -30,6 +36,10 @@ public class DebugMenu extends GameObject {
         transform = new TransformComponent(20, 20);
     }
 
+    /**
+     * Updates all of the statistics shown in the viewing window of this menu
+     * @param dt not used
+     */
     @Override
     public void update(float dt) {
         KinematicComponent k = GameplayScene.INSTANCE.player.kinematics;

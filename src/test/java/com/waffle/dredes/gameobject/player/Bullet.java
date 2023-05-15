@@ -39,6 +39,9 @@ public class Bullet extends GameObject {
 
     }
 
+    /**
+     * Called when the GameObject is added to the world
+     */
     @Override
     public void start() {
 

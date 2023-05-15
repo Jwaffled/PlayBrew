@@ -20,13 +20,13 @@ public class LoopingAnimation extends Animation {
         numLoops = 0;
     }
 
-    public LoopingAnimation(String dir) throws IOException {
-        super(dir);
-    }
-
-    public LoopingAnimation(String dir, int updateFrequency) throws IOException {
-        super(dir, updateFrequency);
-    }
+//    public LoopingAnimation(String dir) throws IOException {
+//        super(dir);
+//    }
+//
+//    public LoopingAnimation(String dir, int updateFrequency) throws IOException {
+//        super(dir, updateFrequency);
+//    }
 
     /**
      * Instantiates a LoopingAnimation given file path names

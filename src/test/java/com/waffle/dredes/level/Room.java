@@ -7,6 +7,9 @@ import com.waffle.struct.Vec2f;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+/**
+ * A class representing a "Room": an 8 by 6 tile rectangle with rules for its placement
+ */
 public class Room {
     public ArrayList<Room>[] strongNeighbors;
     public ArrayList<Room>[] weakNeighbors;
@@ -15,7 +18,9 @@ public class Room {
     public int[][] configuration;
     public String name;
 
-
+    /**
+     * Represents a type of tile in a biome
+     */
     public enum TileType {
         AIR,
         SURFACE,
@@ -27,9 +32,7 @@ public class Room {
     }
 
     /**
-     * 0 1 2
-     * 3 _ 4
-     * 5 6 7
+     * Represents a direction relative to some center location
      */
     public enum Direction {
         UP_LEFT,
@@ -41,8 +44,13 @@ public class Room {
         DOWN_LEFT,
         LEFT
     }
-    public static Direction getDirection(Vec2f vector)
-    {
+
+    /**
+     * Converts a vector into a direction object
+     * @param vector the vector to convert
+     * @return a direction associated with the given vector
+     */
+    public static Direction getDirection(Vec2f vector) {
         if(vector.x > 0)
         {
             if(vector.y > 0)
@@ -78,6 +86,9 @@ public class Room {
         return null;
     }
 
+    /**
+     * Constructs an empty room with no meaningful state
+     */
     public Room() {
         configuration = new int[6][8];
         weakNeighbors = new ArrayList[8];
@@ -90,6 +101,10 @@ public class Room {
         flipped = false;
     }
 
+    /**
+     * Sets the layout of the room, each int represents a TileType
+     * @param config the new layout
+     */
     public void addConfig(int[][] config) {
         for(int i = 0; i < configuration.length; i++) {
             for(int j = 0; j < configuration[i].length; j++) {
@@ -98,12 +113,23 @@ public class Room {
         }
     }
 
+    /**
+     * Adds a "strong" neighbor rule to this room
+     * @param d the direction to add the neighbor in
+     * @param room the room to add
+     */
     public void addNeighbor(Direction d , Room room) {
         strongNeighbors[d.ordinal()].add(room);
         weakNeighbors[d.ordinal()].add(room);
         important = true;
     }
 
+    /**
+     * Adds a neighbor rule to this room
+     * @param d the direction to add the neighbor in
+     * @param room the room to add
+     * @param strong if the room is a weak or strong relationship
+     */
     public void addNeighbor(Direction d , Room room, boolean strong) {
         if(strong)
         {
@@ -115,6 +141,11 @@ public class Room {
         }
     }
 
+    /**
+     * Returns a random valid neighbor based on the rules of this Room
+     * @param d the direction to check
+     * @return a random valid neighbor based on the rules of this Room
+     */
     public Room getNeighbor(Direction d) {
         if(strongNeighbors[d.ordinal()].size() == 0)
         {
@@ -125,6 +156,12 @@ public class Room {
 
     }
 
+    /**
+     * Returns the list of valid rooms associated with a given direction
+     * @param d the direction to check
+     * @param strong whether to return strong relationships
+     * @return the list of valid rooms associated with a given direction
+     */
     public Room[] getRoomPool(Direction d, boolean strong) {
         if(strong)
         {
@@ -153,6 +190,10 @@ public class Room {
 
     }
 
+    /**
+     * Returns a copy of this room, but mirrored
+     * @return a copy of this room, but mirrored
+     */
     public Room flip() {
         int[][] neoConfig = new int[6][8];
         for(int i = 0; i < configuration.length; i++) {
@@ -188,11 +229,16 @@ public class Room {
         return ret;
     }
 
+    /**
+     *
+     * @param obj
+     * @return
+     */
     @Override
     public boolean equals(Object obj) {
-        if(obj instanceof Room)
+        if(obj instanceof Room r)
         {
-            int[][] comp = ((Room)obj).configuration;
+            int[][] comp = r.configuration;
             for(int i = 0; i < comp.length; i++)
             {
                 for(int j = 0; j < comp[i].length; j++)
@@ -208,6 +254,10 @@ public class Room {
         return false;
     }
 
+    /**
+     * Returns a string representation of this object
+     * @return a string representation of this object
+     */
     public String toString()
     {
         return name;

@@ -5,12 +5,17 @@ import com.waffle.core.Utils;
 import java.util.*;
 
 /**
- * A manager class for loading "rooms" (8 by 6 tilemaps used for WFC)<br>
+ * A manager class for loading "rooms" (8 by 6 tilemaps used for procedural generation)<br>
  * <b>ALL</b> data files are searched for inside of the <code>resources</code> folder
  * <pre>{@code
  * // Room.txt
  * RoomName
- * data
+ * 0 0 0 0 0 0 0 0
+ * 1 0 0 2 1 3 1 2
+ * 0 0 1 2 5 3 4 2
+ * 1 3 5 3 2 1 0 0
+ * 1 5 0 0 0 0 0 0
+ * 1 1 1 1 1 1 1 1
  * }</pre>
  */
 public class RoomLoader {
@@ -46,6 +51,7 @@ public class RoomLoader {
     }
 
     /**
+     * @deprecated Does not work in compiled JAR files, prefer using addRoomPath(String) instead.<br>
      * Adds a directory to the loader and loads all non-directory paths within it
      * @param dir the path to the folder to add
      */

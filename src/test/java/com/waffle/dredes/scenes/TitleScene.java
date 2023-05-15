@@ -13,21 +13,34 @@ import com.waffle.ui.TexturedButton;
 import java.awt.*;
 import java.awt.event.MouseEvent;
 
+/**
+ * A main menu scene
+ */
 public class TitleScene extends DefaultScene {
     private Background sceneBackground;
     private Button quitBTN;
     private Button playBTN;
     private Button optBTN;
 
+    /**
+     * Constructs a main menu scene with a maximum of 25 entities
+     */
     public TitleScene() {
         super(25);
     }
 
+    /**
+     * Updates just the GameObjects within this scene; no systems are updated
+     * @param dt the time between frames
+     */
     @Override
     public void update(float dt) {
         world.update(dt);
     }
 
+    /**
+     * Called when the Scene is added to the world
+     */
     @Override
     public void start() {
         world.createLayers(2);

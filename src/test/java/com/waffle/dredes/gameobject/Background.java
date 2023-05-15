@@ -15,11 +15,21 @@ public class Background extends GameObject {
     private final String pathToImage;
     private final int width, height;
 
+    /**
+     * Constructs a new background
+     * @param path the path to the image to be used for the background
+     * @param w the width of the sprite
+     * @param h the height of the sprite
+     */
     public Background(String path, int w, int h) {
         pathToImage = path;
         width = w;
         height = h;
     }
+
+    /**
+     * Called when the GameObject is added to the world
+     */
     @Override
     public void start() {
         try {
@@ -33,6 +43,10 @@ public class Background extends GameObject {
 
     }
 
+    /**
+     * Called every frame; Unused
+     * @param dt not used
+     */
     @Override
     public void update(float dt) {
 

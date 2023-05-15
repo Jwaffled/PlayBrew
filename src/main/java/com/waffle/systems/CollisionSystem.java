@@ -17,23 +17,28 @@ public class CollisionSystem extends ECSSystem {
     public void update(float dt) {
         for(DynamicQuadTreeContainer<Integer> tree : quadTrees) {
             Map<Integer, ColliderComponent> toCall = new HashMap<>();
-            List<Integer> list = tree.search(new Rectangle(new Vec2f(0, -200), new Vec2f(10000, 10000)));
+            List<Integer> list = tree.search(new Rectangle(new Vec2f(0, -200), new Vec2f(3000, 1000)));
             for(int entity : list) {
                 TransformComponent t = world.getComponent(entity, TransformComponent.class);
                 ColliderComponent c = world.getComponent(entity, ColliderComponent.class);
-                tree.remove(entityToIndexMap.get(entity));
+                if(!c.isStatic) {
+                    tree.remove(entityToIndexMap.get(entity));
+                }
                 Vec2f colliderPos = new Vec2f(t.position).add(c.position);
                 Rectangle searchRect = new Rectangle(colliderPos, c.size);
-                entityToIndexMap.put(entity, tree.insert(entity, searchRect));
-                for(int checkAgainst : tree.search(searchRect)) {
-                    if(entity == checkAgainst) continue;
-                    TransformComponent tTwo = world.getComponent(checkAgainst, TransformComponent.class);
-                    ColliderComponent cTwo = world.getComponent(checkAgainst, ColliderComponent.class);
-                    if(intersects(c, cTwo, t.position, tTwo.position)) {
-                        toCall.put(entity, cTwo);
-                        toCall.put(checkAgainst, c);
+                if(!c.isStatic) {
+                    entityToIndexMap.put(entity, tree.insert(entity, searchRect));
+                    for(int checkAgainst : tree.search(searchRect)) {
+                        if(entity == checkAgainst) continue;
+                        TransformComponent tTwo = world.getComponent(checkAgainst, TransformComponent.class);
+                        ColliderComponent cTwo = world.getComponent(checkAgainst, ColliderComponent.class);
+                        if(intersects(c, cTwo, t.position, tTwo.position)) {
+                            toCall.put(entity, cTwo);
+                            toCall.put(checkAgainst, c);
+                        }
                     }
                 }
+
             }
             for(Integer key : toCall.keySet()) {
                 toCall.get(key).listener.collideWith(new CollisionEvent(world.getGameObject(key)));

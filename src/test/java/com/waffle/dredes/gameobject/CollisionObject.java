@@ -11,6 +11,7 @@ import com.waffle.struct.Vec2f;
 
 import java.awt.image.BufferedImage;
 
+// Don't bother documenting this class, will be deleted in final version
 public class CollisionObject extends GameObject {
     public TransformComponent transform;
     public SpriteRenderComponent spriteRenderComponent;
@@ -18,6 +19,9 @@ public class CollisionObject extends GameObject {
     private KinematicComponent kinematics;
     public long totalCollisions = 0;
 
+    /**
+     * Called when the GameObject is added to the world
+     */
     @Override
     public void start() {
         transform = new TransformComponent(400, 300);

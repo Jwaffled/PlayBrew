@@ -10,24 +10,40 @@ import com.waffle.render.Camera;
 
 import java.awt.event.KeyEvent;
 
+/**
+ * The main game loop and manager for the entire game
+ */
 public class MainGame extends Game {
     public static MainGame INSTANCE = null;
     public KeybindManager keybindManager;
 
+    /**
+     * Constructs a new game with default camera settings and video settings
+     */
     public MainGame() {
         super(10, 60, 960, 540, "Dreams & Deserts", new Camera(960, 540));
     }
 
+    /**
+     * Updates all of the state within the game
+     * @param dt the time between frames
+     */
     @Override
     public void update(float dt) {
         super.update(dt);
     }
 
+    /**
+     * Frees resources associated with this game
+     */
     @Override
     public void free() {
 
     }
 
+    /**
+     * Called before the main game loop starts
+     */
     @Override
     public void start() {
         INSTANCE = this;
@@ -52,10 +68,6 @@ public class MainGame extends Game {
     }
 
     private void addKeybinds() {
-//        keybindManager.addKeybind("PlayerLeft", KeyEvent.VK_A);
-//        keybindManager.addKeybind("PlayerRight", KeyEvent.VK_D);
-//        keybindManager.addKeybind("PlayerJump", KeyEvent.VK_W);
-//        keybindManager.addKeybind("PlayerShoot", KeyEvent.VK_SPACE);
         keybindManager.addKeybind("Pause", KeyEvent.VK_ESCAPE);
     }
 }
