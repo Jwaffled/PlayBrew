@@ -13,6 +13,7 @@ public class Room {
     boolean important;
     boolean flipped;
     public int[][] configuration;
+    public String name;
 
 
     public enum TileType {
@@ -147,6 +148,7 @@ public class Room {
         for(int i = 0; i < toCast.length; i++) {
             ret[i] = (Room)toCast[i];
         }
+        //System.out.println(Arrays.toString(ret));
         return ret;
 
     }
@@ -182,6 +184,7 @@ public class Room {
         ret.strongNeighbors = neoStrongNeighbors;
         ret.weakNeighbors = neoWeakNeighbors;
         ret.flipped = true;
+        ret.name += "Flipped";
         return ret;
     }
 
