@@ -132,6 +132,14 @@ public class Room {
             for(int i = 0; i < toCast.length; i++) {
                 ret[i] = (Room)toCast[i];
             }
+            if(flipped)
+            {
+                for(int i = 0; i < ret.length; i++)
+                {
+                    ret[i] = ret[i].flip();
+                }
+            }
+            //System.out.println(Arrays.toString(ret));
             return ret;
         }
         Room[] ret = new Room[weakNeighbors[d.ordinal()].size()];
@@ -177,7 +185,31 @@ public class Room {
         return ret;
     }
 
-//    public String toString() {
+    @Override
+    public boolean equals(Object obj) {
+        if(obj instanceof Room)
+        {
+            int[][] comp = ((Room)obj).configuration;
+            for(int i = 0; i < comp.length; i++)
+            {
+                for(int j = 0; j < comp[i].length; j++)
+                {
+                    if(comp[i][j] != configuration[i][j])
+                    {
+                        return false;
+                    }
+                }
+            }
+            return true;
+        }
+        return false;
+    }
+
+    public String toString()
+    {
+        return name;
+    }
+//        public String toString() {
 //        return String.format("""
 //                Neighbors: %s
 //                Configuration: %s

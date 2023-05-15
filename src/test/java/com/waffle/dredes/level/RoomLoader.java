@@ -87,6 +87,7 @@ public class RoomLoader {
 
         room.addConfig(arr);
         rooms.put(name, room);
+        rooms.put(name + "Flipped", flipped);
     }
 
     /**
