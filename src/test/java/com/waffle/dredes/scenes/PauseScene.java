@@ -17,15 +17,16 @@ import java.util.Timer;
  */
 public class PauseScene extends DefaultScene {
     private Button resume;
-    private Button options;
+
     private Button exit;
+    private Button map;
     private KeybindManager keybindManager;
 
     /**
      * Creates a new pause scene with a maximum of 15 entities
      */
     public PauseScene() {
-        super(15);
+        super(100);
     }
 
     /**
@@ -69,14 +70,40 @@ public class PauseScene extends DefaultScene {
                     }
                 })
                 .buildButton();
-        options = Button.newBuilder()
+        map = Button.newBuilder()
                 .setX(400)
                 .setY(350)
                 .setWidth(100)
                 .setHeight(20)
-                .setButtonMessage("Options")
+                .setButtonMessage("Level Map")
                 .setDrawMode(Constants.DrawMode.OUTLINE)
-                .buildButton();
+                .addButtonListener(new ButtonEventListener() {
+                    @Override
+                    public void buttonClicked(MouseEvent e) {
+                        System.out.println(MainGame.INSTANCE.getPreviousSceneName());
+                        MainGame.INSTANCE.setCurrentScene("MapScene");
+                    }
+
+                    @Override
+                    public void buttonPressed(MouseEvent e) {
+
+                    }
+
+                    @Override
+                    public void buttonReleased(MouseEvent e) {
+
+                    }
+
+                    @Override
+                    public void mouseEntered() {
+
+                    }
+
+                    @Override
+                    public void mouseExited() {
+
+                    }
+                }).buildButton();
 
         exit = Button.newBuilder()
                 .setX(400)
@@ -117,7 +144,7 @@ public class PauseScene extends DefaultScene {
         keybindManager.addKeybind("Unpause", KeyEvent.VK_ESCAPE);
 
         world.createGameObject(resume);
-        world.createGameObject(options);
+        world.createGameObject(map);
         world.createGameObject(exit);
     }
 
@@ -139,7 +166,7 @@ public class PauseScene extends DefaultScene {
     @Override
     public void focus() {
         resume.setActive(true);
-        options.setActive(true);
+        map.setActive(true);
         exit.setActive(true);
         super.focus();
     }
@@ -147,7 +174,7 @@ public class PauseScene extends DefaultScene {
     @Override
     public void lostFocus() {
         resume.setActive(false);
-        options.setActive(false);
+        map.setActive(false);
         exit.setActive(false);
     }
 }

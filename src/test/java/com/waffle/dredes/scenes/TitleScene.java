@@ -97,7 +97,7 @@ public class TitleScene extends DefaultScene {
                 .addButtonListener(new ButtonEventListener() {
                     @Override
                     public void buttonClicked(MouseEvent e) {
-                        MainGame.INSTANCE.setCurrentScene("GameplayScene");;
+                        MainGame.INSTANCE.setCurrentScene("MapScene");
                     }
 
                     @Override
@@ -118,7 +118,7 @@ public class TitleScene extends DefaultScene {
                 .setY(315)
                 .setWidth(140)
                 .setHeight(50)
-                .setButtonMessage("OPTIONS")
+                .setButtonMessage("HOW TO \nPLAY")
                 .setMessageOffset(new Vec2f(15,15))
                 .setFontColor(Color.white)
                 .setShapeType(Constants.ShapeType.ELLIPSE)
@@ -126,7 +126,7 @@ public class TitleScene extends DefaultScene {
                 .addButtonListener(new ButtonEventListener() {
                     @Override
                     public void buttonClicked(MouseEvent e) {
-                        System.out.println("Does Nothing Yet");
+                        MainGame.INSTANCE.setCurrentScene("TutorialScene");
                     }
 
                     @Override

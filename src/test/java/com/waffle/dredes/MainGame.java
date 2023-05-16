@@ -1,9 +1,7 @@
 package com.waffle.dredes;
 
 import com.waffle.core.Game;
-import com.waffle.dredes.scenes.GameplayScene;
-import com.waffle.dredes.scenes.PauseScene;
-import com.waffle.dredes.scenes.TitleScene;
+import com.waffle.dredes.scenes.*;
 import com.waffle.input.Input;
 import com.waffle.input.KeybindManager;
 import com.waffle.render.Camera;
@@ -53,9 +51,11 @@ public class MainGame extends Game {
         keybindManager = new KeybindManager();
 
 
+        addScene("MapScene", new MapScene());
         addScene("TitleScene", new TitleScene());
         addScene("GameplayScene", new GameplayScene());
         addScene("PauseScene", new PauseScene());
+        addScene("TutorialScene", new TutorialScene());
         setCurrentScene("TitleScene");
 
         window.addMouseListener(Input.getInstance());

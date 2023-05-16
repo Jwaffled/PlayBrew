@@ -5,6 +5,7 @@ import com.waffle.components.KinematicComponent;
 import com.waffle.components.SpriteRenderComponent;
 import com.waffle.components.TransformComponent;
 import com.waffle.core.SpriteRenderer;
+import com.waffle.core.Utils;
 import com.waffle.dredes.gameobject.player.Bullet;
 import com.waffle.dredes.level.Tile;
 import com.waffle.ecs.GameObject;
@@ -12,7 +13,14 @@ import com.waffle.struct.Vec2f;
 
 import java.awt.image.BufferedImage;
 
-public abstract class Enemy extends GameObject {
+public class Enemy extends GameObject {
+
+    public enum EnemyType
+    {
+        SCORPION
+    }
+    public EnemyType type;
+    public boolean faceLeft;
     public ColliderComponent hb;
     public boolean gc;
     public float hp;
@@ -55,6 +63,17 @@ public abstract class Enemy extends GameObject {
     }
     public  void applyEffect(GameObject gameObject)
     {
+
+    }
+
+    @Override
+    public void update(float dt) {
+
+    }
+
+    public void mutateToScorpion()
+    {
+        sprite = Utils.loadImageFromPath("DreDes/Scorpion.png");
 
     }
 }

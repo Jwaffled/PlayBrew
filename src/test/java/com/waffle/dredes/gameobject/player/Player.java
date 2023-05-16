@@ -61,12 +61,13 @@ public class Player extends GameObject {
             BufferedImage b = Utils.loadImageFromPath("DreDes/DreDes-Will-FFPose-Gun.png");
             sprites = new SpriteRenderComponent();
             sprites.sprites.add(new SpriteRenderer(new Vec2f(), b, b.getWidth(), b.getHeight()));
-            transform = new TransformComponent(400, 0);
+            transform = new TransformComponent(64, 448);
             kinematics = new KinematicComponent(new Vec2f(), new Vec2f(), 0, 1);
             gc = new ColliderComponent(new Vec2f(0, 0), new Vec2f(b.getWidth(), b.getHeight()) , e -> {
                 if(e.getCollidedObject() instanceof Tile tile) {
-                    groundCheck = true;
+
                     if(!tile.fluid) {
+                        groundCheck = true;
                         Vec2f playerMidpoint = new Vec2f(transform.position.x + b.getWidth() / 2f, transform.position.y + b.getHeight() / 2f);
                         Vec2f tileMidpoint = new Vec2f(tile.transform.position.x + tile.width / 2f, tile.transform.position.y + tile.height / 2f);
                         // Calculate collision normal
@@ -124,6 +125,16 @@ public class Player extends GameObject {
      */
     @Override
     public void update(float dt) {
+        if(transform.position.x < 1)
+        {
+            transform.position.x = 64;
+            kinematics.v.x = 100;
+        }
+        if(transform.position.x > 2559)
+        {
+            transform.position.x = 2528;
+            kinematics.v.x = -100;
+        }
         applyDirection();
         groundCheck = groundCheck || keybindManager.triggered("Levitate");
         if(!groundCheck) {
@@ -152,11 +163,12 @@ public class Player extends GameObject {
                 current = idleState.activate();
             }
         }
-        applyCoefficients();
+
         current.apply(this);
         if(kinematics.v.x > 0 && wallCheckR || kinematics.v.x < 0 && wallCheckL) {
             kinematics.v.x = 0;
         }
+        applyCoefficients();
         vCoEff.x = 1;
         vCoEff.y = 1;
         frictionCoEff = 1;

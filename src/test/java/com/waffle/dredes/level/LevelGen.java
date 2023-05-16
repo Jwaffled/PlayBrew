@@ -125,7 +125,7 @@ public class LevelGen {
     public Tile[][] generate(Biome biome, int x, int y, boolean river) {
         Tile[] tiles = new Tile[7];
         roomLoader = new RoomLoader();
-        rng = new Random(690);
+        rng = new Random(x ^ y);
         Room[][] level = new Room[6][10];
         loadBiome(biome, tiles);
 
@@ -148,8 +148,7 @@ public class LevelGen {
 
         int height = 2; //decides starting height for initial snaking
         int direction = 1; //decides initail vertical traversal direction
-        //level[2][0] = roomLoader.getRoom("Camp"); //loading Camp
-        //level[2][9] = roomLoader.getRoom("Source"); //loading Source
+
 
         level[2][0] = roomLoader.getRoom("Camp");
         level[2][9] = roomLoader.getRoom("Source");
@@ -167,37 +166,6 @@ public class LevelGen {
             }
         }
 
-
-//        for(int j = height; j < level.length; j++) //Goes inward a column at a time until at the center
-//        {
-//            for(int i = 1; i < level[0].length - 1; i++) //goes until a vertical bound in reached
-//            {
-//                Room room = pickRoom(level, i, j);
-//                if(room != null) {
-//                    Constants.LOGGER.logWarning("Room picked: " + room.name + " i: " + i + " j: " + j);
-//                }
-//                level[j][i] = room; //picks a room on the left side
-//                //level[j][level[j].length - 1 - i] = pickRoom(level, j, level[j].length - 1 - i); //picks a room on the right side, opposite to the one on the left
-//            }
-//        }
-//        for(int j = 1; j > 0; j--) //Goes inward a column at a time until at the center
-//        {
-//            for(int i = 1; i < level[0].length - 1; i++) //goes until a vertical bound in reached
-//            {
-//                level[j][i] = pickRoom(level, i, j); //picks a room on the left side
-//                //level[j][level[j].length - 1 - i] = pickRoom(level, j, level[j].length - 1 - i); //picks a room on the right side, opposite to the one on the left
-//            }
-//        }
-//        for(int i = 0; i < level[0].length; i++) //goes right to left
-//        {
-//            for(int j = level.length - 1; j > 0; j--) //bottom to top
-//            {
-//                if(level[j][i] == null) //checks if a room has been generated yet
-//                {
-//                    //level[j][i] = pickRoom(level, j, i); //if not, then pick a room given the adjacent tiles
-//                }
-//            }
-//        }
         Tile[][] ret = new Tile[36][80]; //creates the return object
         for(int i = 0; i < level.length; i++) //traverses the newly-filled Room[][]
         {
