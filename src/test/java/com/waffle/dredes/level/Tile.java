@@ -33,6 +33,8 @@ public class Tile extends GameObject {
             touchingPlayer = true;
         });
         friction = 1;
+        this.fluid = fluid;
+        this.water = water;
         velocity = new Vec2f(1,1);
     }
     public Tile(BufferedImage sprite, int row ,int col, boolean fluid, boolean water, float frictionCoefficient, Vec2f velocityCoefficient) {
@@ -52,6 +54,8 @@ public class Tile extends GameObject {
                 ((Player)e.getCollidedObject()).vCoEff = velocityCoefficient;
             }
         });
+        this.fluid = fluid;
+        this.water = water;
         collider.isStatic = true;
     }
 
