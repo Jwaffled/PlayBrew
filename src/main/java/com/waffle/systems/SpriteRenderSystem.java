@@ -51,11 +51,13 @@ public class SpriteRenderSystem extends ECSSystem {
                     if(s.isFlipped()) {
                         tr.scale(-1, 1);
                         tr.translate(-s.getSprite().getWidth(), 0);
+                        tr.translate(-finalX, finalY);
+                    } else {
+                        tr.translate(finalX, finalY);
                     }
-
-                    tr.translate(finalX, finalY);
                     tr.rotate(-comp.rotation, 0, 0);
                     tr.scale(finalWidth / (float)s.getSprite().getWidth(), finalHeight / (float)s.getSprite().getHeight());
+
 
                     ((Graphics2D)window).drawImage(s.getSprite(), tr, null);
 
