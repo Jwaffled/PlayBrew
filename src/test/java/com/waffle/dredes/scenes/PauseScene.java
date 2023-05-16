@@ -51,22 +51,22 @@ public class PauseScene extends DefaultScene {
 
                     @Override
                     public void buttonPressed(MouseEvent e) {
-
+                        System.out.println("Resume pressed");
                     }
 
                     @Override
                     public void buttonReleased(MouseEvent e) {
-
+                        System.out.println("Resume released");
                     }
 
                     @Override
                     public void mouseEntered() {
-
+                        System.out.println("Resume entered");
                     }
 
                     @Override
                     public void mouseExited() {
-
+                        System.out.println("Resume exited");
                     }
                 })
                 .buildButton();
@@ -80,7 +80,6 @@ public class PauseScene extends DefaultScene {
                 .addButtonListener(new ButtonEventListener() {
                     @Override
                     public void buttonClicked(MouseEvent e) {
-                        System.out.println(MainGame.INSTANCE.getPreviousSceneName());
                         MainGame.INSTANCE.setCurrentScene("MapScene");
                     }
 
@@ -142,6 +141,10 @@ public class PauseScene extends DefaultScene {
 
         keybindManager = new KeybindManager();
         keybindManager.addKeybind("Unpause", KeyEvent.VK_ESCAPE);
+
+        resume.setActive(false);
+        map.setActive(false);
+        exit.setActive(false);
 
         world.createGameObject(resume);
         world.createGameObject(map);

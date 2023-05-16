@@ -99,7 +99,9 @@ public class World {
     private void sweepMarked() {
         for(int gameObjID : toRemove) {
             GameObject o = gameObjects.get(gameObjID);
-            destroyEntity(o.ID, o.layer);
+            if(o != null) {
+                destroyEntity(o.ID, o.layer);
+            }
         }
         gameObjects.keySet().removeAll(toRemove);
         toRemove.clear();

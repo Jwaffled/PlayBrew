@@ -49,22 +49,21 @@ public class GameplayScene extends DefaultScene {
         if(keybindManager.triggered("Pause") && getFramesActive() >= 20) {
             MainGame.INSTANCE.setCurrentScene("PauseScene");
         }
-        if(source.health < 1)
-        {
+
+        if(source.health < 1) {
             world.removeGameObject(source);
-            Vec2f temp = new Vec2f(((MapScene)MainGame.INSTANCE.getPreviousScene()).pos.x - 37.5f, ((MapScene)MainGame.INSTANCE.getPreviousScene()).pos.y - 37.5f);
-            ((MapScene)MainGame.INSTANCE.getPreviousScene()).icon.transformComponent.position = new Vec2f(temp);
-            for(Tile[] arr : tiles)
-            {
-                for(Tile t : arr)
-                {
-                    if(t != null)
-                    {
-                        world.removeGameObject(t);
+            if(MainGame.INSTANCE.getPreviousScene() instanceof MapScene mapScene) {
+                Vec2f temp = new Vec2f(mapScene.pos.x - 37.5f, mapScene.pos.y - 37.5f);
+                mapScene.icon.transformComponent.position = new Vec2f(temp);
+                for(Tile[] arr : tiles) {
+                    for(Tile t : arr) {
+                        if(t != null) {
+                            world.removeGameObject(t);
+                        }
                     }
                 }
+                MainGame.INSTANCE.setCurrentScene("MapScene");
             }
-            MainGame.INSTANCE.setCurrentScene("MapScene");
         }
     }
 
@@ -97,9 +96,9 @@ public class GameplayScene extends DefaultScene {
     @Override
     public void focus() {
         super.focus();
-        if(MainGame.INSTANCE.getPreviousSceneName().equals("MapScene")) {
+        if(MainGame.INSTANCE.getPreviousScene() instanceof MapScene mapScene) {
             LevelGen l = LevelGen.INSTANCE;
-            Vec2f temp = new Vec2f(((MapScene)MainGame.INSTANCE.getPreviousScene()).pos.x, ((MapScene)MainGame.INSTANCE.getPreviousScene()).pos.y);
+            Vec2f temp = new Vec2f(mapScene.pos.x, mapScene.pos.y);
             if(tiles != null) {
                 for(Tile[] a : tiles) {
                     for(Tile tile : a) {
@@ -110,7 +109,7 @@ public class GameplayScene extends DefaultScene {
                 }
             }
 
-            tiles = l.generate(((MapScene)MainGame.INSTANCE.getPreviousScene()).biome, (int)temp.x, (int)temp.y, false);
+            tiles = l.generate(mapScene.biome, (int)temp.x, (int)temp.y, false);
 
             for(Tile[] a : tiles) {
                 for(Tile tile : a) {

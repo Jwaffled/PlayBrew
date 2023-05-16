@@ -55,8 +55,7 @@ public class MapScene extends DefaultScene {
         pos = new Vec2f(i.getMousePosition().x, i.getMousePosition().y);
         world.update(dt);
 
-        if(keybindManager.triggered("Click") && inRange() && validBounds())
-        {
+        if(keybindManager.triggered("Click") && inRange() && validBounds()) {
             System.out.println("Valid Click");
             Color pixel = new Color(bgMap.image.getRGB((int)pos.x, (int)pos.y));
             if(pixel.getRed() > 175 && pixel.getGreen() < 150)
@@ -80,8 +79,6 @@ public class MapScene extends DefaultScene {
                 biome = LevelGen.Biome.Stoneland;
             }
             MainGame.INSTANCE.setCurrentScene("GameplayScene");
-                //MainGame.INSTANCE.
-
         }
     }
 

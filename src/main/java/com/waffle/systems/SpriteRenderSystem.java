@@ -47,7 +47,6 @@ public class SpriteRenderSystem extends ECSSystem {
                     final int finalY = (int)(drawPos.y * scalar.y);
 
                     AffineTransform tr = new AffineTransform();
-                    // TODO: Get flipping working
                     if(s.isFlipped()) {
                         tr.scale(-1, 1);
                         tr.translate(-s.getSprite().getWidth(), 0);

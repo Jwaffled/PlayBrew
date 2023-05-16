@@ -188,7 +188,7 @@ public class LevelGen {
 
             }
         }
-        debugLevelGen(level, tiles); //prints the room in an ascii format
+        //debugLevelGen(level, tiles); //prints the room in an ascii format
 
 
         return ret; //returns the 2D tile array to create into a ton of serparate game objects
@@ -482,7 +482,7 @@ public class LevelGen {
 
         }
         catch (Exception ignored){}
-        System.out.println("Strong " + test);
+        //System.out.println("Strong " + test);
         if(test.size() > 0)
         {
             test.remove(roomLoader.getRoom("HilltopFlipped"));
@@ -536,12 +536,12 @@ public class LevelGen {
 
         }
         catch (Exception ignored){}
-        System.out.println("Weak " + test);
+        //System.out.println("Weak " + test);
         if(test.size() > 0)
         {
             return test.get(rng.nextInt(test.size()));
         }
-        System.out.printf("[%02d][%02d] cannot be decided%n", row, col);
+        //System.out.printf("[%02d][%02d] cannot be decided%n", row, col);
         return roomLoader.getRoom("OpenAir");
 //        if(row == 1 && col == 0) {
 //            Constants.LOGGER.logDebug("Pool:" + pool);
@@ -590,11 +590,11 @@ public class LevelGen {
         Room n = roomLoader.getRoom(neighbor);
 
         if(c == null) {
-            Constants.LOGGER.logSevere("Room '" + center + "' was not found!");
+            //Constants.LOGGER.logSevere("Room '" + center + "' was not found!");
         }
 
         if(n == null) {
-            Constants.LOGGER.logSevere("Room '" + neighbor + "' was not found!");
+            //Constants.LOGGER.logSevere("Room '" + neighbor + "' was not found!");
         }
 
         if(c != null && n != null) {
@@ -607,11 +607,11 @@ public class LevelGen {
         Room n = roomLoader.getRoom(neighbor);
 
         if(c == null) {
-            Constants.LOGGER.logSevere("Room '" + center + "' was not found!");
+            //Constants.LOGGER.logSevere("Room '" + center + "' was not found!");
         }
 
         if(n == null) {
-            Constants.LOGGER.logSevere("Room '" + neighbor + "' was not found!");
+            //Constants.LOGGER.logSevere("Room '" + neighbor + "' was not found!");
         }
 
         if(c != null && n != null) {
