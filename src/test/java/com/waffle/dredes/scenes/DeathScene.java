@@ -10,6 +10,7 @@ import com.waffle.input.KeybindManager;
 import com.waffle.ui.Button;
 import com.waffle.ui.ButtonEventListener;
 
+import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.util.Timer;
@@ -47,6 +48,7 @@ public class DeathScene extends DefaultScene {
                 .setWidth(100)
                 .setHeight(20)
                 .setButtonMessage("Title Screen")
+                .setFontColor(Color.white)
                 .setDrawMode(Constants.DrawMode.OUTLINE)
                 .addButtonListener(new ButtonEventListener() {
                     @Override
@@ -82,6 +84,7 @@ public class DeathScene extends DefaultScene {
                 .setWidth(100)
                 .setHeight(20)
                 .setButtonMessage("Level Map")
+                .setFontColor(Color.white)
                 .setDrawMode(Constants.DrawMode.OUTLINE)
                 .addButtonListener(new ButtonEventListener() {
                     @Override
@@ -117,6 +120,7 @@ public class DeathScene extends DefaultScene {
                 .setWidth(100)
                 .setHeight(20)
                 .setButtonMessage("Quit Game")
+                .setFontColor(Color.white)
                 .addButtonListener(new ButtonEventListener() {
                     @Override
                     public void buttonClicked(MouseEvent e) {
