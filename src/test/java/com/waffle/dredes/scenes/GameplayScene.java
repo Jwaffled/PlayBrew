@@ -2,6 +2,7 @@ package com.waffle.dredes.scenes;
 
 import com.waffle.core.DefaultScene;
 import com.waffle.dredes.MainGame;
+import com.waffle.dredes.gameobject.Background;
 import com.waffle.dredes.gameobject.CollisionObject;
 import com.waffle.dredes.gameobject.DebugMenu;
 import com.waffle.dredes.gameobject.player.Player;
@@ -20,7 +21,7 @@ public class GameplayScene extends DefaultScene {
     public static GameplayScene INSTANCE = null;
     public KeybindManager keybindManager;
     public Player player;
-    public CollisionObject collisionObject;
+    public Background background;
     private RoomLoader roomLoader;
     public SourceEntity source;
     private Room room;
@@ -44,7 +45,7 @@ public class GameplayScene extends DefaultScene {
         super.update(dt);
         //System.out.println(source.health);
         Camera cam = MainGame.INSTANCE.gameCamera;
-        cam.setPosition(new Vec2f(player.transform.position.x - cam.getSize().x / 2, player.transform.position.y - cam.getSize().y / 2));
+        cam.getPosition().set(player.transform.position.x - cam.getSize().x / 2, player.transform.position.y - cam.getSize().y / 2);
         if(keybindManager.triggered("Pause") && getFramesActive() >= 20) {
             MainGame.INSTANCE.setCurrentScene("PauseScene");
         }
@@ -75,11 +76,9 @@ public class GameplayScene extends DefaultScene {
         world.createLayers(3);
 
 
-
-
+        Camera camera = MainGame.INSTANCE.gameCamera;
+        background = new Background("DreDes/DreDes-BG-Nighttime.png", (int)camera.getSize().x, (int)camera.getSize().y, camera);
         player = new Player();
-
-        collisionObject = new CollisionObject();
 
         debug = new DebugMenu();
 
@@ -87,8 +86,9 @@ public class GameplayScene extends DefaultScene {
         addBindings();
 
         //world.createGameObject(collisionObject);
-        world.createGameObject(debug);
-        world.createGameObject(player);
+        world.createGameObject(debug, 1);
+        world.createGameObject(player, 1);
+        world.createGameObject(background, 0);
     }
 
     /**
@@ -97,22 +97,34 @@ public class GameplayScene extends DefaultScene {
     @Override
     public void focus() {
         super.focus();
-        LevelGen l = LevelGen.INSTANCE;
-        Vec2f temp = new Vec2f(((MapScene)MainGame.INSTANCE.getPreviousScene()).pos.x, ((MapScene)MainGame.INSTANCE.getPreviousScene()).pos.y);
-        tiles = l.generate(((MapScene)MainGame.INSTANCE.getPreviousScene()).biome, (int)temp.x, (int)temp.y, false);
-
-        for(Tile[] a : tiles) {
-            for(Tile tile : a) {
-                if(tile != null)
-                {
-                    world.createGameObject(tile);
+        if(MainGame.INSTANCE.getPreviousSceneName().equals("MapScene")) {
+            LevelGen l = LevelGen.INSTANCE;
+            Vec2f temp = new Vec2f(((MapScene)MainGame.INSTANCE.getPreviousScene()).pos.x, ((MapScene)MainGame.INSTANCE.getPreviousScene()).pos.y);
+            if(tiles != null) {
+                for(Tile[] a : tiles) {
+                    for(Tile tile : a) {
+                        if(tile != null) {
+                            world.removeGameObject(tile);
+                        }
+                    }
                 }
             }
+
+            tiles = l.generate(((MapScene)MainGame.INSTANCE.getPreviousScene()).biome, (int)temp.x, (int)temp.y, false);
+
+            for(Tile[] a : tiles) {
+                for(Tile tile : a) {
+                    if(tile != null) {
+                        world.createGameObject(tile, 1);
+                    }
+                }
+            }
+            player.transform.position.x = 64;
+            player.transform.position.y = 448;
+            source = new SourceEntity();
+            source.health = 3;
+            world.createGameObject(source, 1);
         }
-        player.transform.position = new Vec2f(64, 448);
-        source = new SourceEntity();
-        source.health = 3;
-        world.createGameObject(source);
 
     }
 

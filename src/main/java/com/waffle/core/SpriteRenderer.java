@@ -9,6 +9,7 @@ public class SpriteRenderer {
     private int width;
     private int height;
     private BufferedImage sprite;
+    private boolean flipped = false;
 
     public SpriteRenderer(Vec2f pos, BufferedImage spr, int w, int h) {
         position = pos;
@@ -43,6 +44,14 @@ public class SpriteRenderer {
 
     public BufferedImage getSprite() {
         return sprite;
+    }
+
+    public void setFlipped(boolean flipped) {
+        this.flipped = flipped;
+    }
+
+    public boolean isFlipped() {
+        return flipped;
     }
 
     public void setSprite(BufferedImage sprite) {

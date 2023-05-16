@@ -105,7 +105,7 @@ public class MapScene extends DefaultScene {
     @Override
     public void focus() {
         super.focus();
-        MainGame.INSTANCE.gameCamera.setPosition(new Vec2f());
+        MainGame.INSTANCE.gameCamera.getPosition().set(0, 0);
     }
 
     private void addBindings() {

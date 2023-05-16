@@ -114,7 +114,7 @@ public class PauseScene extends DefaultScene {
                 .addButtonListener(new ButtonEventListener() {
                     @Override
                     public void buttonClicked(MouseEvent e) {
-                        System.exit(0);
+                        MainGame.INSTANCE.setCurrentScene("TitleScene");
                     }
 
                     @Override

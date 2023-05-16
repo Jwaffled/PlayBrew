@@ -9,13 +9,13 @@ public class Camera {
 
     public Camera(float width, float height) {
         size = new Vec2f(width, height);
-        this.setPosition(new Vec2f(0, 0));
+        this.position = new Vec2f(0, 0);
         setZoomScale(1);
     }
 
     public Camera(float width, float height, Vec2f position) {
         size = new Vec2f(width, height);
-        this.setPosition(position);
+        this.position = new Vec2f(position);
     }
 
     public Vec2f getSize() {
@@ -24,10 +24,6 @@ public class Camera {
 
     public Vec2f getPosition() {
         return position;
-    }
-
-    public void setPosition(Vec2f position) {
-        this.position = new Vec2f(position);
     }
 
     public float getZoomScale() {

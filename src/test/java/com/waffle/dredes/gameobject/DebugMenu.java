@@ -33,6 +33,7 @@ public class DebugMenu extends GameObject {
         outline.shapes.add(new RenderShape(ShapeType.RECTANGLE, DrawMode.OUTLINE, Color.BLACK, 300, 5 + 5 + (STRING_COUNT * 16), new Vec2f()));
         text = new FontRenderComponent("");
         text.position = new Vec2f(5, 10);
+        text.color = Color.WHITE;
         transform = new TransformComponent(20, 20);
     }
 
@@ -52,7 +53,6 @@ public class DebugMenu extends GameObject {
                         Player accel: %s
                         Player force: %s
                         Player pos: %s
-                        Collisions: %d
                         Player onGround: %s
                         Player State: %s
                         State Counter: %d
@@ -61,7 +61,7 @@ public class DebugMenu extends GameObject {
                 Input.getInstance().getMousePosition().x, Input.getInstance().getMousePosition().y,
                 MainGame.INSTANCE.renderTime,
                 k.v, k.a, k.force, GameplayScene.INSTANCE.player.transform.position,
-                GameplayScene.INSTANCE.collisionObject.totalCollisions, GameplayScene.INSTANCE.player.groundCheck,
+                GameplayScene.INSTANCE.player.groundCheck,
                 GameplayScene.INSTANCE.player.current.getClass(), GameplayScene.INSTANCE.player.current.counter,
                 GameplayScene.INSTANCE.player.gc.position
         );

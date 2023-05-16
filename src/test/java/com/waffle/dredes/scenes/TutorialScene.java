@@ -31,12 +31,11 @@ public class TutorialScene extends DefaultScene {
     public void update(float dt) {
         super.update(dt);
         Camera cam = MainGame.INSTANCE.gameCamera;
-        cam.setPosition(new Vec2f(player.transform.position.x - cam.getSize().x / 2, player.transform.position.y - cam.getSize().y / 2));
+        cam.getPosition().set(player.transform.position.x - cam.getSize().x / 2, player.transform.position.y - cam.getSize().y / 2);
         if(keybindManager.triggered("Pause") && getFramesActive() >= 20) {
             MainGame.INSTANCE.setCurrentScene("PauseScene");
         }
-        if(source.health <= 0)
-        {
+        if(source.health <= 0) {
             MainGame.INSTANCE.setCurrentScene("TitleScene");
         }
     }

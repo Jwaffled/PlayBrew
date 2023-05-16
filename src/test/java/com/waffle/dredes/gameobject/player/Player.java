@@ -125,13 +125,13 @@ public class Player extends GameObject {
      */
     @Override
     public void update(float dt) {
-        if(transform.position.x < 1)
-        {
+        sprites.sprites.get(0).setFlipped(faceLeft);
+
+        if(transform.position.x < 1) {
             transform.position.x = 64;
             kinematics.v.x = 100;
         }
-        if(transform.position.x > 2559)
-        {
+        if(transform.position.x > 2559) {
             transform.position.x = 2528;
             kinematics.v.x = -100;
         }
@@ -183,10 +183,10 @@ public class Player extends GameObject {
      */
     private void addBindings() {
         keybindManager.addKeybind("Jump", KeyEvent.VK_SPACE);
-        keybindManager.addKeybind("Left", KeyEvent.VK_LEFT);
-        keybindManager.addKeybind("Right", KeyEvent.VK_RIGHT);
-        keybindManager.addKeybind("Up", KeyEvent.VK_UP);
-        keybindManager.addKeybind("Down", KeyEvent.VK_DOWN);
+        keybindManager.addKeybind("Left", KeyEvent.VK_A);
+        keybindManager.addKeybind("Right", KeyEvent.VK_D);
+        keybindManager.addKeybind("Up", KeyEvent.VK_W);
+        keybindManager.addKeybind("Down", KeyEvent.VK_S);
         keybindManager.addKeybind("Levitate", KeyEvent.VK_SHIFT);
     }
 

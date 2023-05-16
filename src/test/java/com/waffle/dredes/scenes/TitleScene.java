@@ -38,6 +38,11 @@ public class TitleScene extends DefaultScene {
         world.update(dt);
     }
 
+    @Override
+    public void focus() {
+        MainGame.INSTANCE.gameCamera.getPosition().set(0, 0);
+    }
+
     /**
      * Called when the Scene is added to the world
      */
@@ -45,7 +50,7 @@ public class TitleScene extends DefaultScene {
     public void start() {
         world.createLayers(2);
 
-        sceneBackground = new Background("DreDes/DreDes-TitleScreen.png", 960, 540);
+        sceneBackground = new Background("DreDes/DreDes-TitleScreen.png", 960, 540, MainGame.INSTANCE.gameCamera);
 
         buildButtons();
 

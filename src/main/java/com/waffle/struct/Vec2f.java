@@ -63,6 +63,12 @@ public class Vec2f {
         this.y /= magnitude;
         return this;
     }
+
+    public Vec2f set(float x, float y) {
+        this.x = x;
+        this.y = y;
+        return this;
+    }
     @Override
     public String toString() {
         return "(x: " + x + ", y: " + y + ")";

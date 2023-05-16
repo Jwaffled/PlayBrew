@@ -47,11 +47,18 @@ public class SpriteRenderSystem extends ECSSystem {
                     final int finalY = (int)(drawPos.y * scalar.y);
 
                     AffineTransform tr = new AffineTransform();
+                    // TODO: Get flipping working
+                    if(s.isFlipped()) {
+                        tr.scale(-1, 1);
+                        tr.translate(-s.getSprite().getWidth(), 0);
+                    }
+
                     tr.translate(finalX, finalY);
                     tr.rotate(-comp.rotation, 0, 0);
                     tr.scale(finalWidth / (float)s.getSprite().getWidth(), finalHeight / (float)s.getSprite().getHeight());
 
                     ((Graphics2D)window).drawImage(s.getSprite(), tr, null);
+
                     if(Constants.DEBUG_MODE) {
                         window.setColor(Color.red);
                         window.drawRect(finalX, finalY, finalWidth, finalHeight);
