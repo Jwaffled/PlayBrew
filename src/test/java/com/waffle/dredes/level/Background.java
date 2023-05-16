@@ -13,7 +13,10 @@ import java.awt.image.BufferedImage;
  */
 public class Background extends GameObject {
     private SpriteRenderComponent sr;
-    private TransformComponent transform;
+    /**
+     * The positional data of the goal
+     */
+    public TransformComponent transform;
     /**
      * The image this background uses
      */

@@ -1,22 +1,20 @@
 package com.waffle.dredes;
 
 import com.waffle.core.Game;
+import com.waffle.dredes.gameobject.TextBox;
 import com.waffle.dredes.scenes.*;
 import com.waffle.input.Input;
 import com.waffle.input.KeybindManager;
 import com.waffle.render.Camera;
-
 import java.awt.event.KeyEvent;
 
 /**
  * The main game loop and manager for the entire game
  */
 public class MainGame extends Game {
-    /**
-     * The instance of the game running; singleton
-     */
     public static MainGame INSTANCE = null;
-    private KeybindManager keybindManager;
+    public KeybindManager keybindManager;
+    private TextBox box;
 
     /**
      * Constructs a new game with default camera settings and video settings
@@ -43,11 +41,13 @@ public class MainGame extends Game {
     }
 
     /**
-     * Called before the main game loop starts, initializes the game
+     * Called before the main game loop starts
      */
     @Override
     public void start() {
         INSTANCE = this;
+        // Change this to make it so that each scene has its own ECS
+        // And gameobjects
         gameCamera.setZoomScale(1);
         keybindManager = new KeybindManager();
 
@@ -56,6 +56,8 @@ public class MainGame extends Game {
         addScene("TitleScene", new TitleScene());
         addScene("GameplayScene", new GameplayScene());
         addScene("PauseScene", new PauseScene());
+        addScene("WinScene", new WinScene());
+        addScene("DeathScene", new DeathScene());
         addScene("TutorialScene", new TutorialScene());
         setCurrentScene("TitleScene");
 

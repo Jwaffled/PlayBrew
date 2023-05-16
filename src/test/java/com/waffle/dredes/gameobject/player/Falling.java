@@ -1,22 +1,23 @@
 package com.waffle.dredes.gameobject.player;
 
+import com.waffle.core.Utils;
 import com.waffle.ecs.GameObject;
 
 /**
  * A class representing the falling player state
  */
 public class Falling extends State {
-    float grav;
-    float termVY;
-    public float airAccel;
-    public float termVX;
+    private float grav;
+    private float termVY;
+    private float airAccel;
+    private float termVX;
 
     /**
      * Constructs a falling state
-     * @param terminalVelocityY the maximum velocity in the y direction that the player can fall
-     * @param terminalVelocityX the maximum velocity in the x direction that the player can fall
-     * @param gravity the gravity acceleration exerted upon the player
-     * @param airAccel
+     * @param terminalVelocityY the maximum velocity in the y direction that the object can fall
+     * @param terminalVelocityX the maximum velocity in the x direction that the object can fall
+     * @param gravity the gravity acceleration exerted upon the object
+     * @param airAccel the horizontal acceleration exerted upon the object
      */
     public Falling(float terminalVelocityY, float terminalVelocityX, float gravity, float airAccel) {
         super(30,30,30);
@@ -24,11 +25,12 @@ public class Falling extends State {
         grav = gravity;
         termVX = terminalVelocityX;
         this.airAccel = airAccel;
+        sprite = Utils.loadImageFromPath("DreDes/Will-Overworld-Fall.png");
     }
 
     /**
-     *
-     * @param gamob
+     * Simulates one frame of falling for a GameObject
+     * @param gamob the GameObject to simulate
      */
     public void apply(GameObject gamob) {
         if(gamob instanceof Player p) {
