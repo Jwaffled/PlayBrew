@@ -2,9 +2,10 @@ package com.waffle.dredes.gameobject.player;
 import com.waffle.ecs.GameObject;
 
 import java.awt.Color;
+import java.awt.image.BufferedImage;
 
 /**
- * An abstract class representing a certain player state
+ * An abstract class representing a certain state
  */
 public abstract class State {
     private Color color;
@@ -13,11 +14,13 @@ public abstract class State {
     private boolean countingUp;
     public boolean active;
 
+    public BufferedImage sprite;
+
     /**
      *
-     * @param r
-     * @param g
-     * @param b
+     * @param r the red value of the state's color
+     * @param g the green value of the state's color
+     * @param b the blue value of the state's color
      */
     public State(int r, int g, int b) {
         color = new Color(r,b,g, 50);
@@ -26,10 +29,10 @@ public abstract class State {
 
     /**
      *
-     * @param r
-     * @param g
-     * @param b
-     * @param duration
+     * @param r the red value of the state's color
+     * @param g the green value of the state's color
+     * @param b the blue value of the state's color
+     * @param duration the number of frames the state lasts for
      */
     public State(int r, int g, int b, int duration) {
         color = new Color(r,b,g, 50);
@@ -38,25 +41,25 @@ public abstract class State {
     }
 
     /**
-     *
-     * @return
+     *  gets the state's corresponding color
+     * @return the color for the state
      */
     public Color getColor() {
         return color;
     }
 
     /**
-     *
-     * @param other
-     * @return
+     *  Check whether another object is "equal" to this state
+     * @param other the object to check
+     * @return whether the object is "equal"
      */
     public boolean equals(Object other) {
         return other instanceof State s && s.color.equals(color);
     }
 
     /**
-     *
-     * @return
+     *  resets counting variables and sets active to true
+     * @return a reference to this state
      */
     public State activate() {
         counter = countingUp? 0 : record;
@@ -65,7 +68,7 @@ public abstract class State {
     }
 
     /**
-     *
+     *  Counts up/down, deactivating if a countdown reaches zero
      */
     public void update() {
         if(active) {
@@ -85,8 +88,8 @@ public abstract class State {
     }
 
     /**
-     *
-     * @param gamob
+     *  Applies this state to a GameObject
+     * @param gamob the GameObject to apply the state to
      */
     public abstract void apply(GameObject gamob);
 }

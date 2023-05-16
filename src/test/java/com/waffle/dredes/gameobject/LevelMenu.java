@@ -37,6 +37,10 @@ public class LevelMenu extends GameObject {
         KinematicComponent k = GameplayScene.INSTANCE.player.kinematics;
         text.message = String.format(
                 """
+                  Pick a Level
+                  Get to the goal in California!
+                  The color of the pixel
+                  decides the biome
                   Mouse x:%d,  y:%d
                   Valid x range %d - %d
                   Valid y range %d - %d

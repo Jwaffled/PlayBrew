@@ -8,6 +8,7 @@ import com.waffle.core.Constants;
 import com.waffle.core.LogLevel;
 import com.waffle.core.SpriteRenderer;
 import com.waffle.core.Utils;
+import com.waffle.dredes.MainGame;
 import com.waffle.dredes.level.Tile;
 import com.waffle.ecs.GameObject;
 import com.waffle.input.KeybindManager;
@@ -23,27 +24,64 @@ public class Player extends GameObject {
     private static final Vec2f TERMINAL_VELOCITY = new Vec2f(500, 200);
     //COMPONENTS
     private SpriteRenderComponent sprites;
+    /**
+     * The positional data associated with the player
+     */
     public TransformComponent transform;
+    /**
+     * The physics data associated with the Player
+     */
     public KinematicComponent kinematics;
+
     private KeybindManager keybindManager;
+    /**
+     *  The collision data associated with the Player
+     */
     public ColliderComponent gc;
+    /**
+     *  Checks if the player has ground below it
+     */
     public Boolean groundCheck;
+    /**
+     *  Checks if the player has a wall to the right it
+     */
     public Boolean wallCheckR;
+    /**
+     *  Checks if the player has a wall to the left of it
+     */
     public Boolean wallCheckL;
+    /**
+     *  Checks if the player has a ceiling above it
+     */
     public Boolean ceilingCheck;
+    /**
+     * A vector representing the directional input for a given frame
+     */
     public Vec2f inputD;
     //STATES
+    /**
+     * If the player is facing left
+     */
     public boolean faceLeft;
     private Falling fallState;
     private Jumping jumpState;
     private Idling idleState;
     private Walking walkState;
     private Turning turnState;
+    /**
+     * The current state of the player
+     */
     public State current;
+    /**
+     * The friction currently being applied to the player
+     */
     public float frictionCoEff;
+    /**
+     * The modification in velocity currently being applied to the player
+     */
     public Vec2f vCoEff;
 
-    public boolean committed;
+    private boolean committed;
 
 
     /**
@@ -58,10 +96,10 @@ public class Player extends GameObject {
     @Override
     public void start() {
         try {
-            BufferedImage b = Utils.loadImageFromPath("DreDes/DreDes-Will-FFPose-Gun.png");
+            BufferedImage b = Utils.loadImageFromPath("DreDes/Will-Overworld-Idle.png");
             sprites = new SpriteRenderComponent();
             sprites.sprites.add(new SpriteRenderer(new Vec2f(), b, b.getWidth(), b.getHeight()));
-            transform = new TransformComponent(64, 448);
+            transform = new TransformComponent(64, 400);
             kinematics = new KinematicComponent(new Vec2f(), new Vec2f(), 0, 1);
             gc = new ColliderComponent(new Vec2f(0, 0), new Vec2f(b.getWidth(), b.getHeight()) , e -> {
                 if(e.getCollidedObject() instanceof Tile tile) {
@@ -107,6 +145,7 @@ public class Player extends GameObject {
                 }
             });
 
+
             keybindManager = new KeybindManager();
             addBindings();
             setStates();
@@ -125,8 +164,12 @@ public class Player extends GameObject {
      */
     @Override
     public void update(float dt) {
-        sprites.sprites.get(0).setFlipped(faceLeft);
 
+
+        if(transform.position.y > 1200)
+        {
+            MainGame.INSTANCE.setCurrentScene("DeathScene");
+        }
         if(transform.position.x < 1) {
             transform.position.x = 64;
             kinematics.v.x = 100;
@@ -136,7 +179,6 @@ public class Player extends GameObject {
             kinematics.v.x = -100;
         }
         applyDirection();
-        groundCheck = groundCheck || keybindManager.triggered("Levitate");
         if(!groundCheck) {
             if(!(current instanceof Jumping) || (!current.active) || ceilingCheck) {
                 current = fallState.activate();
@@ -176,6 +218,8 @@ public class Player extends GameObject {
         ceilingCheck = false;
         wallCheckR = false;
         wallCheckL = false;
+        sprites.sprites.set(0 , new SpriteRenderer(new Vec2f(), current.sprite, 32,64));
+        sprites.sprites.get(0).setFlipped(faceLeft);
     }
 
     /**
@@ -187,7 +231,7 @@ public class Player extends GameObject {
         keybindManager.addKeybind("Right", KeyEvent.VK_D);
         keybindManager.addKeybind("Up", KeyEvent.VK_W);
         keybindManager.addKeybind("Down", KeyEvent.VK_S);
-        keybindManager.addKeybind("Levitate", KeyEvent.VK_SHIFT);
+        //keybindManager.addKeybind("Levitate", KeyEvent.VK_SHIFT);
     }
 
     /**

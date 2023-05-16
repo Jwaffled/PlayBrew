@@ -1,11 +1,11 @@
 package com.waffle.dredes;
 
 import com.waffle.core.Game;
+import com.waffle.dredes.gameobject.TextBox;
 import com.waffle.dredes.scenes.*;
 import com.waffle.input.Input;
 import com.waffle.input.KeybindManager;
 import com.waffle.render.Camera;
-
 import java.awt.event.KeyEvent;
 
 /**
@@ -14,6 +14,7 @@ import java.awt.event.KeyEvent;
 public class MainGame extends Game {
     public static MainGame INSTANCE = null;
     public KeybindManager keybindManager;
+    private TextBox box;
 
     /**
      * Constructs a new game with default camera settings and video settings
@@ -55,6 +56,8 @@ public class MainGame extends Game {
         addScene("TitleScene", new TitleScene());
         addScene("GameplayScene", new GameplayScene());
         addScene("PauseScene", new PauseScene());
+        addScene("WinScene", new WinScene());
+        addScene("DeathScene", new DeathScene());
         addScene("TutorialScene", new TutorialScene());
         setCurrentScene("TitleScene");
 

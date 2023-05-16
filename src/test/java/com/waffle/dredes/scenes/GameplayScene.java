@@ -3,7 +3,7 @@ package com.waffle.dredes.scenes;
 import com.waffle.core.DefaultScene;
 import com.waffle.dredes.MainGame;
 import com.waffle.dredes.gameobject.Background;
-import com.waffle.dredes.gameobject.CollisionObject;
+
 import com.waffle.dredes.gameobject.DebugMenu;
 import com.waffle.dredes.gameobject.player.Player;
 import com.waffle.dredes.level.*;
@@ -26,7 +26,7 @@ public class GameplayScene extends DefaultScene {
     public SourceEntity source;
     private Room room;
     private Tile[][] tiles;
-    private DebugMenu debug;
+    //private DebugMenu debug;
 
     /**
      * Creates a new gameplay scene with a maximum of 10000 entities
@@ -79,13 +79,13 @@ public class GameplayScene extends DefaultScene {
         background = new Background("DreDes/DreDes-BG-Nighttime.png", (int)camera.getSize().x, (int)camera.getSize().y, camera);
         player = new Player();
 
-        debug = new DebugMenu();
+        //debug = new DebugMenu();
 
         keybindManager = new KeybindManager();
         addBindings();
 
         //world.createGameObject(collisionObject);
-        world.createGameObject(debug, 1);
+        //world.createGameObject(debug, 1);
         world.createGameObject(player, 1);
         world.createGameObject(background, 0);
     }
@@ -120,6 +120,10 @@ public class GameplayScene extends DefaultScene {
             }
             player.transform.position.x = 64;
             player.transform.position.y = 448;
+            if(source != null)
+            {
+                
+            }
             source = new SourceEntity();
             source.health = 3;
             world.createGameObject(source, 1);

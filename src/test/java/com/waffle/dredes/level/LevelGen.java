@@ -165,6 +165,10 @@ public class LevelGen {
                 level[i][j] = r;
             }
         }
+        for(int i = 3; i < level.length; i++)
+        {
+            level[i][9] = roomLoader.getRoom("SolidGround");
+        }
 
         Tile[][] ret = new Tile[36][80]; //creates the return object
         for(int i = 0; i < level.length; i++) //traverses the newly-filled Room[][]

@@ -5,7 +5,7 @@ import com.waffle.core.SceneManager;
 import com.waffle.core.UpdateCounter;
 import com.waffle.core.Utils;
 import com.waffle.dredes.MainGame;
-import com.waffle.dredes.gameobject.CollisionObject;
+
 import com.waffle.dredes.gameobject.DebugMenu;
 import com.waffle.dredes.gameobject.LevelMenu;
 import com.waffle.dredes.gameobject.Travel;
@@ -27,6 +27,7 @@ public class MapScene extends DefaultScene {
     public KeybindManager keybindManager;
     public Background bgMap;
     public Background bgBg;
+    public Background bgGoal;
 
     public LevelGen.Biome biome;
 
@@ -57,6 +58,10 @@ public class MapScene extends DefaultScene {
 
         if(keybindManager.triggered("Click") && inRange() && validBounds()) {
             System.out.println("Valid Click");
+            if(pos.x > 80 && pos.x < 112 && pos.y > 70 && pos.y < 112)
+            {
+                MainGame.INSTANCE.setCurrentScene("WinScene");
+            }
             Color pixel = new Color(bgMap.image.getRGB((int)pos.x, (int)pos.y));
             if(pixel.getRed() > 175 && pixel.getGreen() < 150)
             {
@@ -85,14 +90,18 @@ public class MapScene extends DefaultScene {
     @Override
     public void start() {
         menu = new LevelMenu();
-        world.createLayers(2);
+        world.createLayers(3);
         bgBg = new Background(Utils.loadImageFromPath("DreDes/Texas-Cali-Gradient.png"));
         bgMap = new Background(Utils.loadImageFromPath("DreDes/DreDes-BiomeMap.png"));
+        bgGoal = new Background(Utils.loadImageFromPath("DreDes/Goal.png"));
+
         icon = new Travel(new Vec2f(450, 250));
         keybindManager = new KeybindManager();
         keybindManager.addMouseBind("Click", MouseEvent.BUTTON1);
         menu.validLB = icon.transformComponent.position;
         menu.validUB = new Vec2f(menu.validLB.x + 75, menu.validLB.y + 75);
+        world.createGameObject(bgGoal, 2);
+        bgGoal.transform.position = new Vec2f(80, 70);
         world.createGameObject(bgBg, 0);
         world.createGameObject(bgMap, 1);
         world.createGameObject(icon, 1);

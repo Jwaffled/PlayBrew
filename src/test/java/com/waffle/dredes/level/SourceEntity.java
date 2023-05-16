@@ -7,7 +7,7 @@ import com.waffle.components.TransformComponent;
 import com.waffle.core.CollisionEvent;
 import com.waffle.core.SpriteRenderer;
 import com.waffle.core.Utils;
-import com.waffle.dredes.gameobject.player.Bullet;
+
 import com.waffle.dredes.gameobject.player.Player;
 import com.waffle.ecs.GameObject;
 import com.waffle.struct.Vec2f;
@@ -27,7 +27,7 @@ public class SourceEntity extends GameObject {
         kinematics = new KinematicComponent(new Vec2f(), new Vec2f());
         BufferedImage image = Utils.loadImageFromPath("DreDes/DreDes-Source.png");
         hb = new ColliderComponent(new Vec2f(), new Vec2f(128, 96),  e ->{
-            if(e.getCollidedObject() instanceof Player || e.getCollidedObject() instanceof Bullet)
+            if(e.getCollidedObject() instanceof Player)
             {
 
                 health--;

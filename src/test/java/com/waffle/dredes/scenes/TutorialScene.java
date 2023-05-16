@@ -3,7 +3,7 @@ package com.waffle.dredes.scenes;
 import com.waffle.core.DefaultScene;
 import com.waffle.core.Utils;
 import com.waffle.dredes.MainGame;
-import com.waffle.dredes.gameobject.CollisionObject;
+
 import com.waffle.dredes.gameobject.DebugMenu;
 import com.waffle.dredes.gameobject.TextBox;
 import com.waffle.dredes.gameobject.player.Player;
@@ -21,7 +21,7 @@ public class TutorialScene extends DefaultScene {
     public KeybindManager keybindManager;
     public Player player;
     public SourceEntity source;
-    public CollisionObject collisionObject;
+
     private TextBox textBox;
     public TutorialScene() {
         super(10000);
@@ -111,7 +111,7 @@ public class TutorialScene extends DefaultScene {
 
 
         player = new Player();
-        collisionObject = new CollisionObject();
+
         textBox = new TextBox("");
 
         source = new SourceEntity();
