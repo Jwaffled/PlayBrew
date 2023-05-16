@@ -11,17 +11,42 @@ import com.waffle.struct.Vec2f;
 
 import java.awt.image.BufferedImage;
 
+/**
+ * Represents a single tile
+ */
 public class Tile extends GameObject {
-    public boolean touchingPlayer;
-    public final int width, height;
+    private boolean touchingPlayer;
+    /**
+     * The width of this tile (in px)
+     */
+    public final int width;
+    /**
+     * The height of this tile (in px)
+     */
+    public final int height;
+    /**
+     * Whether this tile is a fluid tile
+     */
     public boolean fluid;
-    public boolean water;
-    public float friction;
-    public Vec2f velocity;
-    public ColliderComponent collider;
-    public KinematicComponent k;
-    public SpriteRenderComponent render;
+    private boolean water;
+    private float friction;
+    private Vec2f velocity;
+    private ColliderComponent collider;
+    private KinematicComponent k;
+    private SpriteRenderComponent render;
+    /**
+     * The positional data of this Tile
+     */
     public TransformComponent transform;
+
+    /**
+     * Constructs a new tile object
+     * @param sprite the sprite of this tile
+     * @param row the row to place this tile in
+     * @param col the column to place this tile in
+     * @param fluid whether the tile represents a fluid (no collisions)
+     * @param water whether the tile represents water
+     */
     public Tile(BufferedImage sprite, int row ,int col, boolean fluid, boolean water) {
         transform = new TransformComponent(new Vec2f(col * 32, row * 32));
         width = sprite.getWidth();
@@ -37,6 +62,17 @@ public class Tile extends GameObject {
         this.water = water;
         velocity = new Vec2f(1,1);
     }
+
+    /**
+     * Constructs a new tile object
+     * @param sprite the sprite of this tile
+     * @param row the row to place this tile in
+     * @param col the column to place this tile in
+     * @param fluid whether the tile represents a fluid (no collisions)
+     * @param water whether the tile represents water
+     * @param frictionCoefficient the amount of friction to apply on this tile
+     * @param velocityCoefficient the amount of drag to apply on this tile
+     */
     public Tile(BufferedImage sprite, int row ,int col, boolean fluid, boolean water, float frictionCoefficient, Vec2f velocityCoefficient) {
         transform = new TransformComponent(new Vec2f(col * 32, row * 32));
         render = new SpriteRenderComponent();
@@ -59,8 +95,13 @@ public class Tile extends GameObject {
         collider.isStatic = true;
     }
 
-    public Tile copy(int newRow, int newCol)
-    {
+    /**
+     * Creates a deep clone of this tile object
+     * @param newRow the new row to place this tile in
+     * @param newCol the new column to place this tile in
+     * @return a deep clone of this tile object
+     */
+    public Tile copy(int newRow, int newCol) {
         return new Tile(render.sprites.get(0).getSprite(), newRow, newCol, fluid, water, friction, velocity);
     }
 
@@ -70,6 +111,10 @@ public class Tile extends GameObject {
     @Override
     public void start(){}
 
+    /**
+     * Unused
+     * @param dt not used
+     */
     @Override
     public void update(float dt) {
 

@@ -16,6 +16,9 @@ import static com.waffle.dredes.level.Room.TileType.*;
  * A class used for procedural generation of Rooms
  */
 public class LevelGen {
+    /**
+     * The Singleton access to this level generator
+     */
     public static LevelGen INSTANCE = new LevelGen();
     private RoomLoader roomLoader;
     private Random rng;
@@ -120,7 +123,7 @@ public class LevelGen {
      * @param x the x coordinate of where to start generation
      * @param y the y coordinate of where to start generation
      * @param river true if rivers should be generated
-     * @return a two dimensional tile array with the generated rooms
+     * @return a two-dimensional tile array with the generated rooms
      */
     public Tile[][] generate(Biome biome, int x, int y, boolean river) {
         Tile[] tiles = new Tile[7];
@@ -192,53 +195,31 @@ public class LevelGen {
 
             }
         }
-        //debugLevelGen(level, tiles); //prints the room in an ascii format
 
-
-        return ret; //returns the 2D tile array to create into a ton of serparate game objects
-
+        return ret;
     }
 
-    private void pickNeighbors(Room[][] level, Room center, int row, int col) {
-
-    }
-
-    private void collapseRoom(int row, int col, Room[][] level)
-    {
-        ArrayList<Room> pool = new ArrayList<>();
-
-    }
-
-    private void debugLevelGen(Room[][] level, Tile[] tiles)
-    {
+    private void debugLevelGen(Room[][] level, Tile[] tiles) {
         int[][] debug = new int[36][80];
-        for(int i = 0; i < level.length; i++)
-        {
-            for(int j = 0; j < level[0].length; j++)
-            {
-                if(level[i][j] != null)
-                {
+        for(int i = 0; i < level.length; i++) {
+            for(int j = 0; j < level[0].length; j++) {
+                if(level[i][j] != null) {
                     int[][] blueprint = level[i][j].configuration;
-                    for(int k = 0; k < blueprint.length; k++)
-                    {
-                        for(int l = 0; l < blueprint[k].length; l++)
-                        {
-                            if(tiles[blueprint[k][l]] != null)
-                            {
+                    for(int k = 0; k < blueprint.length; k++) {
+                        for(int l = 0; l < blueprint[k].length; l++) {
+                            if(tiles[blueprint[k][l]] != null) {
                                 debug[(i * 6)+ k][(j * 8) + l] = blueprint[k][l];
                             }
                         }
                     }
                 }
-
             }
         }
+
         int count = 0;
         int countRow = 0;
-        for(int[] iArr : debug)
-        {
-            for(int i : iArr)
-            {
+        for(int[] iArr : debug) {
+            for(int i : iArr) {
                 switch (i) {
                     case 1 -> System.out.print("Su ");
                     case 2 -> System.out.print("St ");
@@ -249,17 +230,14 @@ public class LevelGen {
                     default ->System.out.print(".  ");
                 }
                 count++;
-                if(count % 8 == 0)
-                {
+                if(count % 8 == 0) {
                     System.out.print("|");
                 }
             }
             countRow++;
             System.out.println();
-            if(countRow % 6 == 0)
-            {
-                for(int j = 0; j < 80; j++)
-                {
+            if(countRow % 6 == 0) {
+                for(int j = 0; j < 80; j++) {
                     System.out.print("---");
                 }
                 System.out.println();
@@ -418,46 +396,23 @@ public class LevelGen {
     }
 
     private Room pickRoom(Room[][] rooms, int row, int col) {
-        //Collection<Room> pool = roomLoader.getRooms().values();
-//        pool.remove(roomLoader.getRoom("Source"));
-//        pool.remove(roomLoader.getRoom("SourceFlipped"));
-//        pool.remove(roomLoader.getRoom("Camp"));
-//        pool.remove(roomLoader.getRoom("CampFlipped"));
-        /*
-
-        Picking room rooms[row][col]
-        The following tiles' rules need to be satisfied
-        - rooms[row - 1][col] UP
-        - rooms[row - 1][col - 1] UP LEFT
-        - rooms[row - 1][col + 1] UP RIGHT
-        - rooms[row][col - 1] LEFT
-        - rooms[row][col + 1] RIGHT
-        - rooms[row + 1][col + 1] DOWN RIGHT
-        - rooms[row + 1][col] DOWN
-        - rooms[row + 1][col - 1] DOWN LEFT
-         */
-
         ArrayList<Room> test= new ArrayList<Room>();
         try {
             Collection<Room> temp = Arrays.asList(rooms[row - 1][col].getRoomPool(DOWN, true));
             if(!temp.isEmpty())
                 test.addAll(temp);
-        }
-        catch (Exception ignored){}
+        } catch (Exception ignored){}
         try {
             Collection<Room> temp = Arrays.asList(rooms[row + 1][col].getRoomPool(UP, true));
-            if(!temp.isEmpty())
-            {
-                if(test.isEmpty())
-                {
+            if(!temp.isEmpty()) {
+                if(test.isEmpty()) {
                     test.addAll(temp);
-                }
-                else
+                } else {
                     test.retainAll(temp);
+                }
             }
 
-        }
-        catch (Exception ignored){}
+        } catch (Exception ignored){}
         try {
             Collection<Room> temp = Arrays.asList(rooms[row][col + 1].getRoomPool(LEFT, true));
             if(!temp.isEmpty())
@@ -547,59 +502,10 @@ public class LevelGen {
         }
         //System.out.printf("[%02d][%02d] cannot be decided%n", row, col);
         return roomLoader.getRoom("OpenAir");
-//        if(row == 1 && col == 0) {
-//            Constants.LOGGER.logDebug("Pool:" + pool);
-//        }
-//        if(!pool.isEmpty())
-//        {
-//            System.out.println();
-//            Constants.LOGGER.logWarning(Arrays.toString(pool.toArray()));
-//            int index = rng.nextInt(0, pool.size());
-//            Constants.LOGGER.logInfo("Index chosen: " + index);
-//            return (Room)pool.toArray()[index];
-//        }
-//        System.out.println();
-//        pool = roomLoader.getRooms().values();
-//        pool.remove(roomLoader.getRoom("Source"));
-//        pool.remove(roomLoader.getRoom("Camp"));
-//        for(int i = -1; i < 2; i++)
-//        {
-//            for(int j = -1; j < 2; j++)
-//            {
-////                System.out.print(pool.size() + " ");
-//                if(row + i > 0 && row + 1 < rooms.length && col + j > 0 && col + j < rooms[0].length && i != 0 && j != 0)
-//                {
-//                    if(rooms[row + i][col + j] != null)
-//                    {
-//                        if(!Arrays.asList(rooms[row + i][col + j].getRoomPool(Room.getDirection(new Vec2f(-j, -i)), false)).isEmpty())
-//                        {
-//                            pool.retainAll(Arrays.asList(rooms[row + i][col + j].getRoomPool(Room.getDirection(new Vec2f(-j, -i)), false)));
-//                        }
-//                    }
-//                }
-//            }
-//        }
-//        if(!pool.isEmpty())
-//        {
-//            System.out.println();
-//            Constants.LOGGER.logWarning(Arrays.toString(pool.toArray()));
-//            int index = rng.nextInt(0, pool.size());
-//            Constants.LOGGER.logInfo("Index chosen: " + index);
-//            return (Room)pool.toArray()[index];
-//        }
-//        return roomLoader.getRoom("SolidGround");
     }
     private void tryAdd(String center, Room.Direction direction, String neighbor) {
         Room c = roomLoader.getRoom(center);
         Room n = roomLoader.getRoom(neighbor);
-
-        if(c == null) {
-            //Constants.LOGGER.logSevere("Room '" + center + "' was not found!");
-        }
-
-        if(n == null) {
-            //Constants.LOGGER.logSevere("Room '" + neighbor + "' was not found!");
-        }
 
         if(c != null && n != null) {
             c.addNeighbor(direction, n, true);
@@ -610,25 +516,12 @@ public class LevelGen {
         Room c = roomLoader.getRoom(center);
         Room n = roomLoader.getRoom(neighbor);
 
-        if(c == null) {
-            //Constants.LOGGER.logSevere("Room '" + center + "' was not found!");
-        }
-
-        if(n == null) {
-            //Constants.LOGGER.logSevere("Room '" + neighbor + "' was not found!");
-        }
-
         if(c != null && n != null) {
-            if(flipped)
-            {
+            if(flipped) {
                 c.addNeighbor(direction, roomLoader.getRoom(neighbor+"Flipped"), true);
-
-            }
-            else
-            {
+            } else {
                 c.addNeighbor(direction, n, false);
             }
-
         }
     }
 
@@ -1708,10 +1601,8 @@ public class LevelGen {
         tryAdd("TempleHallway", DOWN_LEFT, "CliffRoof", true);
         tryAdd("TempleHallway", LEFT, "Staircase", true);
         tryAdd("Staircase", RIGHT, "Staircase", true);
-        for(String key: roomLoader.getRooms().keySet())
-        {
-            if(key.contains("Flipped"))
-            {
+        for(String key: roomLoader.getRooms().keySet()) {
+            if(key.contains("Flipped")) {
                 Room temp = roomLoader.getRoom(key.replace("Flipped", "")).flip();
                 Room fix = roomLoader.getRoom(key);
                 fix.weakNeighbors = temp.weakNeighbors;

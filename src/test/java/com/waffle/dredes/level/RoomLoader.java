@@ -6,7 +6,7 @@ import java.util.*;
 
 /**
  * A manager class for loading "rooms" (8 by 6 tilemaps used for procedural generation)<br>
- * <b>ALL</b> data files are searched for inside of the <code>resources</code> folder
+ * <b>ALL</b> data files are searched for inside the <code>resources</code> folder
  * <pre>{@code
  * // Room.txt
  * RoomName

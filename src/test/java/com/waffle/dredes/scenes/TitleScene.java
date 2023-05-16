@@ -8,7 +8,6 @@ import com.waffle.struct.Vec2f;
 import com.waffle.ui.Button;
 import com.waffle.ui.ButtonBuilder;
 import com.waffle.ui.ButtonEventListener;
-import com.waffle.ui.TexturedButton;
 
 import java.awt.*;
 import java.awt.event.MouseEvent;
@@ -38,6 +37,9 @@ public class TitleScene extends DefaultScene {
         world.update(dt);
     }
 
+    /**
+     * Called when the scene is displayed on the viewport
+     */
     @Override
     public void focus() {
         MainGame.INSTANCE.gameCamera.getPosition().set(0, 0);

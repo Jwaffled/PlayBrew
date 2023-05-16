@@ -2,7 +2,6 @@ package com.waffle.dredes.scenes;
 
 import com.waffle.core.Constants;
 import com.waffle.core.DefaultScene;
-import com.waffle.core.UpdateCounter;
 import com.waffle.dredes.MainGame;
 import com.waffle.input.KeybindManager;
 import com.waffle.ui.Button;
@@ -10,7 +9,6 @@ import com.waffle.ui.ButtonEventListener;
 
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
-import java.util.Timer;
 
 /**
  * A pause menu scene
@@ -174,6 +172,9 @@ public class PauseScene extends DefaultScene {
         super.focus();
     }
 
+    /**
+     * Called when the scene is replaced by a different scene in the viewport
+     */
     @Override
     public void lostFocus() {
         resume.setActive(false);

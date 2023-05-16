@@ -19,6 +19,9 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
+/**
+ * 
+ */
 public class MainMenuGraphics extends GameObject {
     private SpriteRenderComponent map;
     private SimpleDateFormat dateFormat;

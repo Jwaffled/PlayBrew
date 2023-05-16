@@ -5,7 +5,6 @@ import com.waffle.components.GeometryComponent;
 import com.waffle.components.KinematicComponent;
 import com.waffle.components.TransformComponent;
 import com.waffle.core.RenderShape;
-import com.waffle.dredes.MainGame;
 import com.waffle.dredes.scenes.GameplayScene;
 import com.waffle.struct.Vec2f;
 import com.waffle.ecs.GameObject;
@@ -15,14 +14,26 @@ import java.awt.*;
 
 import static com.waffle.core.Constants.*;
 
+/**
+ *
+ */
 public class LevelMenu extends GameObject {
     private GeometryComponent outline;
     private TransformComponent transform;
     private FontRenderComponent text;
+    /**
+     * Represents the lowest coordinate value that the player can select a value from on the MapScene
+     */
     public Vec2f validLB;
+    /**
+     * Represents the highest coordinate value that the player can select a value from on the MapScene
+     */
     public Vec2f validUB;
     private static final int STRING_COUNT = 12;
 
+    /**
+     * Initializes this level menu
+     */
     @Override
     public void start() {
         outline = new GeometryComponent();
@@ -32,6 +43,10 @@ public class LevelMenu extends GameObject {
         transform = new TransformComponent(700, 20);
     }
 
+    /**
+     * Updates the state within the level menu
+     * @param dt the time between frames
+     */
     @Override
     public void update(float dt) {
         KinematicComponent k = GameplayScene.INSTANCE.player.kinematics;
