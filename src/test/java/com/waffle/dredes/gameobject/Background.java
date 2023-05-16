@@ -2,7 +2,6 @@ package com.waffle.dredes.gameobject;
 
 import com.waffle.components.SpriteRenderComponent;
 import com.waffle.components.TransformComponent;
-import com.waffle.components.UITextureComponent;
 import com.waffle.core.*;
 import com.waffle.ecs.GameObject;
 import com.waffle.render.Camera;
@@ -11,6 +10,9 @@ import com.waffle.struct.Vec2f;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 
+/**
+ * Represents a static image that follows a camera position
+ */
 public class Background extends GameObject {
     private TransformComponent transform;
     private SpriteRenderComponent texture;

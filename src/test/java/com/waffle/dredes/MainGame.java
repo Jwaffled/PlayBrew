@@ -12,8 +12,11 @@ import java.awt.event.KeyEvent;
  * The main game loop and manager for the entire game
  */
 public class MainGame extends Game {
+    /**
+     * The instance of the game running; singleton
+     */
     public static MainGame INSTANCE = null;
-    public KeybindManager keybindManager;
+    private KeybindManager keybindManager;
 
     /**
      * Constructs a new game with default camera settings and video settings
@@ -40,13 +43,11 @@ public class MainGame extends Game {
     }
 
     /**
-     * Called before the main game loop starts
+     * Called before the main game loop starts, initializes the game
      */
     @Override
     public void start() {
         INSTANCE = this;
-        // Change this to make it so that each scene has its own ECS
-        // And gameobjects
         gameCamera.setZoomScale(1);
         keybindManager = new KeybindManager();
 

@@ -230,21 +230,17 @@ public class Room {
     }
 
     /**
-     *
-     * @param obj
-     * @return
+     * Determines if two rooms are equal
+     * @param obj the object to compare to
+     * @return if two rooms are equal
      */
     @Override
     public boolean equals(Object obj) {
-        if(obj instanceof Room r)
-        {
+        if(obj instanceof Room r) {
             int[][] comp = r.configuration;
-            for(int i = 0; i < comp.length; i++)
-            {
-                for(int j = 0; j < comp[i].length; j++)
-                {
-                    if(comp[i][j] != configuration[i][j])
-                    {
+            for(int i = 0; i < comp.length; i++) {
+                for(int j = 0; j < comp[i].length; j++) {
+                    if(comp[i][j] != configuration[i][j]) {
                         return false;
                     }
                 }
@@ -258,14 +254,7 @@ public class Room {
      * Returns a string representation of this object
      * @return a string representation of this object
      */
-    public String toString()
-    {
+    public String toString() {
         return name;
     }
-//        public String toString() {
-//        return String.format("""
-//                Neighbors: %s
-//                Configuration: %s
-//                Tiles: %s""", Arrays.toString(neighbors), Arrays.toString(configuration), Arrays.toString(tiles));
-//    }
 }

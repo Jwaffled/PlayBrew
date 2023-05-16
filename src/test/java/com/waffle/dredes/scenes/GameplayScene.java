@@ -3,7 +3,6 @@ package com.waffle.dredes.scenes;
 import com.waffle.core.DefaultScene;
 import com.waffle.dredes.MainGame;
 import com.waffle.dredes.gameobject.Background;
-import com.waffle.dredes.gameobject.CollisionObject;
 import com.waffle.dredes.gameobject.DebugMenu;
 import com.waffle.dredes.gameobject.player.Player;
 import com.waffle.dredes.level.*;
@@ -84,7 +83,6 @@ public class GameplayScene extends DefaultScene {
         keybindManager = new KeybindManager();
         addBindings();
 
-        //world.createGameObject(collisionObject);
         world.createGameObject(debug, 1);
         world.createGameObject(player, 1);
         world.createGameObject(background, 0);
