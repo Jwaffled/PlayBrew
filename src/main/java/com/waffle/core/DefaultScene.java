@@ -33,6 +33,11 @@ public class DefaultScene implements Scene {
         resetFramesActive();
     }
 
+    @Override
+    public void lostFocus() {
+
+    }
+
     /**
      * Updates the specified systems<br>
      * The default systems that are updated are

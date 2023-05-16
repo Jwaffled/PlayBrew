@@ -138,6 +138,16 @@ public class PauseScene extends DefaultScene {
      */
     @Override
     public void focus() {
+        resume.setActive(true);
+        options.setActive(true);
+        exit.setActive(true);
         super.focus();
+    }
+
+    @Override
+    public void lostFocus() {
+        resume.setActive(false);
+        options.setActive(false);
+        exit.setActive(false);
     }
 }

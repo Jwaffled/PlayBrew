@@ -16,6 +16,7 @@ import com.waffle.render.Camera;
 import com.waffle.struct.Vec2f;
 
 import java.awt.event.KeyEvent;
+import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 
 /**
@@ -30,6 +31,7 @@ public class GameplayScene extends DefaultScene {
     private RoomLoader roomLoader;
     private Room room;
     private DebugMenu debug;
+    private Tile[][] tiles;
 
     /**
      * Creates a new gameplay scene with a maximum of 10000 entities
@@ -51,6 +53,25 @@ public class GameplayScene extends DefaultScene {
         if(keybindManager.triggered("Pause") && getFramesActive() >= 20) {
             MainGame.INSTANCE.setCurrentScene("PauseScene");
         }
+
+        if(keybindManager.triggered("GenerateNew")) {
+            for(Tile[] a : tiles) {
+                for(Tile t : a) {
+                    if(t != null) {
+                        world.removeGameObject(t);
+                    }
+                }
+            }
+
+            tiles = LevelGen.INSTANCE.generate(LevelGen.Biome.Redland, 0, 0, false);
+            for(Tile[] a : tiles) {
+                for(Tile t: a) {
+                    if(t != null) {
+                        world.createGameObject(t);
+                    }
+                }
+            }
+        }
     }
 
     /**
@@ -60,12 +81,11 @@ public class GameplayScene extends DefaultScene {
     public void start() {
         world.createLayers(3);
         LevelGen l = LevelGen.INSTANCE;
-        Tile[][] arr = l.generate(LevelGen.Biome.Stoneland, 0, 0, false);
+        tiles = l.generate(LevelGen.Biome.Stoneland, 0, 0, false);
 
-        for(Tile[] a : arr) {
+        for(Tile[] a : tiles) {
             for(Tile tile : a) {
-                if(tile != null)
-                {
+                if(tile != null) {
                     world.createGameObject(tile);
                 }
             }
@@ -97,5 +117,6 @@ public class GameplayScene extends DefaultScene {
 
     private void addBindings() {
         keybindManager.addKeybind("Pause", KeyEvent.VK_ESCAPE);
+        keybindManager.addMouseBind("GenerateNew", MouseEvent.BUTTON1);
     }
 }

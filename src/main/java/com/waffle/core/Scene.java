@@ -8,6 +8,7 @@ import com.waffle.systems.UIRenderSystem;
 
 public interface Scene {
     void focus();
+    void lostFocus();
     void update(float dt);
     void start();
     World getWorld();

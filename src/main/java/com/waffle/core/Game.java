@@ -100,6 +100,9 @@ public abstract class Game implements Runnable, FreeableResource {
      * @param name the name of the scene
      */
     public void setCurrentScene(String name) {
+        if(sceneManager.getCurrentScene() != null) {
+            sceneManager.getCurrentScene().lostFocus();
+        }
         sceneManager.setCurrentScene(name);
         Scene s = sceneManager.getCurrentScene();
         world = s.getWorld();
